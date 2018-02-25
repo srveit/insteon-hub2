@@ -1,0 +1,32 @@
+{
+  "name": "insteon",
+  "version": "1.0.0",
+  "description": "Control and monitor Insteon devices through hub",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/srveit/node_projects.git"
+  },
+  "keywords": [
+    "insteon",
+    "home",
+    "automation"
+  ],
+  "author": "Stephen R. Veit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/srveit/insteon-plm/issues"
+  },
+  "homepage": "https://github.com/srveit/insteon-plm#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "jasmine": "^3.0.0",
+    "moment": "^2.20.1",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "ws": "^4.0.0"
+  }
+}
