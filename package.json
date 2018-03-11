@@ -4,7 +4,10 @@
   "description": "Control and monitor Insteon devices through hub",
   "main": "index.js",
   "watch": {
-    "test": "{lib,spec}/*.js"
+    "test": {
+      "patterns": "{lib,spec}/*.js",
+      "quiet": true
+    }
   },
   "scripts": {
     "test": "jasmine",

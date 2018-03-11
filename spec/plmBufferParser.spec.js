@@ -422,6 +422,75 @@ describe('plBufferBarser.processPlmBuffer', () => {
         ]);
       });
     });
+    describe('Product Data Request', () => {
+      const bytes = '02625712340F0300060250571234511234200300';
+      let commands;
+      beforeEach(() => {
+        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        plmBufferParser.reset();
+        commands = plmBufferParser.processPlmBuffer(buffer);
+      });
+      it('should return commands', () => {
+        expect(commands).toEqual([
+          {
+            received: jasmine.any(String),
+            command: 'Send INSTEON Standard-length Message',
+            code: '62',
+            length: 14,
+            messageType: 'direct',
+            allLink: false,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            fromAddress: 'im-hub',
+            toAddress: '571234',
+            command1: '03',
+            command2: '00',
+            ack: true,
+            insteonCommand: {
+              command: 'Product Data Request',
+              messageType: 'direct',
+              fromAddress: 'im-hub',
+              toAddress: '571234',
+              fromDevice: 'hub controller',
+              toDevice: 'foyer chandelier'
+            },
+            fromDevice: 'hub controller',
+            toDevice: 'foyer chandelier',
+            bytes: '02625712340F030006'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '571234',
+            toAddress: '511234',
+            messageType: 'directAck',
+            allLink: false,
+            acknowledgement: true,
+            extendedMessage: false,
+            hopsLeft: 0,
+            maxHops: 0,
+            command1: '03',
+            command2: '00',
+            insteonCommand: {
+              command: 'Product Data Request',
+              messageType: 'directAck',
+              fromAddress: '571234',
+              toAddress: '511234',
+              edExpected: true,
+              fromDevice: 'foyer chandelier',
+              toDevice: 'hub controller'
+            },
+            fromDevice: 'foyer chandelier',
+            toDevice: 'hub controller',
+            bytes: '0250571234511234200300'
+          }
+        ]);
+      });
+    });
     describe('with Outlet OFF (bottom)', () => {
       const bytes = '02625A12340533020602505A1234511234203302';
       let commands;
@@ -658,8 +727,7 @@ describe('plBufferBarser.processPlmBuffer', () => {
             hopsLeft: 1,
             maxHops: 1,
             insteonCommand: {
-              command: 'Light Status Request',
-              type: 2,
+              command: 'Light Status Request 02',
               fromAddress: 'im-hub',
               toAddress: '571234',
               messageType: 'direct',
@@ -697,6 +765,267 @@ describe('plBufferBarser.processPlmBuffer', () => {
             fromDevice: 'foyer chandelier',
             toDevice: 'hub controller',
             bytes: '0250571234511234201900' }
+        ]);
+      });
+    });
+    describe('with Get Operating Flags', () => {
+      const bytes = '02625512340F1F00060250551234511234201F00' +
+        '02625512340F1F01060250551234511234201F00' +
+        '02625512340F1F02060250551234511234201F14';
+      let commands;
+      beforeEach(() => {
+        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        plmBufferParser.reset();
+        commands = plmBufferParser.processPlmBuffer(buffer);
+      });
+      it('should return commands', () => {
+        expect(commands).toEqual([
+          {
+            received: jasmine.any(String),
+            command: 'Send INSTEON Standard-length Message',
+            code: '62',
+            length: 14,
+            messageType: 'direct',
+            allLink: false,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            fromAddress: 'im-hub',
+            toAddress: '551234',
+            command1: '1F',
+            command2: '00',
+            ack: true,
+            insteonCommand: {
+              command: 'Get Operating Flags',
+              messageType: 'direct',
+              fromAddress: 'im-hub',
+              toAddress: '551234',
+              fromDevice: 'hub controller',
+              toDevice: 'foyer chandelier switch'
+            },
+            fromDevice: 'hub controller',
+            toDevice: 'foyer chandelier switch',
+            bytes: '02625512340F1F0006'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '551234',
+            toAddress: '511234',
+            messageType: 'directAck',
+            allLink: false,
+            acknowledgement: true,
+            extendedMessage: false,
+            hopsLeft: 0,
+            maxHops: 0,
+            command1: '1F',
+            command2: '00',
+            insteonCommand: {
+              command: 'Get Operating Flags',
+              programLockOn: false,
+              ledOnDuringTransmit: false,
+              resumeDimEnabled: false,
+              numberKeys: 6,
+              ledOn: false,
+              loadSenseOn: false,
+              bit6: false,
+              bit7: false,
+              messageType: 'directAck',
+              fromAddress: '551234',
+              toAddress: '511234',
+              fromDevice: 'foyer chandelier switch',
+              toDevice: 'hub controller'
+            },
+            fromDevice: 'foyer chandelier switch',
+            toDevice: 'hub controller',
+            bytes: '0250551234511234201F00'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'Send INSTEON Standard-length Message',
+            code: '62',
+            length: 14,
+            messageType: 'direct',
+            allLink: false,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            fromAddress: 'im-hub',
+            toAddress: '551234',
+            command1: '1F',
+            command2: '01',
+            ack: true,
+            insteonCommand: {
+              command: 'Get ALL-Link Database Delta',
+              messageType: 'direct',
+              fromAddress: 'im-hub',
+              toAddress: '551234',
+              fromDevice: 'hub controller',
+              toDevice: 'foyer chandelier switch'
+            },
+            fromDevice: 'hub controller',
+            toDevice: 'foyer chandelier switch',
+            bytes: '02625512340F1F0106'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '551234',
+            toAddress: '511234',
+            messageType: 'directAck',
+            allLink: false,
+            acknowledgement: true,
+            extendedMessage: false,
+            hopsLeft: 0,
+            maxHops: 0,
+            command1: '1F',
+            command2: '00',
+            insteonCommand: {
+              command: 'Get ALL-Link Database Delta',
+              allLinkDatabaseDelta: 0,
+              messageType: 'directAck',
+              fromAddress: '551234',
+              toAddress: '511234',
+              fromDevice: 'foyer chandelier switch',
+              toDevice: 'hub controller'
+            },
+            fromDevice: 'foyer chandelier switch',
+            toDevice: 'hub controller',
+            bytes: '0250551234511234201F00'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'Send INSTEON Standard-length Message',
+            code: '62',
+            length: 14,
+            messageType: 'direct',
+            allLink: false,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            fromAddress: 'im-hub',
+            toAddress: '551234',
+            command1: '1F',
+            command2: '02',
+            ack: true,
+            insteonCommand: {
+              command: 'Get Signal-to-Noise Value',
+              messageType: 'direct',
+              fromAddress: 'im-hub',
+              toAddress: '551234',
+              fromDevice: 'hub controller',
+              toDevice: 'foyer chandelier switch'
+            },
+            fromDevice: 'hub controller',
+            toDevice: 'foyer chandelier switch',
+            bytes: '02625512340F1F0206'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '551234',
+            toAddress: '511234',
+            messageType: 'directAck',
+            allLink: false,
+            acknowledgement: true,
+            extendedMessage: false,
+            hopsLeft: 0,
+            maxHops: 0,
+            command1: '1F',
+            command2: '14',
+            insteonCommand: {
+              command: 'Get Signal-to-Noise Value',
+              signalToNoise: 20,
+              messageType: 'directAck',
+              fromAddress: '551234',
+              toAddress: '511234',
+              fromDevice: 'foyer chandelier switch',
+              toDevice: 'hub controller' },
+            fromDevice: 'foyer chandelier switch',
+            toDevice: 'hub controller',
+            bytes: '0250551234511234201F14'
+          }
+        ]);
+      });
+    });
+    describe('with Light ON at Ramp Rate', () => {
+      const bytes = '02625712340F2E67060250571234511234202E67';
+      let commands;
+      beforeEach(() => {
+        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        plmBufferParser.reset();
+        commands = plmBufferParser.processPlmBuffer(buffer);
+      });
+      it('should return commands', () => {
+        expect(commands).toEqual([
+          {
+            received: jasmine.any(String),
+            command: 'Send INSTEON Standard-length Message',
+            code: '62',
+            length: 14,
+            messageType: 'direct',
+            allLink: false,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            fromAddress: 'im-hub',
+            toAddress: '571234',
+            command1: '2E',
+            command2: '67',
+            ack: true,
+            insteonCommand: {
+              command: 'Light ON at Ramp Rate',
+              onLevel: 111,
+              rampRate: 15,
+              messageType: 'direct',
+              fromAddress: 'im-hub',
+              toAddress: '571234',
+              fromDevice: 'hub controller',
+              toDevice: 'foyer chandelier'
+            },
+            fromDevice: 'hub controller',
+            toDevice: 'foyer chandelier',
+            bytes: '02625712340F2E6706'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '571234',
+            toAddress: '511234',
+            messageType: 'directAck',
+            allLink: false,
+            acknowledgement: true,
+            extendedMessage: false,
+            hopsLeft: 0,
+            maxHops: 0,
+            command1: '2E',
+            command2: '67',
+            insteonCommand: {
+              command: 'Light ON at Ramp Rate',
+              onLevel: 111,
+              rampRate: 15,
+              messageType: 'directAck',
+              fromAddress: '571234',
+              toAddress: '511234',
+              fromDevice: 'foyer chandelier',
+              toDevice: 'hub controller'
+            },
+            fromDevice: 'foyer chandelier',
+            toDevice: 'hub controller',
+            bytes: '0250571234511234202E67'
+          }
         ]);
       });
     });
