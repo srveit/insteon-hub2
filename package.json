@@ -7,11 +7,18 @@
     "test": {
       "patterns": "{lib,spec}/*.js",
       "quiet": true
+    },
+    "lint": {
+      "patterns": [
+        "index.js",
+        "{lib,spec}/*.js"
+      ],
+      "quiet": true
     }
   },
   "scripts": {
     "test": "jasmine",
-    "lint": "jshint {lib,spec}/*.js || exit 1",
+    "lint": "eslint index.js {lib,spec}/*.js || exit 1",
     "watch": "npm-watch"
   },
   "repository": {
@@ -38,8 +45,15 @@
     "ws": "^4.0.0"
   },
   "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jasmine": "^2.9.3",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
     "jasmine": "^3.1.0",
-    "jshint": "^2.9.5",
+    "jsonlint": "^1.6.3",
     "npm-watch": "^0.3.0"
   }
 }

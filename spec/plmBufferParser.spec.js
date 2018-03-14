@@ -1,23 +1,23 @@
 'use strict';
-const { createPlmBufferParser } = require('../lib/plmBufferParser'),
+const {createPlmBufferParser} = require('../lib/plmBufferParser'),
   deviceNames = {
-    '511234': 'hub controller',
+    511234: 'hub controller',
     'im-hub': 'hub controller',
-    
-    '521234': 'porch outlets',
-    '531234': 'Garage lights',
-    '541234': 'foyer lamps switch',
-    '551234': 'foyer chandelier switch',
-    '561234': 'front lights',
-    '571234': 'foyer chandelier',
-    '581234': 'foyer lamps',
-    '591234': 'dining outlet',
+
+    521234: 'porch outlets',
+    531234: 'Garage lights',
+    541234: 'foyer lamps switch',
+    551234: 'foyer chandelier switch',
+    561234: 'front lights',
+    571234: 'foyer chandelier',
+    581234: 'foyer lamps',
+    591234: 'dining outlet',
     '5A1234': 'Danny outlet',
     '5B1234': 'Steph outlet'
-  };
+  },
 
-const hexLength = bytes =>
-  bytes.length.toString(16).padStart(2, '0').toUpperCase();
+  hexLength = bytes =>
+    bytes.length.toString(16).padStart(2, '0').toUpperCase();
 
 describe('plBufferBarser.processPlmBuffer', () => {
   const plmBufferParser = createPlmBufferParser(deviceNames);
@@ -736,7 +736,8 @@ describe('plBufferBarser.processPlmBuffer', () => {
             },
             fromDevice: 'hub controller',
             toDevice: 'foyer chandelier',
-            bytes: '026257123405190206' },
+            bytes: '026257123405190206'
+          },
           {
             received: jasmine.any(String),
             command: 'INSTEON Standard Message Received',
@@ -764,7 +765,8 @@ describe('plBufferBarser.processPlmBuffer', () => {
             },
             fromDevice: 'foyer chandelier',
             toDevice: 'hub controller',
-            bytes: '0250571234511234201900' }
+            bytes: '0250571234511234201900'
+          }
         ]);
       });
     });
@@ -949,7 +951,8 @@ describe('plBufferBarser.processPlmBuffer', () => {
               fromAddress: '551234',
               toAddress: '511234',
               fromDevice: 'foyer chandelier switch',
-              toDevice: 'hub controller' },
+              toDevice: 'hub controller'
+            },
             fromDevice: 'foyer chandelier switch',
             toDevice: 'hub controller',
             bytes: '0250551234511234201F14'

@@ -1,5 +1,0 @@
-client/vendor/**
-node_modules/**
-server/boot/*
-reports/**
-client/**
