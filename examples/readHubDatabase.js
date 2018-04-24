@@ -1,6 +1,6 @@
 'use strict';
 const util = require('util'),
-  { createPlm } = require('./lib/plm'),
+  { createPlm } = require('../index'),
   deviceNames = {
     '49EA70': 'hub controller',
     

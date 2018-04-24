@@ -1,6 +1,6 @@
 'use strict';
 const util = require('util'),
-  { createPlm } = require('./lib/plm'),
+  { createPlm } = require('../index'),
   deviceNames = {
     '123456': 'hub controller',
     '56789A': 'front lights',
@@ -15,6 +15,7 @@ const main = async () => {
     port: 25105,
     deviceNames
   });
+  plm.addCommandHandler(() => true, command => console.log(command));
   await plm.start();
 };
 
