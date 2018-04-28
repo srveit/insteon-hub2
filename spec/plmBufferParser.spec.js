@@ -20,6 +20,7 @@ const {createPlmBufferParser} = require('../lib/plmBufferParser'),
     bytes.length.toString(16).padStart(2, '0').toUpperCase();
 
 describe('plBufferBarser.processPlmBuffer', () => {
+  /* eslint no-undefined: "off" */
   const plmBufferParser = createPlmBufferParser(deviceNames);
   describe('parsing Beep', () => {
     const bytes = '02770006';
@@ -766,6 +767,184 @@ describe('plBufferBarser.processPlmBuffer', () => {
             fromDevice: 'foyer chandelier',
             toDevice: 'hub controller',
             bytes: '0250571234511234201900'
+          }
+        ]);
+      });
+    });
+    describe('with long buffer', () => {
+      const bytes = '000000000000000000000002504A1AB6110201CF0600' +
+        '0269060257E2004B2BA601394402504A1AB6000001CF1300' +
+        '02504A1AB649EA7040130102504A1AB6130201CF0600027F0206';
+      let commands;
+      beforeEach(() => {
+        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        plmBufferParser.reset();
+        commands = plmBufferParser.processPlmBuffer(buffer);
+      });
+      it('should return commands', () => {
+        expect(commands).toEqual([
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '4A1AB6',
+            messageType: 'allLinkBroadcast',
+            allLink: true,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            command1: '06',
+            command2: '00',
+            cleanUpCommand1: '11',
+            numberDevices: 2,
+            groupNumber: 1,
+            insteonCommand:
+            {
+              command: 'ALL-Link Cleanup Status Report',
+              groupNumber: 1,
+              command1: '06',
+              cleanUpCommand: 'ALL-Link Recall',
+              numberDevices: 2,
+              messageType: 'allLinkBroadcast',
+              fromAddress: '4A1AB6',
+              fromDevice: undefined
+            },
+            fromDevice: undefined,
+            bytes: '02504A1AB6110201CF0600'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'Get First ALL-Link Record',
+            code: '69',
+            length: 2,
+            ack: true,
+            responseMatcher: jasmine.any(Function),
+            bytes: '026906'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'ALL-Link Record Response',
+            code: '57',
+            length: 16,
+            inUse: true,
+            isController: true,
+            bit5: true,
+            bit4: false,
+            bit3: false,
+            bit2: false,
+            hasBeenUsed: true,
+            groupNumber: 0,
+            id: '4B2BA6',
+            deviceCategory: '01',
+            deviceSubcategory: '39',
+            firmware: '44',
+            numberRetries: 1,
+            controllerGroupNumber: 68,
+            data: '013944',
+            deviceName: undefined,
+            bytes: '0257E2004B2BA6013944'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '4A1AB6',
+            messageType: 'allLinkBroadcast',
+            allLink: true,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            command1: '13',
+            command2: '00',
+            cleanUpCommand1: '00',
+            numberDevices: 0,
+            groupNumber: 1,
+            insteonCommand:
+            {
+              command: 'ALL-Link Alias 1 Low',
+              groupNumber: 1,
+              command1: '13',
+              numberDevices: 0,
+              messageType: 'allLinkBroadcast',
+              fromAddress: '4A1AB6',
+              fromDevice: undefined
+            },
+            fromDevice: undefined,
+            bytes: '02504A1AB6000001CF1300'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '4A1AB6',
+            toAddress: '49EA70',
+            messageType: 'allLinkCleanup',
+            allLink: true,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 0,
+            maxHops: 0,
+            command1: '13',
+            command2: '01',
+            insteonCommand:
+            {
+              command: 'ALL-Link Alias 1 Low',
+              groupNumber: 1,
+              command1: '13',
+              messageType: 'allLinkCleanup',
+              fromAddress: '4A1AB6',
+              toAddress: '49EA70',
+              fromDevice: undefined,
+              toDevice: undefined
+            },
+            fromDevice: undefined,
+            toDevice: undefined,
+            bytes: '02504A1AB649EA70401301'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '4A1AB6',
+            messageType: 'allLinkBroadcast',
+            allLink: true,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            command1: '06',
+            command2: '00',
+            cleanUpCommand1: '13',
+            numberDevices: 2,
+            groupNumber: 1,
+            insteonCommand:
+            {
+              command: 'ALL-Link Cleanup Status Report',
+              groupNumber: 1,
+              command1: '06',
+              cleanUpCommand: 'ALL-Link Alias 1 Low',
+              numberDevices: 2,
+              messageType: 'allLinkBroadcast',
+              fromAddress: '4A1AB6',
+              fromDevice: undefined
+            },
+            fromDevice: undefined,
+            bytes: '02504A1AB6130201CF0600'
+          },
+          {
+            received: jasmine.any(String),
+            command: '7F Command',
+            code: '7F',
+            length: 4,
+            data: '02',
+            ack: true,
+            bytes: '027F0206'
           }
         ]);
       });
