@@ -424,14 +424,15 @@ describe('plBufferBarser.processPlmBuffer', () => {
       });
     });
     describe('Product Data Request', () => {
-      const bytes = '02625712340F0300060250571234511234200300';
+      const bytes = '02625712340F0300060250571234511234200300' +
+        '025157123451123411030001000000022A45003F0001000000';
       let commands;
       beforeEach(() => {
         const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
-      it('should return commands', () => {
+      fit('should return commands', () => {
         expect(commands).toEqual([
           {
             received: jasmine.any(String),
@@ -488,6 +489,43 @@ describe('plBufferBarser.processPlmBuffer', () => {
             fromDevice: 'foyer chandelier',
             toDevice: 'hub controller',
             bytes: '0250571234511234200300'
+          },
+          {
+            received: jasmine.any(String),
+            command: 'INSTEON Extended Message Received',
+            code: '51',
+            length: 46,
+            fromAddress: '571234',
+            toAddress: '511234',
+            command1: '03',
+            command2: '00',
+            data: '01000000022A45003F00010000',
+            crc: '00',
+            messageType: 'direct',
+            allLink: false,
+            acknowledgement: false,
+            extendedMessage: true,
+            hopsLeft: 0,
+            maxHops: 1,
+            insteonCommand: {
+              command: 'Product Data Response',
+              productKey: '000000',
+              deviceCategory: '02',
+              deviceSubcategory: '2A',
+              firmware: '45',
+              d8: '00',
+              userDefined: '3F00010000',
+              messageType: 'direct',
+              fromAddress: '571234',
+              toAddress: '511234',
+              fromDevice: 'foyer chandelier',
+              toDevice: 'hub controller',
+              deviceDescription: 'SwitchLinc Relay (Dual-Band)',
+              modelNumber: '2477S'
+            },
+            fromDevice: 'foyer chandelier',
+            toDevice: 'hub controller',
+            bytes: '025157123451123411030001000000022A45003F0001000000'
           }
         ]);
       });
@@ -772,14 +810,24 @@ describe('plBufferBarser.processPlmBuffer', () => {
       });
     });
     describe('with long buffer', () => {
-      const bytes = '000000000000000000000002504A1AB6110201CF0600' +
-        '0269060257E2004B2BA601394402504A1AB6000001CF1300' +
-        '02504A1AB649EA7040130102504A1AB6130201CF0600027F0206';
-      let commands;
+      const bytes = '00000000000000000000000250541234110201CF0600' +
+        '0269060257E2004B2BA60139440250541234000001CF1300' +
+        '02505412345112344013010250541234130201CF0600027F0206';
+      let commands, consoleWarn;
       beforeEach(() => {
+        consoleWarn = console.warn;
+        console.warn = jasmine.createSpy('warn');
         const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
+      });
+      afterEach(() => console.warn = consoleWarn);
+      it('should warn of discarded bytes', () => {
+        expect(console.warn)
+          .toHaveBeenCalledWith(
+            'discarded 0000000000000000000000',
+            jasmine.anything()
+          );
       });
       it('should return commands', () => {
         expect(commands).toEqual([
@@ -788,7 +836,7 @@ describe('plBufferBarser.processPlmBuffer', () => {
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
-            fromAddress: '4A1AB6',
+            fromAddress: '541234',
             messageType: 'allLinkBroadcast',
             allLink: true,
             acknowledgement: false,
@@ -808,11 +856,11 @@ describe('plBufferBarser.processPlmBuffer', () => {
               cleanUpCommand: 'ALL-Link Recall',
               numberDevices: 2,
               messageType: 'allLinkBroadcast',
-              fromAddress: '4A1AB6',
-              fromDevice: undefined
+              fromAddress: '541234',
+              fromDevice: 'foyer lamps switch'
             },
-            fromDevice: undefined,
-            bytes: '02504A1AB6110201CF0600'
+            fromDevice: 'foyer lamps switch',
+            bytes: '0250541234110201CF0600'
           },
           {
             received: jasmine.any(String),
@@ -851,7 +899,7 @@ describe('plBufferBarser.processPlmBuffer', () => {
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
-            fromAddress: '4A1AB6',
+            fromAddress: '541234',
             messageType: 'allLinkBroadcast',
             allLink: true,
             acknowledgement: false,
@@ -870,19 +918,19 @@ describe('plBufferBarser.processPlmBuffer', () => {
               command1: '13',
               numberDevices: 0,
               messageType: 'allLinkBroadcast',
-              fromAddress: '4A1AB6',
-              fromDevice: undefined
+              fromAddress: '541234',
+              fromDevice: 'foyer lamps switch'
             },
-            fromDevice: undefined,
-            bytes: '02504A1AB6000001CF1300'
+            fromDevice: 'foyer lamps switch',
+            bytes: '0250541234000001CF1300'
           },
           {
             received: jasmine.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
-            fromAddress: '4A1AB6',
-            toAddress: '49EA70',
+            fromAddress: '541234',
+            toAddress: '511234',
             messageType: 'allLinkCleanup',
             allLink: true,
             acknowledgement: false,
@@ -897,21 +945,21 @@ describe('plBufferBarser.processPlmBuffer', () => {
               groupNumber: 1,
               command1: '13',
               messageType: 'allLinkCleanup',
-              fromAddress: '4A1AB6',
-              toAddress: '49EA70',
-              fromDevice: undefined,
-              toDevice: undefined
+              fromAddress: '541234',
+              toAddress: '511234',
+              fromDevice: 'foyer lamps switch',
+              toDevice: 'hub controller'
             },
-            fromDevice: undefined,
-            toDevice: undefined,
-            bytes: '02504A1AB649EA70401301'
+            fromDevice: 'foyer lamps switch',
+            toDevice: 'hub controller',
+            bytes: '0250541234511234401301'
           },
           {
             received: jasmine.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
-            fromAddress: '4A1AB6',
+            fromAddress: '541234',
             messageType: 'allLinkBroadcast',
             allLink: true,
             acknowledgement: false,
@@ -931,15 +979,15 @@ describe('plBufferBarser.processPlmBuffer', () => {
               cleanUpCommand: 'ALL-Link Alias 1 Low',
               numberDevices: 2,
               messageType: 'allLinkBroadcast',
-              fromAddress: '4A1AB6',
-              fromDevice: undefined
+              fromAddress: '541234',
+              fromDevice: 'foyer lamps switch'
             },
-            fromDevice: undefined,
-            bytes: '02504A1AB6130201CF0600'
+            fromDevice: 'foyer lamps switch',
+            bytes: '0250541234130201CF0600'
           },
           {
             received: jasmine.any(String),
-            command: '7F Command',
+            command: 'Unknown Command 7F',
             code: '7F',
             length: 4,
             data: '02',
