@@ -19,9 +19,16 @@ const {createPlmBufferParser} = require('../lib/plmBufferParser'),
   hexLength = bytes =>
     bytes.length.toString(16).padStart(2, '0').toUpperCase();
 
-describe('plBufferBarser.processPlmBuffer', () => {
+describe('plmBufferParser.processPlmBuffer', () => {
   /* eslint no-undefined: "off" */
-  const plmBufferParser = createPlmBufferParser(deviceNames);
+  let parsingLogger, plmBufferParser;
+  beforeEach(() => {
+    parsingLogger = jasmine.createSpyObj('parsingLogger', [
+      'log'
+    ]);
+    plmBufferParser = createPlmBufferParser(deviceNames, parsingLogger);
+  });
+
   describe('parsing Beep', () => {
     const bytes = '02770006';
     let commands;
@@ -30,6 +37,7 @@ describe('plBufferBarser.processPlmBuffer', () => {
       plmBufferParser.reset();
       commands = plmBufferParser.processPlmBuffer(buffer);
     });
+
     it('should return commands', () => {
       expect(commands).toEqual([
         {
@@ -42,6 +50,34 @@ describe('plBufferBarser.processPlmBuffer', () => {
           bytes: '02770006'
         }
       ]);
+    });
+    it('should call parsingLogger with processPlmBuffer', () => {
+      expect(parsingLogger.log).toHaveBeenCalledWith({
+        event: 'processPlmBuffer',
+        buffer: '0277000608',
+        previousBuffer: '',
+        processedAt: jasmine.anything()
+      });
+    });
+    it('should call parsingLogger with parsePlmBuffer', () => {
+      expect(parsingLogger.log).toHaveBeenCalledWith({
+        event: 'parsePlmBuffer',
+        currentBuffer: '02770006',
+        previousParsedCommand: undefined,
+        buffer: '',
+        command: {
+          received: jasmine.any(String),
+          command: 'Beep',
+          code: '77',
+          length: 4,
+          data: '00',
+          ack: true,
+          bytes: '02770006'
+        },
+        discarded: undefined,
+        warning: undefined,
+        parsedAt: jasmine.anything()
+      });
     });
   });
   describe('parsing Send ALL-Link Command', () => {
@@ -144,6 +180,53 @@ describe('plBufferBarser.processPlmBuffer', () => {
             bytes: '02505A123451123460110C'
           }
         ]);
+      });
+      it('should call parsingLogger with parsePlmBuffer', () => {
+        expect(parsingLogger.log).toHaveBeenCalledWith({
+          event: 'parsePlmBuffer',
+          currentBuffer: '02580602505A123451123460110C',
+          previousParsedCommand: {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '5B1234',
+            toAddress: '511234',
+            command1: '11',
+            command2: '0C',
+            messageType: 'allLinkCleanupAck',
+            allLink: true,
+            acknowledgement: true,
+            extendedMessage: false,
+            hopsLeft: 0,
+            maxHops: 0,
+            insteonCommand: {
+              command: 'ALL-Link Recall',
+              fromAddress: '5B1234',
+              groupNumber: 12,
+              command1: '11',
+              toAddress: '511234',
+              messageType: 'allLinkCleanupAck',
+              fromDevice: 'Steph outlet',
+              toDevice: 'hub controller'
+            },
+            fromDevice: 'Steph outlet',
+            toDevice: 'hub controller',
+            bytes: '02505B123451123460110C'
+          },
+          buffer: '02505A123451123460110C',
+          command: {
+            received: jasmine.any(String),
+            command: 'ALL-Link Cleanup Status Report',
+            code: '58',
+            length: 2,
+            ack: true,
+            bytes: '025806'
+          },
+          discarded: undefined,
+          warning: undefined,
+          parsedAt: jasmine.anything()
+        });
       });
     });
   });
@@ -432,7 +515,7 @@ describe('plBufferBarser.processPlmBuffer', () => {
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
-      fit('should return commands', () => {
+      it('should return commands', () => {
         expect(commands).toEqual([
           {
             received: jasmine.any(String),
@@ -826,8 +909,47 @@ describe('plBufferBarser.processPlmBuffer', () => {
         expect(console.warn)
           .toHaveBeenCalledWith(
             'discarded 0000000000000000000000',
-            jasmine.anything()
+            undefined
           );
+      });
+      it('should call parsingLogger with parsePlmBuffer', () => {
+        expect(parsingLogger.log).toHaveBeenCalledWith({
+          event: 'parsePlmBuffer',
+          currentBuffer: '00000000000000000000000250541234110201CF06000269060257E2004B2BA60139440250541234000001CF130002505412345112344013010250541234130201CF0600027F0206',
+          previousParsedCommand: undefined,
+          buffer: '0269060257E2004B2BA60139440250541234000001CF130002505412345112344013010250541234130201CF0600027F0206',
+          command: {
+            received: jasmine.any(String),
+            command: 'INSTEON Standard Message Received',
+            code: '50',
+            length: 18,
+            fromAddress: '541234',
+            messageType: 'allLinkBroadcast',
+            allLink: true,
+            acknowledgement: false,
+            extendedMessage: false,
+            hopsLeft: 3,
+            maxHops: 3,
+            command1: '06',
+            command2: '00',
+            cleanUpCommand1: '11',
+            numberDevices: 2,
+            groupNumber: 1,
+            insteonCommand: Object({ command: 'ALL-Link Cleanup Status Report',
+                                     groupNumber: 1,
+                                     command1: '06',
+                                     cleanUpCommand: 'ALL-Link Recall',
+                                     numberDevices: 2,
+                                     messageType: 'allLinkBroadcast',
+                                     fromAddress: '541234',
+                                     fromDevice: 'foyer lamps switch' }),
+            fromDevice: 'foyer lamps switch',
+            bytes: '0250541234110201CF0600'
+          },
+        discarded: '0000000000000000000000',
+        warning: undefined,
+        parsedAt: jasmine.anything()
+      });
       });
       it('should return commands', () => {
         expect(commands).toEqual([

@@ -7,7 +7,7 @@ const { parseStringPromise } = require('xml2js'),
   util = require('util'),
   URL = 'https://insteon.atlassian.net/cgraphql?q=QueryPreloader_ContentBodyQuery',
   payload = {
-    query: 'query ContentBodyQuery($contentId:ID$versionOverride:Int$embeddedContentRender:String){content(id:$contentId version:$versionOverride embeddedContentRender:$embeddedContentRender){__typename nodes{__typename id body{__typename view{__typename value webresource{__typename tags{__typename css}uris{__typename js}}}}}}}',
+    query: 'query ContentBodyQuery($contentId:ID$versionOverride:Int$embeddedContentRender:String){content(id:$contentId version:$versionOverride embeddedContentRender:$embeddedContentRender){nodes{id body{view{value}}}}}',
     variables: {
       contentId: '13533225',
       versionOverride: null,
