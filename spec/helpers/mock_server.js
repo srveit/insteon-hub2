@@ -174,4 +174,4 @@ const mockServer = done => {
   return server;
 };
 
-global.mockServer = mockServer;
+exports.mockServer = mockServer;

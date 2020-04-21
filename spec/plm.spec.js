@@ -1,5 +1,6 @@
 'use strict';
 const {createPlm} = require('../lib/plm'),
+  {mockServer} = require('./helpers/mock_server.js'),
   deviceNames = {
     511234: 'hub controller',
     'im-hub': 'hub controller',
@@ -56,9 +57,11 @@ describe('plm.createPlm', () => {
       expect(server.clearBuffer).toHaveBeenCalledWith({
         path: '/1',
         headers: {
+          'accept-encoding': 'gzip, deflate, br',
           authorization,
           host: `${host}:${port}`,
-          connection: 'close'
+          connection: 'close',
+          'user-agent': 'got (https://github.com/sindresorhus/got)'
         },
         body: {},
         query: {

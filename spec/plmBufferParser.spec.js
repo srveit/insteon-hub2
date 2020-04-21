@@ -21,11 +21,12 @@ const {createPlmBufferParser} = require('../lib/plmBufferParser'),
 
 describe('plmBufferParser.processPlmBuffer', () => {
   /* eslint no-undefined: "off" */
-  let parsingLogger, plmBufferParser;
+  let parsingLogger = {
+    log: () => true
+  }, log,
+    plmBufferParser;
   beforeEach(() => {
-    parsingLogger = jasmine.createSpyObj('parsingLogger', [
-      'log'
-    ]);
+    log = jest.spyOn(parsingLogger, 'log');
     plmBufferParser = createPlmBufferParser(deviceNames, parsingLogger);
   });
 
@@ -33,7 +34,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
     const bytes = '02770006';
     let commands;
     beforeEach(() => {
-      const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+      const buffer = `${bytes}${hexLength(bytes)}`;
       plmBufferParser.reset();
       commands = plmBufferParser.processPlmBuffer(buffer);
     });
@@ -86,7 +87,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         '02505A123451123460110C';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -236,7 +237,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         '0250561234110101CF0600';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -338,7 +339,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         '0250561234130101CF0600';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -439,7 +440,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       const bytes = '0250551234000001CF17010250551234000001CF1800';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -511,7 +512,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         '025157123451123411030001000000022A45003F0001000000';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -617,7 +618,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       const bytes = '02625A12340533020602505A1234511234203302';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -685,7 +686,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       const bytes = '02625A12340519000602505A12345112342002FF';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -755,7 +756,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       const bytes = '02625A12340519010602505A1234511234200203';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -826,7 +827,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       const bytes = '0262571234051902060250571234511234201900';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -900,7 +901,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       beforeEach(() => {
         consoleWarn = console.warn;
         console.warn = jasmine.createSpy('warn');
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -1125,7 +1126,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         '02625512340F1F02060250551234511234201F14';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -1313,7 +1314,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       const bytes = '02625712340F2E67060250571234511234202E67';
       let commands;
       beforeEach(() => {
-        const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+        const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
       });
@@ -1386,7 +1387,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
     const bytes = '026A15';
     let commands;
     beforeEach(() => {
-      const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+      const buffer = `${bytes}${hexLength(bytes)}`;
       plmBufferParser.reset();
       commands = plmBufferParser.processPlmBuffer(buffer);
     });
@@ -1408,7 +1409,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
     const bytes = '02770006';
     let commands;
     beforeEach(() => {
-      const buffer = `<BS>${bytes}${hexLength(bytes)}</BS>`;
+      const buffer = `${bytes}${hexLength(bytes)}`;
       plmBufferParser.reset();
       commands = plmBufferParser.processPlmBuffer(buffer);
     });
