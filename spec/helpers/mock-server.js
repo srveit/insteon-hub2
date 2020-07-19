@@ -64,8 +64,8 @@ const createMock = ({name, rootPath, environment, port}) => {
       }
     },
 
-    mockHandler = (name, method, path, responseName) => {
-      mock[name] = jasmine.createSpy(name).and.returnValue({}); // eslint-disable-line jasmine/no-unsafe-spy
+    mockHandler = ({name, method = 'get', path, responseName}) => {
+      mock[name] = jest.fn().mockReturnValue({}); // eslint-disable-line jasmine/no-unsafe-spy
       mock.app[method](rootPath + path + '*', (req, res) => {
         // console.log('called', mockName, 'mock', name, path);
 
@@ -84,7 +84,7 @@ const createMock = ({name, rootPath, environment, port}) => {
             includeDeclaration: true,
             value: response
           }));
-        } else if (req.path.match(/html$/)) {
+        } else if (req.path.match(/(xml|html)$/)) {
           if (response.headers) {
             res.set(response.headers).send(response.body);
           } else {
@@ -157,7 +157,7 @@ const createMock = ({name, rootPath, environment, port}) => {
   return mock;
 };
 
-const mockServer = done => {
+const mockServer = (handlers) => {
   const environment = {
     SERVER_BASE_URL: '<mockUrl>',
     SERVER_HOSTNAME: '<mockHostname>',
@@ -166,8 +166,9 @@ const mockServer = done => {
   };
 
   const server = createMock({name: 'server', rootPath: '', environment});
-  server.mockHandler('clearBuffer', 'get', '/1');
-  server.mockHandler('bufferStatus', 'get', '/buffstatus.xml');
+  for (const handler of handlers) {
+    server.mockHandler(handler);
+  }
 
   server.addDefaultHandler();
 

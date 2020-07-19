@@ -1,6 +1,6 @@
 'use strict';
 const {createPlm} = require('../lib/plm'),
-  {mockServer} = require('./helpers/mock_server.js'),
+  {mockServer} = require('./helpers/mock-server.js'),
   deviceNames = {
     511234: 'hub controller',
     'im-hub': 'hub controller',
@@ -25,7 +25,16 @@ describe('plm.createPlm', () => {
   let server, baseUrl, host, port, username, password, authorization, plm;
 
   beforeAll(async () => {
-    server = mockServer();
+    server = mockServer([
+      {
+        path: '/1',
+        name: 'clearBuffer'
+      },
+      {
+        path: '/buffstatus.xml',
+        name: 'bufferStatus'
+      }
+    ]);
     await server.start();
   });
 
@@ -42,7 +51,7 @@ describe('plm.createPlm', () => {
   });
 
   it('should have a start function', () =>
-     expect(plm.start).toEqual(jasmine.any(Function)));
+     expect(plm.start).toEqual(expect.any(Function)));
 
   describe('plm.start', () => {
     beforeEach(async () => {
@@ -72,7 +81,7 @@ describe('plm.createPlm', () => {
 
     describe('when called a second time', () => {
       beforeEach(async () => {
-        server.clearBuffer.calls.reset();
+        server.clearBuffer.mockClear();
         await plm.start();
       });
 

@@ -42,7 +42,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
     it('should return commands', () => {
       expect(commands).toEqual([
         {
-          received: jasmine.any(String),
+          received: expect.any(String),
           command: 'Beep',
           code: '77',
           length: 4,
@@ -57,7 +57,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         event: 'processPlmBuffer',
         buffer: '0277000608',
         previousBuffer: '',
-        processedAt: jasmine.anything()
+        processedAt: expect.anything()
       });
     });
     it('should call parsingLogger with parsePlmBuffer', () => {
@@ -67,7 +67,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         previousParsedCommand: undefined,
         buffer: '',
         command: {
-          received: jasmine.any(String),
+          received: expect.any(String),
           command: 'Beep',
           code: '77',
           length: 4,
@@ -77,7 +77,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
         },
         discarded: undefined,
         warning: undefined,
-        parsedAt: jasmine.anything()
+        parsedAt: expect.anything()
       });
     });
   });
@@ -94,7 +94,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send ALL-Link Command',
             code: '61',
             length: 8,
@@ -115,7 +115,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02610C110006'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -144,7 +144,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02505B123451123460110C'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'ALL-Link Cleanup Status Report',
             code: '58',
             length: 2,
@@ -152,7 +152,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '025806'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -187,7 +187,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
           event: 'parsePlmBuffer',
           currentBuffer: '02580602505A123451123460110C',
           previousParsedCommand: {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -217,7 +217,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
           },
           buffer: '02505A123451123460110C',
           command: {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'ALL-Link Cleanup Status Report',
             code: '58',
             length: 2,
@@ -226,7 +226,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
           },
           discarded: undefined,
           warning: undefined,
-          parsedAt: jasmine.anything()
+          parsedAt: expect.anything()
         });
       });
     });
@@ -244,7 +244,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -273,7 +273,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250561234000001CF1100'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -302,7 +302,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250561234511234401101'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -346,7 +346,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -375,7 +375,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250561234000001CF1300'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -404,7 +404,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250561234511234401301'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -447,7 +447,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -476,7 +476,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250551234000001CF1701'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -519,7 +519,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -547,7 +547,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625712340F030006'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -575,7 +575,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250571234511234200300'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Extended Message Received',
             code: '51',
             length: 46,
@@ -625,7 +625,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -653,7 +653,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625A123405330206'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -693,7 +693,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -721,7 +721,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625A123405190006'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -763,7 +763,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -791,7 +791,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625A123405190106'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -834,7 +834,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -862,7 +862,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '026257123405190206'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -900,7 +900,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       let commands, consoleWarn;
       beforeEach(() => {
         consoleWarn = console.warn;
-        console.warn = jasmine.createSpy('warn');
+        console.warn = jest.fn();
         const buffer = `${bytes}${hexLength(bytes)}`;
         plmBufferParser.reset();
         commands = plmBufferParser.processPlmBuffer(buffer);
@@ -920,7 +920,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
           previousParsedCommand: undefined,
           buffer: '0269060257E2004B2BA60139440250541234000001CF130002505412345112344013010250541234130201CF0600027F0206',
           command: {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -949,13 +949,13 @@ describe('plmBufferParser.processPlmBuffer', () => {
           },
         discarded: '0000000000000000000000',
         warning: undefined,
-        parsedAt: jasmine.anything()
+        parsedAt: expect.anything()
       });
       });
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -986,16 +986,16 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250541234110201CF0600'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Get First ALL-Link Record',
             code: '69',
             length: 2,
             ack: true,
-            responseMatcher: jasmine.any(Function),
+            responseMatcher: expect.any(Function),
             bytes: '026906'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'ALL-Link Record Response',
             code: '57',
             length: 16,
@@ -1018,7 +1018,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0257E2004B2BA6013944'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -1048,7 +1048,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250541234000001CF1300'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -1078,7 +1078,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250541234511234401301'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -1109,7 +1109,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250541234130201CF0600'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Unknown Command 7F',
             code: '7F',
             length: 4,
@@ -1133,7 +1133,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -1161,7 +1161,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625512340F1F0006'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -1196,7 +1196,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250551234511234201F00'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -1224,7 +1224,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625512340F1F0106'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -1252,7 +1252,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '0250551234511234201F00'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -1280,7 +1280,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625512340F1F0206'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -1321,7 +1321,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
       it('should return commands', () => {
         expect(commands).toEqual([
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'Send INSTEON Standard-length Message',
             code: '62',
             length: 14,
@@ -1351,7 +1351,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
             bytes: '02625712340F2E6706'
           },
           {
-            received: jasmine.any(String),
+            received: expect.any(String),
             command: 'INSTEON Standard Message Received',
             code: '50',
             length: 18,
@@ -1394,12 +1394,12 @@ describe('plmBufferParser.processPlmBuffer', () => {
     it('should return commands', () => {
       expect(commands).toEqual([
         {
-          received: jasmine.any(String),
+          received: expect.any(String),
           command: 'Get Next ALL-Link Record',
           code: '6A',
           length: 2,
           ack: false,
-          responseMatcher: jasmine.any(Function),
+          responseMatcher: expect.any(Function),
           bytes: '026A15'
         }
       ]);
@@ -1416,7 +1416,7 @@ describe('plmBufferParser.processPlmBuffer', () => {
     it('should return commands', () => {
       expect(commands).toEqual([
         {
-          received: jasmine.any(String),
+          received: expect.any(String),
           command: 'Beep',
           code: '77',
           length: 4,
