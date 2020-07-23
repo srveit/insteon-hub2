@@ -84,7 +84,7 @@ const createMock = ({name, rootPath, environment, port}) => {
             includeDeclaration: true,
             value: response
           }));
-        } else if (req.path.match(/(xml|html)$/)) {
+        } else if (req.path.match(/(xml|html?)$/)) {
           if (response.headers) {
             res.set(response.headers).send(response.body);
           } else {
