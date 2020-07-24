@@ -1,18 +1,19 @@
 'use strict';
+const got = require('got');
+
 const {createPlmStream} = require('../lib/plmStream'),
   {fixture} = require('./helpers/fixture.js'),
   {mockServer} = require('./helpers/mock-server.js');
 
-const nextTick = () => new Promise(resolve => setImmediate(resolve));
-
 const waitForReadable = stream => new Promise(resolve => {
-  stream.once('readable', (a, b, c) => {
-    console.log('a', a);
-    console.log('b', b);
-    console.log('c', c);
-    resolve();
-  });
+  stream.once('readable', resolve);
 });
+
+const waitForClose = stream => new Promise(resolve => {
+  stream.once('close', resolve);
+});
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('createPlmStream', () => {
   /* eslint no-undefined: "off" */
@@ -38,7 +39,11 @@ describe('createPlmStream', () => {
     password = 'password';
     authorization = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=';
     plmStream = createPlmStream({username, password, host, port});
-//    await nextTick();
+  });
+
+  afterEach(async () => {
+    plmStream.destroy();
+    await waitForClose(plmStream);
   });
 
   describe('when reading', () => {
@@ -56,6 +61,17 @@ describe('createPlmStream', () => {
 
     it('should return a segment', () => {
       expect(segment).toEqual('AAAAAA');
+    });
+
+    describe('when read a second time', () => {
+      beforeEach(async () => {
+        await sleep(100);
+        segment = plmStream.read();
+      });
+
+      it('should not return a segment', () => {
+        expect(segment).toBe(null);
+      });
     });
   });
 });
