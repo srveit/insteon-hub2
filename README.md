@@ -14,6 +14,69 @@
 
 Library for monitoring and controlling Insteon devices through an Insteon hub.
 
+## Files
+
+- allLinkDatabase.js  (36%)
+  - createAllLinkDatabase
+- allLinkRecord.js (81%)
+  - createAllLinkRecord
+- constants.js
+  - ALL_LINK_CODES
+  - ALL_LINK_CONTROL_CODES
+  - ALL_LINK_CONTROL_NAMES
+  - ALL_LINK_TYPES
+  - BUTTON_EVENTS
+  - INSTEON_MESSAGE_TYPES
+  - NAK_ERROR_CODES
+  - OPERATING_FLAGS
+  - OUTLET_CODES
+  - OUTLET_NAMES
+  - X10_COMMANDS
+  - X10_HOUSE_CODES
+  - X10_UNIT_CODES
+- deviceCategories.js
+  - '00'
+  - '01'
+  - '02'
+  - '03'
+  - '04'
+  - '05'
+  - '06'
+  - '07'
+  - '08'
+  - '09'
+  - '0A'
+  - '0B'
+  - '0C'
+  - '0D'
+  - '0E'
+  - '0F'
+  - '10'
+  - '11'
+  - '12'
+  - '13'
+  - '14'
+  - '15'
+  - '16'
+  - '17'
+  - FE
+  - FF
+- encodeCommand.js (67%)
+- parseInsteonCommand.js (70%)
+- parsers.js (49%)
+- plm.js (TODO: rewrite to use stream)
+  - createPlm
+- plmBase.js
+  - createPlmBase
+- plmBufferParser.js (TODO: deprecate once plm.js is rewritten)
+  - createPlmBufferParser
+- plmBufferProcessor.js
+  - createPlmBufferProcessor
+- plmCommandStream.js
+  - createPlmCommandStream
+- plmStream.js
+  - createPlmStream
+
 ## References
 
 https://github.com/openhab/openhab1-addons/tree/master/bundles/binding/org.openhab.binding.insteonplm/src/main/resources

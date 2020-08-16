@@ -1,7 +1,8 @@
 'use strict';
 const got = require('got');
 
-const {createPlmStream} = require('../lib/plmStream'),
+const {createPlmBase} = require('../lib/plmBase'),
+  {createPlmStream} = require('../lib/plmStream'),
   {fixture} = require('./helpers/fixture.js'),
   {mockServer} = require('./helpers/mock-server.js');
 
@@ -17,7 +18,8 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('createPlmStream', () => {
   /* eslint no-undefined: "off" */
-  let server, baseUrl, host, port, username, password, authorization, plmStream;
+  let server, baseUrl, host, port, username, password, authorization, plmBase,
+    plmStream;
 
   beforeAll(async () => {
     server = mockServer([
@@ -38,7 +40,8 @@ describe('createPlmStream', () => {
     username = 'username';
     password = 'password';
     authorization = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=';
-    plmStream = createPlmStream({username, password, host, port});
+    plmBase = createPlmBase({username, password, host, port});
+    plmStream = createPlmStream(plmBase);
   });
 
   afterEach(async () => {

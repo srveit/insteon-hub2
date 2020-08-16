@@ -84,7 +84,7 @@ describe('plm.createPlmBase', () => {
        expect(server.allLinkCommand).toBeCalledWith(
          expect.objectContaining({
            headers: expect.objectContaining({
-             authorization,
+             authorization: authorization,
              host: `${host}:${port}`
            }),
            path: '/0',

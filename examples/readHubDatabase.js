@@ -1,20 +1,7 @@
 'use strict';
 const util = require('util'),
   { createPlm } = require('../index'),
-  deviceNames = {
-    '49EA70': 'hub controller',
-    
-    '49C2B7': 'porch outlets',
-    '4A0A08': 'Garage lights',
-    '4A1AB6': 'foyer lamps switch',
-    '4A209A': 'foyer chandelier switch',
-    '4A3771': 'front lights',
-    '4A3A6F': 'foyer chandelier',
-    '4B2BA6': 'foyer lamps',
-    '4B2D2C': 'dining outlet',
-    '4B2FC6': 'Danny outlet',
-    '4B2D2D': 'Steph outlet'
-  };
+  deviceNames = require('./deviceNames.json');
 
 const main = async () => {
   const plm = createPlm({
@@ -27,8 +14,9 @@ const main = async () => {
   await plm.start();
 
   const hubDatabase = await plm.readHubAllLinkDatabase(deviceNames);
-  console.log('database info', util.inspect(hubDatabase.info(), {depth: null}));
-  console.log('database links', util.inspect(hubDatabase.links(), {depth: null}));
+//  console.log('database info', util.inspect(hubDatabase.info(), {depth: null}));
+//  console.log('database links', util.inspect(hubDatabase.links(), {depth: null}));
+  console.log('done');
   // await sleep(200);
   // await sendModemCommand({
   //   command: 'Get IM Configuration'

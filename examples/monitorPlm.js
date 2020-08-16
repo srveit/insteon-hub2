@@ -1,11 +1,7 @@
 'use strict';
 const util = require('util'),
   { createPlm } = require('../index'),
-  deviceNames = {
-    '123456': 'hub controller',
-    '56789A': 'front lights',
-    '789ABC': 'dining outlet'
-  };
+  deviceNames = require('./deviceNames.json');
 
 const main = async () => {
   const plm = createPlm({
