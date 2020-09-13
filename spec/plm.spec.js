@@ -1,5 +1,6 @@
 'use strict';
 const {createPlm} = require('../lib/plm'),
+  {fixture} = require('./helpers/fixture.js'),
   {mockServer} = require('./helpers/mock-server.js'),
   deviceNames = {
     511234: 'hub controller',
@@ -29,6 +30,10 @@ describe('plm.createPlm', () => {
       {
         path: '/1',
         name: 'clearBuffer'
+      },
+      {
+        path: '/3',
+        name: 'deviceControlCommand'
       },
       {
         path: '/buffstatus.xml',
@@ -87,6 +92,43 @@ describe('plm.createPlm', () => {
 
       it('should not call clearBuffer a second time', () => {
         expect(server.clearBuffer).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('get engine version', () => {
+      let result;
+
+      beforeEach(async () => {
+        const buffer = await fixture('deviceControlCommand-response.xml');
+        server.bufferStatus.mockReturnValue({
+          headers: [{'content-type': 'text/xml'}],
+          body: buffer
+        });
+        result = await plm.sendModemCommand({
+          command: 'Get INSTEON Engine Version',
+          toAddress: '515454'
+        });
+      });
+
+      it('should call deviceControlCommand', () => {
+        expect(server.deviceControlCommand).toHaveBeenCalledWith({
+          body: {},
+          headers: {
+            'accept-encoding': 'gzip, deflate, br',
+            authorization: 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
+            connection: 'close',
+            host: `${host}:${port}`,
+            'user-agent': 'got (https://github.com/sindresorhus/got)'
+          },
+          path: '/3',
+          query: {
+            '02625154540F0D00': 'I=3'
+          }
+        });
+      });
+
+      it('should return the engine version', () => {
+        expect(result.insteonCommand.engineVersion).toBe(2);
       });
     });
   });

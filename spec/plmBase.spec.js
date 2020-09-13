@@ -189,7 +189,7 @@ describe('plm.createPlmBase', () => {
     beforeEach(async () => {
       const result = await fixture('buffstatus-reponse.xml');
       server.bufferStatus.mockReturnValue({
-        headers: [{'content-type': 'text/html'}],
+        headers: [{'content-type': 'text/xml'}],
         body: result
       });
       buffer = await plmBase.getBuffer();
