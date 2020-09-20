@@ -124,6 +124,36 @@ describe('createPlmCommandStream', () => {
     });
   });
 
+  describe('when writing a buffer in two parts with a beep command', () => {
+    const buffer1 = '027700',
+      buffer2 = '06';
+
+    beforeEach(() => {
+      plmCommandStream.write(buffer1);
+      plmCommandStream.write(buffer2);
+    });
+
+    describe('then reading a command', () => {
+      let command;
+      beforeEach(async () => {
+        await waitForReadable(plmCommandStream);
+        command = plmCommandStream.read();
+      });
+
+      it('should return a parsed command', () => {
+        expect(command).toEqual({
+          received: expect.stringMatching(iso8601Regex),
+          command: 'Beep',
+          code: '77',
+          length: 4,
+          data: '00',
+          ack: true,
+          bytes: '02770006'
+        });
+      });
+    });
+  });
+
   describe('when writing a buffer with an unknown command', () => {
     const buffer = '027E0102030519000602';
 
@@ -228,43 +258,6 @@ describe('createPlmCommandStream', () => {
         });
       });
     });
-  });
-
-  describe('when writing a buffer with an known command parser that doesn\'t known the second command byte', () => {
-    const buffer = '025004050649EA703000';
-
-    beforeEach(() => {
-      plmCommandStream.write(buffer);
-    });
-
-    describe('then reading a command', () => {
-      let command;
-      beforeEach(async () => {
-        await waitForReadable(plmCommandStream);
-        command = plmCommandStream.read();
-      });
-
-      it('should return a truncated command', () => {
-        expect(command).toEqual({
-          received: expect.stringMatching(iso8601Regex),
-          discarded: true,
-          reason: 'command truncated',
-          bytes: '0250'
-        });
-      });
-
-      describe('then reading a second time', () => {
-        let secondCommand;
-        beforeEach(async () => {
-          await waitForReadable(plmCommandStream);
-          secondCommand = plmCommandStream.read();
-        });
-
-        it('should return null', () => {
-          expect(secondCommand).toBe(null);
-        });
-      });
-    });      
   });
 
   describe('when writing a buffer with a two commands', () => {
