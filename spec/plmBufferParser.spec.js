@@ -1427,4 +1427,28 @@ describe('plmBufferParser.processPlmBuffer', () => {
       ]);
     });
   });
+  describe('parsing Beep in two chunks', () => {
+    let commands1, commands2;
+    beforeEach(() => {
+      const buffer1 = '0277000006',
+        buffer2 = '0277000608';
+      plmBufferParser.reset();
+      commands1 = plmBufferParser.processPlmBuffer(buffer1);
+      commands2 = plmBufferParser.processPlmBuffer(buffer2);
+    });
+    it('should return commands', () => {
+      expect(commands1).toEqual([]);
+      expect(commands2).toEqual([
+        {
+          received: expect.any(String),
+          command: 'Beep',
+          code: '77',
+          length: 4,
+          data: '00',
+          ack: true,
+          bytes: '02770006'
+        }
+      ]);
+    });
+  });
 });
