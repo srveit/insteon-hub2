@@ -21,20 +21,47 @@ const {createPlm} = require('../lib/plm2'),
   },
 
   run = async () => {
-      await plm.clearBuffer();
-      plm.emitter.on('command', command => {
-        console.log('command', command);
-      });
-      plm.readHub(deviceNames);
-      // await sendModemCommand({
-      //   command: 'Light Status LED Request',
-      //   toAddress: '4A3A6F'
-      // });
-    await sendModemCommand({
-      command: 'Load Sense On (Bottom Outlet)',
-      toAddress: '5151E1'
+    await plm.clearBuffer();
+    plm.emitter.on('command', command => {
+      console.log('command', command);
     });
+    plm.readHub(deviceNames);
+    // await sendModemCommand({
+    //   command: 'Light Status LED Request',
+    //   toAddress: '4A3A6F'
+    // });
+    // await sendModemCommand({
+    //   command: 'Read 8 bytes from Database',
+    //   address: '0000'
+    // });
     // await sleep(1000);
+    // await sendModemCommand({
+    //   command: 'Read 8 bytes from Database',
+    //   address: '0008'
+    // });
+    // await sleep(1000);
+    await sendModemCommand({
+      command: 'Read 8 bytes from Database',
+      address: '0010'
+    });
+    await sleep(1000);
+    await sendModemCommand({
+      command: 'Beep'
+    });
+    await sleep(1000);
+    await sendModemCommand({
+      command: 'ON (Bottom Outlet)',
+      onLevel: 23,
+      toAddress: '4B2FC6'
+    });
+    await sleep(1000);
+    const plmLog = plm.getLog();
+    console.log('plmLog length', plmLog.length);
+    console.log('"receivedAt","buffer","chunk"');
+    for (const logEntry of plmLog) {
+      const chunk = logEntry.chunk === undefined ? '' : logEntry.chunk;
+      console.log(`"${logEntry.timestamp.toISOString()}","${logEntry.buffer}","${chunk}"`);
+    }
     // await sleep(10);
     // await sendModemCommand({
     //   command: 'Product Data Request',
