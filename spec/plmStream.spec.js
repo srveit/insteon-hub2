@@ -45,7 +45,7 @@ describe('createPlmStream', () => {
   });
 
   afterEach(async () => {
-    plmStream.destroy();
+    plmStream.stopMonitoring();
     await waitForClose(plmStream);
   });
 
@@ -66,7 +66,7 @@ describe('createPlmStream', () => {
       expect(segment).toEqual('AAAAAA');
     });
 
-    describe('when read a second time', () => {
+    describe('and read a second time', () => {
       beforeEach(async () => {
         await sleep(100);
         segment = plmStream.read();
@@ -74,6 +74,16 @@ describe('createPlmStream', () => {
 
       it('should not return a segment', () => {
         expect(segment).toBe(null);
+      });
+    });
+
+    describe('and stopMonitoring', () => {
+      beforeEach(async () => {
+        await plmStream.stopMonitoring();
+      });
+
+      it('should stop reading', () => {
+        expect(plmStream.readable).toBe(false);
       });
     });
   });

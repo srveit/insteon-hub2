@@ -25,7 +25,7 @@ const {createPlm} = require('../lib/plm2'),
     plm.emitter.on('command', command => {
       console.log('command', command);
     });
-    plm.readHub(deviceNames);
+    plm.startPolling(deviceNames);
     // await sendModemCommand({
     //   command: 'Light Status LED Request',
     //   toAddress: '4A3A6F'
@@ -52,6 +52,11 @@ const {createPlm} = require('../lib/plm2'),
     await sendModemCommand({
       command: 'ON (Bottom Outlet)',
       onLevel: 23,
+      toAddress: '4B2FC6'
+    });
+    await sleep(1000);
+    await sendModemCommand({
+      command: 'Get INSTEON Engine Version',
       toAddress: '4B2FC6'
     });
     await sleep(1000);
