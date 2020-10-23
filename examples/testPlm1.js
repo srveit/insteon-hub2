@@ -11,7 +11,7 @@ const main = async () => {
     port: 25105,
     deviceNames
   });
-  await plm.start();
+  plm.startPolling(deviceNames);
 
   let result;
   // result = await plm.sendModemCommand({
@@ -25,16 +25,21 @@ const main = async () => {
   // });
   // console.log('result', result);
   console.log('========');
-  result = await plm.sendModemCommand({
-    command: 'Get Operating Flags',
-    toAddress: '515454'
-  });
+  try {
+    result = await plm.sendModemCommand({
+      command: 'Get Operating Flags',
+      toAddress: '515454'
+    });
+  } catch (e) {
+    console.log(e);
+  }
   console.log('result', result);
   // result = await plm.sendModemCommand({
   //   command: 'Light Status LED Request',
   //   toAddress: '515454'
   // });
   // console.log('result', result);
+  await plm.stopPolling();
 };
 
 main();

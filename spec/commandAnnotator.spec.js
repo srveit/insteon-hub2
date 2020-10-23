@@ -33,7 +33,7 @@ describe('createCommandAnnotator', () => {
 
   describe('when writing a command with a fromAddress and toAddress', () => {
     const baseCommand = {
-      received: expect.stringMatching(iso8601Regex),
+      received: '2020-07-29T23:18:29.956Z',
       command: 'Send INSTEON Standard-length Message',
       code: '62',
       length: 14,
@@ -70,7 +70,7 @@ describe('createCommandAnnotator', () => {
 
       it('should return a parsed command', () => {
         expect(command).toEqual({
-          received: expect.stringMatching(iso8601Regex),
+          received: '2020-07-29T23:18:29.956Z',
           command: 'Send INSTEON Standard-length Message',
           code: '62',
           length: 14,
@@ -113,9 +113,84 @@ describe('createCommandAnnotator', () => {
     });
   });
 
+  describe('when writing a command with an id', () => {
+    const baseCommand = {
+      received: '2020-07-29T23:18:29.956Z',
+      command: 'ALL-Link Record Response',
+      code: '57',
+      length: 16,
+      inUse: true,
+      isController: true,
+      hasBeenUsed: true,
+      bit2: false,
+      bit3: true,
+      bit4: false,
+      bit5: true,
+      groupNumber: 0,
+      id: '010203',
+      deviceCategory: '01',
+      deviceSubcategory: '39',
+      firmware: '44',
+      numberRetries: 1,
+      controllerGroupNumber: 68,
+      data: '013944',
+      bytes: '0257EA00010203013944'
+    };
+
+    beforeEach(() => {
+      commandAnnotator.write(baseCommand);
+    });
+
+    describe('then reading a command', () => {
+      let command;
+      beforeEach(async () => {
+        await waitForReadable(commandAnnotator);
+        command = commandAnnotator.read();
+      });
+
+      it('should return a parsed command', () => {
+        expect(command).toEqual({
+          received: '2020-07-29T23:18:29.956Z',
+          command: 'ALL-Link Record Response',
+          code: '57',
+          length: 16,
+          inUse: true,
+          isController: true,
+          hasBeenUsed: true,
+          bit2: false,
+          bit3: true,
+          bit4: false,
+          bit5: true,
+          groupNumber: 0,
+          id: '010203',
+          device: 'device1',
+          deviceCategory: '01',
+          deviceSubcategory: '39',
+          firmware: '44',
+          numberRetries: 1,
+          controllerGroupNumber: 68,
+          data: '013944',
+          bytes: '0257EA00010203013944'
+        });
+      });
+
+      describe('then reading a second time', () => {
+        let secondCommand;
+        beforeEach(async () => {
+          await waitForReadable(commandAnnotator);
+          secondCommand = commandAnnotator.read();
+        });
+
+        it('should return null', () => {
+          expect(secondCommand).toBe(null);
+        });
+      });
+    });
+  });
+
   describe('when writing a command with only fromAddress', () => {
     const baseCommand = {
-      received: expect.stringMatching(iso8601Regex),
+      received: '2020-07-29T23:18:29.956Z',
       command: 'Send INSTEON Standard-length Message',
       code: '62',
       length: 14,
@@ -152,7 +227,7 @@ describe('createCommandAnnotator', () => {
 
       it('should return a parsed command', () => {
         expect(command).toEqual({
-          received: expect.stringMatching(iso8601Regex),
+          received: '2020-07-29T23:18:29.956Z',
           command: 'Send INSTEON Standard-length Message',
           code: '62',
           length: 14,
@@ -210,7 +285,7 @@ describe('createCommandAnnotator', () => {
 
       it('should return a parsed command with imDevice', () => {
         expect(command).toEqual({
-          received: expect.stringMatching(iso8601Regex),
+          received: '2020-07-29T23:18:29.956Z',
           command: 'Get IM Info',
           code: '60',
           length: 14,

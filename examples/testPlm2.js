@@ -1,7 +1,7 @@
 'use strict';
 
-const {createPlm} = require('../lib/plm2'),
-  encodeCommand = require('../lib/encodeCommand'),
+const {createPlm} = require('../index'),
+  {encodeCommand} = require('../lib/encodeCommand'),
 
   deviceNames = require('./deviceNames.json'),
 
@@ -15,17 +15,16 @@ const {createPlm} = require('../lib/plm2'),
     port: 25105
   }),
 
-  sendModemCommand = async (modemCommand) => {
-    const buffer = encodeCommand(modemCommand);
-    await plm.sendDeviceControlCommand(buffer);
-  },
+  sendModemCommand = modemCommand => plm.sendModemCommand(modemCommand),
 
   run = async () => {
     await plm.clearBuffer();
+    console.log('call startlogging');
     plm.emitter.on('command', command => {
       console.log('command', command);
     });
     plm.startPolling(deviceNames);
+    plm.startLogging();
     // await sendModemCommand({
     //   command: 'Light Status LED Request',
     //   toAddress: '4A3A6F'
@@ -40,27 +39,27 @@ const {createPlm} = require('../lib/plm2'),
     //   address: '0008'
     // });
     // await sleep(1000);
-    await sendModemCommand({
-      command: 'Read 8 bytes from Database',
-      address: '0010'
-    });
-    await sleep(1000);
+    // await sendModemCommand({
+    //   command: 'Read 8 bytes from Database',
+    //   address: '0010'
+    // });
+//    await sleep(1000);
     await sendModemCommand({
       command: 'Beep'
     });
-    await sleep(1000);
+//    await sleep(1000);
     await sendModemCommand({
       command: 'ON (Bottom Outlet)',
       onLevel: 23,
       toAddress: '4B2FC6'
     });
-    await sleep(1000);
+//    await sleep(1000);
     await sendModemCommand({
       command: 'Get INSTEON Engine Version',
       toAddress: '4B2FC6'
     });
-    await sleep(1000);
-    const plmLog = plm.getLog();
+//    await sleep(1000);
+    const plmLog = plm.stopLogging();
     console.log('plmLog length', plmLog.length);
     console.log('"receivedAt","buffer","chunk"');
     for (const logEntry of plmLog) {
@@ -79,6 +78,7 @@ const {createPlm} = require('../lib/plm2'),
     // });
     // await sleep(10);
     // await plmBase.sendDeviceControlCommand('026249C2B70F0301');
+    await plm.stopPolling();
   };
 
 run();

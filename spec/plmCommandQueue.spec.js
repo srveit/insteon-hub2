@@ -4,12 +4,11 @@ const {createPlmCommandQueue} = require('../lib/plmCommandQueue');
 describe('plmCommandQueue.createPlmCommandQueue', () => {
   /* eslint no-undefined: "off" */
   let plmCommandQueue, sendCommandBuffer;
-  const delay = 0.1;
 
   beforeEach(() => {
     jest.useFakeTimers();
     sendCommandBuffer = jest.fn();
-    plmCommandQueue = createPlmCommandQueue(sendCommandBuffer, delay);
+    plmCommandQueue = createPlmCommandQueue(sendCommandBuffer);
   });
 
   afterEach(() => {
@@ -17,9 +16,10 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
   });
 
   describe('addCommand with no retries', () => {
-    let responseHandler, rejection, returnedResponse;
+    let responseHandler;
 
-    const commandBuffer = '01020304',
+    const delay = 0.1,
+      commandBuffer = '01020304',
       responseMatcher = response => response.match;
 
     beforeEach(() => {
@@ -27,14 +27,8 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
         plmCommandQueue.addCommand(
           commandBuffer,
           responseMatcher,
-          {maxNumberRetries: 1, delay}
+          {maxNumberRetries: 0, delay}
         );
-      responseHandler.then(response => {
-        returnedResponse = response;
-      });
-      responseHandler.catch(returnedError => {
-        rejection = returnedError;
-      });
     });
 
     it('should call sendCommandBuffer', () => {
@@ -46,8 +40,10 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
     });
 
     describe('and addCommand called again', () => {
-      let responseHandler2, returnedResponse2, rejection2;
+      let responseHandler2;
+
       const secondCommandBuffer = '05060708';
+
       beforeEach(() => {
         responseHandler2 =
           plmCommandQueue.addCommand(
@@ -55,12 +51,6 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
             responseMatcher,
             {delay}
           );
-        responseHandler2.then(response => {
-          returnedResponse2 = response;
-        });
-        responseHandler2.catch(returnedError => {
-          rejection2 = returnedError;
-        });
       });
 
       it('should not call sendCommandBuffer again', () => {
@@ -90,43 +80,49 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
         });
 
         it('should resolve responseHandler', () => {
-          expect(returnedResponse).toEqual(response);
+          expect(responseHandler).resolves.toEqual(response);
         });
 
-        describe('and second response is received', () => {
-          const response2 = {
-            id: 2,
-            match: true
-          };
-
+        describe('and non-matching response received', () => {
           beforeEach(() => {
-            plmCommandQueue.handleResponse(response2);
+            plmCommandQueue.handleResponse({
+              id: 3,
+              match: false
+            });
           });
-          it('should resolve responseHandler', () => {
-            expect(returnedResponse2).toEqual(response2);
+
+          describe('and second response is received', () => {
+            const response2 = {
+              id: 2,
+              match: true
+            };
+
+            beforeEach(() => {
+              plmCommandQueue.handleResponse(response2);
+            });
+
+            it('should resolve responseHandler', () => {
+              expect(responseHandler2).resolves.toEqual(response2);
+            });
           });
         });
-
       });
     });
   });
 
-  describe('addCommand with one retry', () => {
-    let responseHandler, rejection, returnedResponse;
+  describe('addCommand with default retries', () => {
+    let responseHandler, returnedResponse;
 
-    const commandBuffer = '01020304',
+    const defaultDelay = 1,
+      commandBuffer = '01020304',
       responseMatcher = response => response.match;
 
     beforeEach(() => {
       responseHandler =
         plmCommandQueue.addCommand(
           commandBuffer,
-          responseMatcher,
-          {maxNumberRetries: 1, delay}
+          responseMatcher
         );
-      responseHandler.catch(returnedError => {
-         rejection = returnedError;
-      });
     });
 
     it('should call sendCommandBuffer', () => {
@@ -136,24 +132,41 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
 
     describe('and timeout expires', () => {
       beforeEach(() => {
-        jest.advanceTimersByTime(delay * 1.1 * 1000);
+        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
+        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
+        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
       });
 
       it('should call sendCommandBuffer again', () => {
-        expect(sendCommandBuffer).toHaveBeenCalledTimes(2);
+        expect(sendCommandBuffer).toHaveBeenCalledTimes(4);
       });
 
       describe('and timeout expires again', () => {
         beforeEach(() => {
-          jest.advanceTimersByTime(delay * 1.1 * 1000);
+          jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
         });
         
         it('should reject responseHandler', () => {
-          expect(rejection).toEqual({
+          expect(responseHandler).rejects.toEqual({
             message: 'response not received'
           });
         });
       });
+    });
+  });
+
+  describe('and handleResponse with not outstanding command called', () => {
+    const response = {
+      id: 1,
+      match: true
+    };
+
+    beforeEach(() => {
+      plmCommandQueue.handleResponse(response);
+    });
+
+    it('should not call sendCommandBuffer', () => {
+      expect(sendCommandBuffer).not.toHaveBeenCalled();
     });
   });
 });
