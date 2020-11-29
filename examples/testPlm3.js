@@ -26,33 +26,16 @@ const {createPlm} = require('../index'),
       console.log('command', command);
     });
     plm.startPolling(deviceNames);
-    // await sendModemCommand({
-    //   command: 'Get INSTEON Engine Version',
-    //   toAddress: '4A3A6F'
-    // });
-    // const results = await sendModemCommand({
-    //   command: 'Get IM Info'
-    // });
-    // await sendModemCommand({
-    //   command: 'Get First ALL-Link Record'
-    // });
-    // await sleep(1000);
-    // await sendModemCommand({
-    //   command: 'Get Next ALL-Link Record'
-    // });
-    // await sleep(1000);
+    plm.startLogging();
+    const hubInfo = await plm.getHubInfo();
+    console.log(hubInfo);
     await sendModemCommand({
-      command: '7F Command',
-      data: '02'
+      command: 'Product Data Request',
+      toAddress: '518AF7'
     });
-    // console.log('results', results);
-    // const plmLog = plm.getLog();
-    // console.log('plmLog length', plmLog.length);
-    // console.log('"receivedAt","buffer","chunk"');
-    // for (const logEntry of plmLog) {
-    //   const chunk = logEntry.chunk === undefined ? '' : logEntry.chunk;
-    //   console.log(`"${logEntry.timestamp.toISOString()}","${logEntry.buffer}","${chunk}"`);
-    // }
+    await sleep(3500);
+    // console.log(plm.stopLogging());
+    await plm.stopPolling();
   };
 
 run();

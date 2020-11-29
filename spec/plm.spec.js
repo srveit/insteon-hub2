@@ -16,7 +16,6 @@ describe('plm.createPlm', () => {
 
   const deviceNames = {
     'im-hub': 'im-hub',
-    //511234: 'hub controller',
     '070809': 'hub controller',
     '010203': 'device1',
     '040506': 'device2',
@@ -100,15 +99,44 @@ describe('plm.createPlm', () => {
     await plm.stopPolling();
   });
 
-      // addCommandHandler (TODO: figure better way to implement)
-      // readDeviceAllLinkDatabase   (TODO: figure better way to implement)
-      // readHubAllLinkDatabase   (TODO: figure better way to implement)
-      // removeCommandHandler  (TODO: figure better way to implement)
-      // sendAllLinkCommand  (Base)
-      // sendDeviceControlCommand  (Base)
-      // sendInsteonCommandSync  (Base)
-      // sendModemCommand  (TODO: figure better way to implement)
-      // stop   (TODO: figure better way to implement)
+  describe('plm.getHubInfo', () => {
+    let hubInfo;
+
+    beforeEach(async () => {
+      const response = await fixture('getHubInfo-response.html');
+      server.hubInfo.mockReturnValue({
+        headers: [{'content-type': 'text/html'}],
+        body: response
+      });
+      hubInfo = await plm.getHubInfo();
+    });
+
+    afterEach(() => {
+      server.hubInfo.mockClear();
+    });
+
+    it('should send the request', () =>
+       expect(server.hubInfo).toBeCalledWith(
+         expect.objectContaining({
+           headers: expect.objectContaining({
+             authorization,
+             host: `${host}:${port}`
+           }),
+           path: '/index.htm'
+         }))
+      );
+
+    it('should return the Hub Info', () => {
+      expect(hubInfo).toEqual({
+         binVersion: 'Hub2-V04-20140904',
+         type: 'Hub2',
+         hubVersion: '1019',
+         firmwareBuildDate: 'Nov 18 2019  13:45:08',
+         firmware: 'A5',
+         imId: '010203'
+       });
+    });
+  });
 
   describe('plm.getHubStatus', () => {
     let hubStatus;
@@ -135,12 +163,6 @@ describe('plm.createPlm', () => {
 
     it('should return hub status', () =>
        expect(hubStatus).resolves.toEqual({
-         binVersion: 'Hub2-V04-20140904',
-         type: 'Hub2',
-         hubVersion: '1019',
-         firmwareBuildDate: 'Nov 18 2019  13:45:08',
-         plmVersion: 'A5',
-         deviceId: '010203',
          cls: 'Ready',
          clsg: '',
          clsi: '',
@@ -486,7 +508,10 @@ describe('plm.createPlm', () => {
           monitorMode: true,
           disableAutomaticLed: false,
           disableHostComunications: false,
-          reserved: 3
+          bit4: false,
+          bit3: false,
+          bit2: true,
+          bit1: true
         },
         ack: true,
         bytes: '026B4306'

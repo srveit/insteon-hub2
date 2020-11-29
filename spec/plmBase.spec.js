@@ -297,7 +297,6 @@ describe('plm.createPlmBase', () => {
     });
   });
 
-
   describe('plmBase.getHubInfo', () => {
     let result;
 
@@ -327,130 +326,105 @@ describe('plm.createPlmBase', () => {
         type: 'Hub2',
         hubVersion: '1019',
         firmwareBuildDate: 'Nov 18 2019  13:45:08',
-        plmVersion: 'A5',
-        deviceId: '010203'
+        firmware: 'A5',
+        imId: '010203'
       });
     });
   });
 
-  describe('plmBase.getLinkStatus', () => {
-    let result;
+  describe('plmBase.getHubInfo', () => {
+    let hubInfo;
 
     beforeEach(async () => {
-      const response = await fixture('LinkStatus-response.xml');
-      server.linkStatus.mockReturnValue({
-        headers: [{'content-type': 'text/xml'}],
+      const response = await fixture('getHubInfo-response.html');
+      server.hubInfo.mockReturnValue({
+        headers: [{'content-type': 'text/html'}],
         body: response
       });
-      result = await plmBase.getLinkStatus();
+      hubInfo = await plmBase.getHubInfo();
+    });
+
+    afterEach(() => {
+      server.hubInfo.mockClear();
     });
 
     it('should send the request', () =>
-       expect(server.linkStatus).toBeCalledWith(
+       expect(server.hubInfo).toBeCalledWith(
          expect.objectContaining({
            headers: expect.objectContaining({
              authorization,
              host: `${host}:${port}`
            }),
-           path: '/Linkstatus.xml'
+           path: '/index.htm'
          }))
       );
 
-    it('should return the status response', () => {
-      expect(result).toEqual({
-        CLS: 'Ready',
-        CLSG: '',
-        CLSI: ''
+    it('should return the hub info', () => {
+      expect(hubInfo).toEqual({
+        binVersion: 'Hub2-V04-20140904',
+        imId: '010203',
+        firmwareBuildDate: 'Nov 18 2019  13:45:08',
+        hubVersion: '1019',
+        firmware: 'A5',
+        type: 'Hub2'
+      });
+    });
+
+    describe('when it has been retrieved once', () => {
+      let hubInfoSecond;
+
+      beforeEach(async () => {
+        hubInfo = await plmBase.getHubInfo();
+      });
+
+      it('should not call getHubInfo again', () => {
+        expect(server.hubInfo).toHaveBeenCalledTimes(1);
+      });
+
+      it('should return the hub info', () => {
+        expect(hubInfo).toEqual({
+          binVersion: 'Hub2-V04-20140904',
+          imId: '010203',
+          firmwareBuildDate: 'Nov 18 2019  13:45:08',
+          hubVersion: '1019',
+          firmware: 'A5',
+          type: 'Hub2'
+        });
       });
     });
   });
 
-  describe('plmBase.getCurrentTime', () => {
-    let result;
-
+  describe('plmBase.getHubStatus', () => {
+    let hubStatus;
     beforeEach(async () => {
-      const response = await fixture('RStatus-response.xml');
-      server.rStatus.mockReturnValue({
-        headers: [{'content-type': 'text/xml'}],
-        body: response
+      server.hubInfo.mockReturnValue({
+        headers: [{'content-type': 'text/html'}],
+        body: await fixture('getHubInfo-response.html')
       });
-      result = await plmBase.getCurrentTime();
-    });
-
-    it('should send the request', () =>
-       expect(server.rStatus).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/rstatus.xml'
-         }))
-      );
-
-    it('should return the current time', () => {
-      expect(result).toEqual('19:55');
-    });
-  });
-
-  describe('plmBase.getCurrentTimeAndDay', () => {
-    let result;
-
-    beforeEach(async () => {
-      const response = await fixture('status-response.xml');
       server.status.mockReturnValue({
         headers: [{'content-type': 'text/xml'}],
-        body: response
+        body: await fixture('status-response.xml')
       });
-      result = await plmBase.getCurrentTimeAndDay();
-    });
-
-    it('should send the request', () =>
-       expect(server.status).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/status.xml'
-         }))
-      );
-
-    it('should return the status response', () => {
-      expect(result).toEqual({
-        DAY: 'Sunday',
-        FRT: '20:04:24'
+      server.linkStatus.mockReturnValue({
+        headers: [{'content-type': 'text/xml'}],
+        body: await fixture('LinkStatus-response.xml')
       });
-    });
-  });
-
-  describe('plmBase.getStatusD', () => {
-    let result;
-
-    beforeEach(async () => {
-      const response = await fixture('statusD-response.xml');
       server.statusD.mockReturnValue({
         headers: [{'content-type': 'text/xml'}],
-        body: response
+        body: await fixture('statusD-response.xml')
       });
-      result = await plmBase.getStatusD();
+
+      hubStatus = plmBase.getHubStatus();
     });
 
-    it('should send the request', () =>
-       expect(server.statusD).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/statusD.xml'
-         }))
-      );
-
-    it('should return the status response', () => {
-      expect(result).toEqual({
-        CDS: '9999999999999999'
-      });
-    });
+    it('should return hub status', () =>
+       expect(hubStatus).resolves.toEqual({
+         cls: 'Ready',
+         clsg: '',
+         clsi: '',
+         cds: '9999999999999999',
+         day: 'Sunday',
+         time: '20:04:24'
+       }));
   });
 });

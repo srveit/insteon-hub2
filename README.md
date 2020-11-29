@@ -68,8 +68,6 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
   - createPlm
 - plmBase.js
   - createPlmBase
-- plmBufferParser.js (TODO: deprecate once plm.js is rewritten)
-  - createPlmBufferParser
 - plmBufferProcessor.js
   - createPlmBufferProcessor
 - plmCommandStream.js

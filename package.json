@@ -61,6 +61,7 @@
     "pdfreader": "^1.2.6",
     "prettier": "^2.1.2",
     "typescript": "^3.9.7",
+    "unroll": "^1.6.0",
     "unzipper": "^0.10.11",
     "xml2js": "^0.4.23"
   }
