@@ -36,7 +36,6 @@
   "homepage": "https://github.com/srveit/insteon-plm#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "fsevents": "^1.2.13",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
     "ws": "^4.0.0"
