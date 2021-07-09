@@ -2,7 +2,7 @@
 
 const PdfReader = require('pdfreader').PdfReader,
   { parseStringPromise } = require('xml2js'),
-  axios = require('axios'),
+  fetch = require('node-fetch'),
   util = require('util'),
   fs = require('fs'),
   path = require('path'),
@@ -213,10 +213,8 @@ function removeTopBottom(categories) {
 
 const getDevelopersGuide = async () => {
   try {
-    const response = await axios.get(URL, {
-      responseType: 'arraybuffer'
-    });
-    return response.data;
+    const response = await fetch(URL);
+    return response.buffer();
   } catch (error) {
     console.warn(error);
     return undefined;
@@ -225,7 +223,7 @@ const getDevelopersGuide = async () => {
 
 async function decodeDevelopersGuide(filename) {
   const categoryBoundaries =
-      await readJsonFile(CATEGORY_BOUNDARIES_FILE),
+    await readJsonFile(CATEGORY_BOUNDARIES_FILE),
     contents = await getDevelopersGuide(),
     rows = await parseCategoriesTable(contents),
     categories = extractCategories(rows),

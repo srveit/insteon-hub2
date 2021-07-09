@@ -3,7 +3,7 @@
 // https://insteon.atlassian.net/wiki/spaces/IKB/pages/13533225/Insteon+Device+Categories+and+Sub-Categories
 
 const { parseStringPromise } = require('xml2js'),
-  axios = require('axios'),
+  fetch = require('node-fetch'),
   util = require('util'),
   URL = 'https://insteon.atlassian.net/cgraphql?q=QueryPreloader_ContentBodyQuery',
   payload = {
@@ -19,10 +19,12 @@ const { parseStringPromise } = require('xml2js'),
 
 const getData = async url => {
   try {
-    const response = await axios.post(url, payload, {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(payload),
       headers
     });
-    const data = response.data;
+    const data = await response.json();
     return data;
   } catch (error) {
     console.warn(error);

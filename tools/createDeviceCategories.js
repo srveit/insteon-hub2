@@ -91,8 +91,9 @@ async function createDeviceCategories() {
   combineCategories(categories, categories2);
   combineCategories(categories, categories3);
   addAdditionalDevices(categories, additionalDevices);
-  writeDevices(categories);
+  // writeDevices(categories);
   writeStruct(outputStream, categories);
+  console.log(`wrote ${DEVICE_CATEGORIES_FILE}`);
 }
 
 createDeviceCategories();

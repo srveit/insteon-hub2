@@ -1,0 +1,142 @@
+49EA70
+ hub controller
+
+45.F7.7C
+ pantry door
+  2845-222
+  rev 1.5
+  1217
+
+49.C2.B7
+  porch outlets
+  2477S
+  rev 7.2
+  2717
+
+4A.0A.08
+  Garage lights
+  2477D
+  rev 8.2
+  3117
+
+4A.0A.86
+  master lamp switch
+  2477D
+  rev 8.2
+  3117
+
+4A.17.BA
+  game room front outlet
+  2477D
+  rev 8.2
+  3117
+
+4A.1A.B6
+  foyer lamps switch
+  2477D
+  rev 8.2
+  3117
+
+4A.20.9A
+  foyer chandelier switch
+  2477D
+  rev 8.2
+  3117
+
+4A.37.71
+  front lights
+  2477DH
+  rev 8.2
+  3117
+
+4A.3A.6F
+  foyer chandelier
+  2477DH
+  rev 8.2
+  3117
+
+4B.2B.A6
+  foyer lamps
+  2663-222
+  rev 7.4
+  4117
+
+4B.2D.2C
+  dining outlet
+  2663-222
+  rev 7.4
+  4117
+
+4B.2D.2D
+  Steph outlet
+  2663-222
+  rev 7.4
+  4117
+
+4B.2F.C6
+  Danny outlet
+  2663-222
+  rev 7.4
+  4117
+
+51.51.E1
+  master outlet w1
+  2663-222
+  rev 7.4
+  4118
+
+51.54.54
+  master outlet w3
+  2663-222
+  rev 7.4
+  4118
+
+51.54.6B
+  activity outlet
+  2663-222
+  rev 7.4
+  4118
+
+51.55.EF
+  kitchen outlet
+  2663-222
+  rev 7.4
+  4118
+
+51.56.BE
+  family outlet
+  2663-222
+  rev 7.4
+  4118
+
+51.89.E4
+  den switch
+  2477D
+  rev 8.2
+  5118
+
+51.8A.F7
+  pantry switch
+  2477D
+  rev 8.2
+  5118
+
+58.09.80
+  den outlet
+  2663-222
+  rev 7.5
+  4328
+
+58.09.EA
+  butler outlet
+  2663-222
+  rev 7.5
+  4328
+
+Unique Insteon device models
+2245-222 Hub 2
+2477D    2477Sdev-072012-en.pdf
+2477DH   2477Sdev-072012-en.pdf
+2477S    2477Sdev-072012-en.pdf
+2663-222 2663-222dev-062014-en.pdf
+2845-222 2845-222dev-102013-en.pdf

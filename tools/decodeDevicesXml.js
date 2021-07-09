@@ -1,15 +1,13 @@
 'use strict';
 const { parseStringPromise } = require('xml2js'),
   unzipper = require('unzipper'),
-  axios = require('axios'),
+  fetch = require('node-fetch'),
   URL = 'https://www.insteon.com/s/houselinc-device-definitions-2987-bjb7.zip';
 
 const getDevicesXml = async () => {
   try {
-    const response = await axios.get(URL, {
-      responseType: 'arraybuffer'
-    });
-    const directory = await unzipper.Open.buffer(response.data),
+    const response = await fetch(URL);
+    const directory = await unzipper.Open.buffer(await response.buffer()),
       file = directory.files[0],
       content = await file.buffer();
 
