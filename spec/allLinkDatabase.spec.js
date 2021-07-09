@@ -1,18 +1,6 @@
 'use strict';
 
-const util = require('util');
-const { createAllLinkDatabase } = require('../lib/allLinkDatabase.js');
-
-const iso8601Regex =
-  new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z');
-
-const waitForReadable = stream => new Promise(resolve => {
-  if (stream.readable) {
-    resolve();
-  } else {
-    stream.once('readable', resolve);
-  }
-});
+const {createAllLinkDatabase} = require('../lib/allLinkDatabase.js');
 
 describe('createAllLinkDatabase', () => {
   let allLinkDatabase;
@@ -102,7 +90,7 @@ describe('createAllLinkDatabase', () => {
       });
 
       describe('and adding responder', () => {
-        const allLinkRecord = {
+        const allLinkRecord2 = {
           command: 'ALL-Link Record Response',
           code: '57',
           inUse: true,
@@ -124,7 +112,7 @@ describe('createAllLinkDatabase', () => {
         };
 
         beforeEach(() => {
-          allLinkDatabase.addAllLinkRecord(allLinkRecord);
+          allLinkDatabase.addAllLinkRecord(allLinkRecord2);
         });
 
         it('should add a responder', () => {
@@ -144,12 +132,12 @@ describe('createAllLinkDatabase', () => {
                 17: {
                   bit5: true,
                   data: '013944',
-                  groupNumber: 17,
+                  groupNumber: 17
                 }
               }
             }
           });
-        });          
+        });
       });
     });
 
@@ -201,7 +189,7 @@ describe('createAllLinkDatabase', () => {
       });
 
       describe('and controller Database Record Found again', () => {
-        const allLinkRecord = {
+        const allLinkRecord2 = {
           received: '2020-12-06T19:52:20.518Z',
           command: 'Database Record Found',
           code: '59',
@@ -228,7 +216,7 @@ describe('createAllLinkDatabase', () => {
         };
 
         beforeEach(() => {
-          allLinkDatabase.addAllLinkRecord(allLinkRecord);
+          allLinkDatabase.addAllLinkRecord(allLinkRecord2);
         });
 
         it('should add a link', () => {
@@ -256,7 +244,7 @@ describe('createAllLinkDatabase', () => {
     });
 
     describe('when device Database Record Found', () => {
-      const allLinkRecord = {
+      const allLinkRecord2 = {
         received: '2020-12-13T18:06:33.483Z',
         command: 'INSTEON Extended Message Received',
         code: '51',
@@ -304,7 +292,7 @@ describe('createAllLinkDatabase', () => {
       };
 
       beforeEach(() => {
-        allLinkDatabase.addAllLinkRecord(allLinkRecord);
+        allLinkDatabase.addAllLinkRecord(allLinkRecord2);
       });
 
       it('should add a link', () => {

@@ -10,6 +10,7 @@ const path = require('path'),
 
 function writeStruct(stream, deviceCategories) {
   stream.write('\'use strict\';\n');
+  stream.write('/* eslint quote-props: "off" */');
   stream.write('module.exports = ');
   stream.write(objectToString(deviceCategories));
   stream.write(';\n');

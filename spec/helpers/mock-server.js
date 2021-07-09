@@ -154,6 +154,7 @@ const createMockServer = ({name, rootPath, environment, port}) => {
       addDefaultHandler,
       app: express(),
       clearMocks,
+      env: () => process.env,
       mockHandler,
       start,
       stop

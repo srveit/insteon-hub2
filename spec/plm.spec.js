@@ -3,16 +3,9 @@ const {createPlm} = require('../lib/plm'),
   {fixture} = require('./helpers/fixture.js'),
   {mockServer} = require('./helpers/mock-server.js');
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 describe('plm.createPlm', () => {
   /* eslint no-undefined: "off" */
-  let server, baseUrl, host, port, username, password, authorization, userAgent, plm, startTime;
-
-  const logTime = message => {
-    const elapsed = (new Date()).valueOf() - startTime;
-    console.log(`${elapsed} ${message}`);
-  };
+  let server, host, port, username, password, authorization, userAgent, plm;
 
   const deviceNames = {
     'im-hub': 'im-hub',
@@ -31,7 +24,6 @@ describe('plm.createPlm', () => {
   };
 
   beforeAll(async () => {
-    startTime = (new Date()).valueOf();
     server = mockServer([
       {
         path: '/0',
@@ -84,9 +76,8 @@ describe('plm.createPlm', () => {
   afterAll(() => server.stop());
 
   beforeEach(() => {
-    baseUrl = process.env.SERVER_BASE_URL;
-    host = process.env.SERVER_HOSTNAME;
-    port = process.env.SERVER_PORT;
+    host = server.env().SERVER_HOSTNAME;
+    port = server.env().SERVER_PORT;
     username = 'username';
     password = 'password';
     authorization = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=';
@@ -116,25 +107,25 @@ describe('plm.createPlm', () => {
     });
 
     it('should send the request', () =>
-       expect(server.hubInfo).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/index.htm'
-         }))
-      );
+      expect(server.hubInfo).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/index.htm'
+        }))
+    );
 
     it('should return the Hub Info', () => {
       expect(hubInfo).toEqual({
-         binVersion: 'Hub2-V04-20140904',
-         type: 'Hub2',
-         hubVersion: '1019',
-         firmwareBuildDate: 'Nov 18 2019  13:45:08',
-         firmware: 'A5',
-         imId: '010203'
-       });
+        binVersion: 'Hub2-V04-20140904',
+        type: 'Hub2',
+        hubVersion: '1019',
+        firmwareBuildDate: 'Nov 18 2019  13:45:08',
+        firmware: 'A5',
+        imId: '010203'
+      });
     });
   });
 
@@ -162,42 +153,40 @@ describe('plm.createPlm', () => {
     });
 
     it('should return hub status', () =>
-       expect(hubStatus).resolves.toEqual({
-         cls: 'Ready',
-         clsg: '',
-         clsi: '',
-         cds: '9999999999999999',
-         day: 'Sunday',
-         time: '20:04:24'
-       }));
+      expect(hubStatus).resolves.toEqual({
+        cls: 'Ready',
+        clsg: '',
+        clsi: '',
+        cds: '9999999999999999',
+        day: 'Sunday',
+        time: '20:04:24'
+      }));
   });
 
   describe('plm.setUsernamePassword', () => {
-    let buffer;
-    const username = 'newuser',
-      password = 'newpassword';
-
     beforeEach(async () => {
+      username = 'newuser';
+      password = 'newpassword';
       server.hubCommand.mockReturnValue({
         headers: [{'content-type': 'text/html'}],
         body: ''
       });
-      buffer = await plm.setUsernamePassword(username, password);
+      await plm.setUsernamePassword(username, password);
     });
 
     it('should send the request', () =>
-       expect(server.hubCommand).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/1',
-           query: {
-             L: `${username}=1=${password}`
-           }
-         }))
-      );
+      expect(server.hubCommand).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/1',
+          query: {
+            L: `${username}=1=${password}`
+          }
+        }))
+    );
   });
 
   describe('get IM info', () => {
@@ -206,7 +195,7 @@ describe('plm.createPlm', () => {
     beforeEach(async () => {
       server.deviceControlCommand.mockReset();
       server.bufferStatus.mockReset();
-      server.deviceControlCommand.mockImplementation(req => {
+      server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
             headers: [{'content-type': 'text/xml'}],
@@ -487,13 +476,13 @@ describe('plm.createPlm', () => {
       });
       result = await plm.sendModemCommand({
         command: 'Set IM Configuration',
-          imConfigurationFlags: {
-            disableAutomaticLinking: false,
-            monitorMode: true,
-            disableAutomaticLed: false,
-            disableHostComunications: false,
-            reserved: 3
-          }
+        imConfigurationFlags: {
+          disableAutomaticLinking: false,
+          monitorMode: true,
+          disableAutomaticLed: false,
+          disableHostComunications: false,
+          reserved: 3
+        }
       });
     });
 
@@ -536,7 +525,7 @@ describe('plm.createPlm', () => {
       });
       result = await plm.sendModemCommand({
         command: 'Read 8 bytes from Database',
-          address: '0000'
+        address: '0000'
       });
     });
 
@@ -579,6 +568,7 @@ describe('plm.createPlm', () => {
       });
 
       it('should stop polling', () => {
+        /* eslint no-undefined: "off" */
         expect(result).toBe(undefined);
       });
     });

@@ -5,7 +5,7 @@ const {createPlmBase} = require('../lib/plmBase'),
 
 describe('plm.createPlmBase', () => {
   /* eslint no-undefined: "off" */
-  let server, baseUrl, host, port, username, password, authorization, plmBase;
+  let server, host, port, username, password, authorization, plmBase;
 
   beforeAll(async () => {
     server = mockServer([
@@ -60,9 +60,8 @@ describe('plm.createPlmBase', () => {
   afterAll(() => server.stop());
 
   beforeEach(() => {
-    baseUrl = process.env.SERVER_BASE_URL;
-    host = process.env.SERVER_HOSTNAME;
-    port = process.env.SERVER_PORT;
+    host = server.env().SERVER_HOSTNAME;
+    port = server.env().SERVER_PORT;
     username = 'username';
     password = 'password';
     authorization = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=';
@@ -70,33 +69,30 @@ describe('plm.createPlmBase', () => {
   });
 
   describe('plmBase.sendAllLinkCommand', () => {
-    let buffer;
-
     beforeEach(async () => {
       server.allLinkCommand.mockReturnValue({
         headers: [{'content-type': 'text/html'}],
         body: ''
       });
-      buffer = await plmBase.sendAllLinkCommand('18');
+      await plmBase.sendAllLinkCommand('18');
     });
 
     it('should send the request', () =>
-       expect(server.allLinkCommand).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization: authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/0',
-           query: {
-             '1800': 'I=0'
-           }
-         }))
-      );
+      expect(server.allLinkCommand).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization: authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/0',
+          query: {
+            1800: 'I=0'
+          }
+        }))
+    );
   });
 
   describe('plmBase.sendDeviceControlCommand', () => {
-    let buffer;
     const command = '02620102030F117F';
 
     beforeEach(async () => {
@@ -104,22 +100,22 @@ describe('plm.createPlmBase', () => {
         headers: [{'content-type': 'text/html'}],
         body: ''
       });
-      buffer = await plmBase.sendDeviceControlCommand(command);
+      await plmBase.sendDeviceControlCommand(command);
     });
 
     it('should send the request', () =>
-       expect(server.deviceControlCommand).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/3',
-           query: {
-             '02620102030F117F': 'I=3'
-           }
-         }))
-      );
+      expect(server.deviceControlCommand).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/3',
+          query: {
+            '02620102030F117F': 'I=3'
+          }
+        }))
+    );
   });
 
   describe('plmBase.sendInsteonCommandSync', () => {
@@ -137,18 +133,18 @@ describe('plm.createPlmBase', () => {
     });
 
     it('should send the request', () =>
-       expect(server.deviceControlCommandSync).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/sx.xml',
-           query: {
-             '010203': '1900'
-           }
-         }))
-      );
+      expect(server.deviceControlCommandSync).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/sx.xml',
+          query: {
+            '010203': '1900'
+          }
+        }))
+    );
 
     it('should return the command response', () => {
       expect(result).toEqual({
@@ -158,29 +154,27 @@ describe('plm.createPlmBase', () => {
   });
 
   describe('plmBase.clearBuffer', () => {
-    let buffer;
-
     beforeEach(async () => {
       server.hubCommand.mockReturnValue({
         headers: [{'content-type': 'text/html'}],
         body: ''
       });
-      buffer = await plmBase.clearBuffer();
+      await plmBase.clearBuffer();
     });
 
     it('should send the request', () =>
-       expect(server.hubCommand).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/1',
-           query: {
-             XB: 'M=1'
-           }
-         }))
-      );
+      expect(server.hubCommand).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/1',
+          query: {
+            XB: 'M=1'
+          }
+        }))
+    );
   });
 
   describe('plmBase.getBuffer', () => {
@@ -196,44 +190,41 @@ describe('plm.createPlmBase', () => {
     });
 
     it('should return the buffer', () =>
-       expect(buffer).toEqual(
-         '624A3A6F0519000602504A3A6F49EA70200000026251546B05190006025051546B' +
-           '49EA702000FF02625155EF0519000602505155EF49EA702000FF02624B2BA605' +
-           '19000602504B2BA649EA7021000002624A1AB60519000602504A1AB649EA7020' +
-           '00000226'
-       ));
+      expect(buffer).toEqual(
+        '624A3A6F0519000602504A3A6F49EA70200000026251546B05190006025051546B' +
+          '49EA702000FF02625155EF0519000602505155EF49EA702000FF02624B2BA605' +
+          '19000602504B2BA649EA7021000002624A1AB60519000602504A1AB649EA7020' +
+          '00000226'
+      ));
   });
 
   describe('plmBase.setUsernamePassword', () => {
-    let buffer;
-    const username = 'newuser',
-      password = 'newpassword';
-
     beforeEach(async () => {
+      username = 'newuser';
+      password = 'newpassword';
       server.hubCommand.mockReturnValue({
         headers: [{'content-type': 'text/html'}],
         body: ''
       });
-      buffer = await plmBase.setUsernamePassword(username, password);
+      await plmBase.setUsernamePassword(username, password);
     });
 
     it('should send the request', () =>
-       expect(server.hubCommand).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/1',
-           query: {
-             L: `${username}=1=${password}`
-           }
-         }))
-      );
+      expect(server.hubCommand).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/1',
+          query: {
+            L: `${username}=1=${password}`
+          }
+        }))
+    );
   });
 
   describe('plmBase.createScene', () => {
-    let buffer;
     const sceneNumber = 1,
       sceneName = 'myscene';
 
@@ -248,7 +239,7 @@ describe('plm.createPlmBase', () => {
       const show = true;
 
       beforeEach(async () => {
-        buffer = await plmBase.createScene({
+        await plmBase.createScene({
           sceneNumber,
           sceneName,
           show
@@ -256,25 +247,25 @@ describe('plm.createPlmBase', () => {
       });
 
       it('should send the request', () =>
-         expect(server.sceneCommand).toBeCalledWith(
-           expect.objectContaining({
-             headers: expect.objectContaining({
-               authorization,
-               host: `${host}:${port}`
-             }),
-             path: '/2',
-             query: {
-               S1: 'myscene=2=t'
-             }
-           }))
-        );
+        expect(server.sceneCommand).toBeCalledWith(
+          expect.objectContaining({
+            headers: expect.objectContaining({
+              authorization,
+              host: `${host}:${port}`
+            }),
+            path: '/2',
+            query: {
+              S1: 'myscene=2=t'
+            }
+          }))
+      );
     });
 
     describe('when show is false', () => {
       const show = false;
 
       beforeEach(async () => {
-        buffer = await plmBase.createScene({
+        await plmBase.createScene({
           sceneNumber,
           sceneName,
           show
@@ -282,18 +273,18 @@ describe('plm.createPlmBase', () => {
       });
 
       it('should send the request', () =>
-         expect(server.sceneCommand).toBeCalledWith(
-           expect.objectContaining({
-             headers: expect.objectContaining({
-               authorization,
-               host: `${host}:${port}`
-             }),
-             path: '/2',
-             query: {
-               S1: 'myscene=2=f'
-             }
-           }))
-        );
+        expect(server.sceneCommand).toBeCalledWith(
+          expect.objectContaining({
+            headers: expect.objectContaining({
+              authorization,
+              host: `${host}:${port}`
+            }),
+            path: '/2',
+            query: {
+              S1: 'myscene=2=f'
+            }
+          }))
+      );
     });
   });
 
@@ -310,15 +301,15 @@ describe('plm.createPlmBase', () => {
     });
 
     it('should send the request', () =>
-       expect(server.hubInfo).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/index.htm'
-         }))
-      );
+      expect(server.hubInfo).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/index.htm'
+        }))
+    );
 
     it('should return the info response', () => {
       expect(result).toEqual({
@@ -349,15 +340,15 @@ describe('plm.createPlmBase', () => {
     });
 
     it('should send the request', () =>
-       expect(server.hubInfo).toBeCalledWith(
-         expect.objectContaining({
-           headers: expect.objectContaining({
-             authorization,
-             host: `${host}:${port}`
-           }),
-           path: '/index.htm'
-         }))
-      );
+      expect(server.hubInfo).toBeCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization,
+            host: `${host}:${port}`
+          }),
+          path: '/index.htm'
+        }))
+    );
 
     it('should return the hub info', () => {
       expect(hubInfo).toEqual({
@@ -371,8 +362,6 @@ describe('plm.createPlmBase', () => {
     });
 
     describe('when it has been retrieved once', () => {
-      let hubInfoSecond;
-
       beforeEach(async () => {
         hubInfo = await plmBase.getHubInfo();
       });
@@ -418,13 +407,13 @@ describe('plm.createPlmBase', () => {
     });
 
     it('should return hub status', () =>
-       expect(hubStatus).resolves.toEqual({
-         cls: 'Ready',
-         clsg: '',
-         clsi: '',
-         cds: '9999999999999999',
-         day: 'Sunday',
-         time: '20:04:24'
-       }));
+      expect(hubStatus).resolves.toEqual({
+        cls: 'Ready',
+        clsg: '',
+        clsi: '',
+        cds: '9999999999999999',
+        day: 'Sunday',
+        time: '20:04:24'
+      }));
   });
 });

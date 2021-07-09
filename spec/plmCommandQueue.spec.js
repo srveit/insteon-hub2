@@ -111,7 +111,7 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
   });
 
   describe('addCommand with default retries', () => {
-    let responseHandler, returnedResponse;
+    let responseHandler;
 
     const defaultDelay = 1,
       commandBuffer = '01020304',
@@ -145,7 +145,7 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
         beforeEach(() => {
           jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
         });
-        
+
         it('should reject responseHandler', () => {
           expect(responseHandler).rejects.toEqual({
             message: 'response not received'

@@ -87,7 +87,6 @@ describe('device.createDevice', () => {
 
     describe('with Product Data Response', () => {
       describe('with exisiting category', () => {
-
         beforeEach(() => {
           device.update({
             command: 'Product Data Response',
@@ -136,6 +135,7 @@ describe('device.createDevice', () => {
       });
 
       describe('with non-exisitent category', () => {
+        /* eslint no-undefined: "off" */
         beforeEach(() => {
           device.update({
             command: 'Product Data Response',
@@ -233,9 +233,9 @@ describe('device.createDevice', () => {
     });
 
     describe('add All-Link Database record', () => {
-        beforeEach(() => {
-          device.update();
-        });
+      beforeEach(() => {
+        device.update();
+      });
     });
 
     unroll(

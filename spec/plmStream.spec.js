@@ -1,24 +1,22 @@
 'use strict';
-const got = require('got');
 
 const {createPlmBase} = require('../lib/plmBase'),
   {createPlmStream} = require('../lib/plmStream'),
-  {fixture} = require('./helpers/fixture.js'),
-  {mockServer} = require('./helpers/mock-server.js');
+  {mockServer} = require('./helpers/mock-server.js'),
 
-const waitForReadable = stream => new Promise(resolve => {
-  stream.once('readable', resolve);
-});
+  waitForReadable = stream => new Promise(resolve => {
+    stream.once('readable', resolve);
+  }),
 
-const waitForClose = stream => new Promise(resolve => {
-  stream.once('close', resolve);
-});
+  waitForClose = stream => new Promise(resolve => {
+    stream.once('close', resolve);
+  }),
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('createPlmStream', () => {
   /* eslint no-undefined: "off" */
-  let server, baseUrl, host, port, username, password, authorization, plmBase,
+  let server, host, port, username, password, plmBase,
     plmStream;
 
   beforeAll(async () => {
@@ -34,12 +32,10 @@ describe('createPlmStream', () => {
   afterAll(() => server.stop());
 
   beforeEach(async () => {
-    baseUrl = process.env.SERVER_BASE_URL;
-    host = process.env.SERVER_HOSTNAME;
-    port = process.env.SERVER_PORT;
+    host = server.env().SERVER_HOSTNAME;
+    port = server.env().SERVER_PORT;
     username = 'username';
     password = 'password';
-    authorization = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=';
     plmBase = createPlmBase({username, password, host, port});
     plmStream = createPlmStream(plmBase);
   });

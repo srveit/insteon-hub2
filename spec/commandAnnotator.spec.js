@@ -1,21 +1,17 @@
 'use strict';
 
-const util = require('util');
-const { createCommandAnnotator } = require('../lib/commandAnnotator.js');
+const {createCommandAnnotator} = require('../lib/commandAnnotator.js'),
 
-const iso8601Regex =
-  new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z');
-
-const waitForReadable = stream => new Promise(resolve => {
-  if (stream.readable) {
-    resolve();
-  } else {
-    stream.once('readable', resolve);
-  }
-});
+  waitForReadable = stream => new Promise(resolve => {
+    if (stream.readable) {
+      resolve();
+    } else {
+      stream.once('readable', resolve);
+    }
+  });
 
 describe('createCommandAnnotator', () => {
-  let commandAnnotator, write, read;
+  let commandAnnotator;
 
   const deviceNames = {
     'im-hub': 'im-hub',

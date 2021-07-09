@@ -1,9 +1,6 @@
 'use strict';
 const {createDeviceManager} = require('../lib/deviceManager');
 
-      // readDeviceAllLinkDatabase   (TODO: figure better way to implement)
-      // readHubAllLinkDatabase   (TODO: figure better way to implement)
-
 describe('createDeviceManager', () => {
   let deviceManager;
   const deviceNames = {
@@ -29,7 +26,6 @@ describe('createDeviceManager', () => {
 
   describe('updateDeviceInfo', () => {
     beforeEach(() => {
-      
     });
   });
 });

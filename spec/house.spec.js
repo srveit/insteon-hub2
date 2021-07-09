@@ -86,9 +86,9 @@ describe('house.createHouse', () => {
       });
 
       it('should not fail', () => {
+        /* eslint no-undefined: "off" */
         expect(result).toBe(undefined);
       });
     });
-
   });
 });
