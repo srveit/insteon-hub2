@@ -1,9 +1,9 @@
 module.exports = {
-  "rules": {
-    "max-nested-callbacks": [1, 9] // specify the maximum depth callbacks can be nested (off by default)
+  rules: {
+    'max-nested-callbacks': [1, 9]
   },
-  "plugins": ["jest"],
-  "env": {
-    "jest/globals": true
+  plugins: ['jest'],
+  env: {
+    'jest/globals': true
   }
 };

@@ -6,6 +6,7 @@
   "watch": {
     "lint": {
       "patterns": [
+        "jest.config.js",
         "index.js",
         "{lib,spec}/*.js"
       ],
@@ -14,7 +15,7 @@
   },
   "scripts": {
     "test": "jest",
-    "lint": "eslint index.js {lib,spec}/*.js || exit 1",
+    "lint": "eslint jest.config.js index.js {lib,spec}/*.js || exit 1",
     "test-watch": "jest --watch",
     "test-watch-all": "jest --watchAll",
     "createDeviceCategories": "node tools/createDeviceCategories.js"
