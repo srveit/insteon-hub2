@@ -1,22 +1,21 @@
 'use strict';
-const util = require('util'),
-  { createPlm } = require('../index'),
-  deviceNames = {
-    '123456': 'hub controller',
-    '56789A': 'front lights',
-    '789ABC': 'dining outlet'
-  };
+const {createPlm} = require('../index'),
+  deviceNames = require('./deviceNames.json');
 
 const main = async () => {
   const plm = createPlm({
     username: process.env.HUB_USERNAME,
     password: process.env.HUB_PASSWORD,
-    host: 'insteon-hub',
-    port: 25105,
-    deviceNames
+    // host: 'insteon-hub',
+    host: '192.168.1.110',
+    port: 25105
   });
-  plm.addCommandHandler(() => true, command => console.log(command));
-  await plm.start();
+
+  await plm.clearBuffer();
+  plm.emitter.on('command', command => {
+    console.log(command);
+  });
+  plm.startPolling(deviceNames);
 };
 
 main();

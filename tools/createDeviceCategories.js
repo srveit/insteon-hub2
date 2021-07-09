@@ -10,6 +10,7 @@ const path = require('path'),
 
 function writeStruct(stream, deviceCategories) {
   stream.write('\'use strict\';\n');
+  stream.write('/* eslint quote-props: "off" */');
   stream.write('module.exports = ');
   stream.write(objectToString(deviceCategories));
   stream.write(';\n');
@@ -91,8 +92,9 @@ async function createDeviceCategories() {
   combineCategories(categories, categories2);
   combineCategories(categories, categories3);
   addAdditionalDevices(categories, additionalDevices);
-  writeDevices(categories);
+  // writeDevices(categories);
   writeStruct(outputStream, categories);
+  console.log(`wrote ${DEVICE_CATEGORIES_FILE}`);
 }
 
 createDeviceCategories();
