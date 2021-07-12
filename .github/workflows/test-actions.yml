@@ -4,7 +4,15 @@ jobs:
   test-ubuntu:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1 # ! We only skip if the tippy top commit says so!
+          persist-credentials: false
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
       - uses: actions/setup-node@v2
       - run: npm install
       - run: npm run lint
@@ -12,7 +20,15 @@ jobs:
   test-darwin:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1 # ! We only skip if the tippy top commit says so!
+          persist-credentials: false
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
       - uses: actions/setup-node@v2
       - run: npm install
       - run: npm run lint
