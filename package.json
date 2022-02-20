@@ -55,7 +55,6 @@
     "jest": "^26.5.3",
     "jest-html-reporter": "^3.2.0",
     "jsonlint": "github:zaach/jsonlint",
-    "lodash": "^4.17.21",
     "nyc": "^15.1.0",
     "pdfreader": "^1.0.10",
     "prettier": "^2.1.2",
