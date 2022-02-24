@@ -1,12 +1,9 @@
 'use strict';
 
-const PdfReader = require('pdfreader').PdfReader,
-  { parseStringPromise } = require('xml2js'),
-  fetch = require('node-fetch'),
-  util = require('util'),
-  fs = require('fs'),
+const {readFile} = require('fs/promises'),
   path = require('path'),
-  readFile = util.promisify(fs.readFile),
+  PDFParser = require("pdf2json"),
+  fetch = require('node-fetch'),
   objectToString = require('./objectToString.js'),
   URL = 'http://cache.insteon.com/pdf/INSTEON_DevCats_and_Product_Keys_20081008.pdf',
   CATEGORY_BOUNDARIES_FILE = path.join(__dirname, 'categoryBoundaries.json');
@@ -20,25 +17,20 @@ async function parseCategoriesTable(contents) {
   return new Promise(function(resolve, reject) {
     const rows = {};
     let currentPage = 0;
-    return new PdfReader().parseBuffer(contents, function(err, item) {
-      if (err) {
-        reject(err);
-      } else if (!item) {
-        resolve(rows);
-      } else if (item.page) {
-        currentPage = item.page;
-      } else if (item.x && currentPage >= 6) {
-        if (!rows[currentPage]) {
-          rows[currentPage] = {};
-        }
-        if (!rows[currentPage][item.y]) {
-          rows[currentPage][item.y] = {};
-        }
-        rows[currentPage][item.y][item.x] = item.text;
-      } else if (!item.x && !item.file) {
-        console.warn(item);
-      }
+    const pdfParser = new PDFParser();
+
+    pdfParser.on("pdfParser_dataError", errData => reject(errData.parserError));
+    pdfParser.on("pdfParser_dataReady", pdfData => {
+      resolve(pdfData.Pages.map(page => page.Texts.reduce(
+        (rows, item) => {
+          rows[item.y] = rows[item.y] || {}
+          rows[item.y][item.x] = decodeURIComponent(item.R[0].T);
+          return rows;
+        },
+        {}
+      )));
     });
+    pdfParser.parseBuffer(contents);
   });
 }
 
@@ -74,7 +66,7 @@ function extractDevices(rows) {
           devices.push(device);
           previousDevice = device;
         }
-        if (values.length === 1 && xs[0] > 20) {
+        if (values.length === 1 && xs[0] > 20 && previousDevice) {
           previousDevice.description += ' ' + values[0].trim();
         }
         return devices;
@@ -86,8 +78,8 @@ function extractDevices(rows) {
 }
 
 function extractCategories(rows) {
-  return Object.entries(rows).reduce(
-    (categories, [pageNumber, page]) => Object.entries(page).reduce(
+  return rows.reduce(
+    (categories, page, pageNumber) => Object.entries(page).reduce(
       (categories, [y, columns]) => {
         const xs = Object.keys(columns).map(x => parseFloat(x)).sort((x1, x2) => x1 - x2),
           values = Object.values(columns);

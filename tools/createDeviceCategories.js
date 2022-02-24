@@ -30,7 +30,7 @@ function writeDevices(deviceCategories) {
     }
   }
 }
-    
+
 // values in categories2 overwrite values in categories
 function combineCategories(categories, categories2) {
   for (const category2 of Object.values(categories2)) {
