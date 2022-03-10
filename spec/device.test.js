@@ -232,11 +232,11 @@ describe('device.createDevice', () => {
       })
     })
 
-    describe('add All-Link Database record', () => {
-      beforeEach(() => {
-        device.update()
-      })
-    })
+    // describe('add All-Link Database record', () => {
+    //   beforeEach(() => {
+    //     device.update()
+    //   })
+    // })
 
     unroll(
       'with #command should update #stateProperties',

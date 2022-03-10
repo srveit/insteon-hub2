@@ -24,8 +24,8 @@ describe('createDeviceManager', () => {
     })
   })
 
-  describe('updateDeviceInfo', () => {
-    beforeEach(() => {
-    })
-  })
+  // describe('updateDeviceInfo', () => {
+  //   beforeEach(() => {
+  //   })
+  // })
 })

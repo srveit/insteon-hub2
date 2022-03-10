@@ -8,7 +8,8 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
   beforeEach(() => {
     jest.useFakeTimers()
     sendCommandBuffer = jest.fn()
-    plmCommandQueue = createPlmCommandQueue(sendCommandBuffer)
+    setTimeout = jest.fn()
+    plmCommandQueue = createPlmCommandQueue(sendCommandBuffer, setTimeout)
   })
 
   afterEach(() => {
