@@ -1,16 +1,15 @@
-'use strict';
+'use strict'
 
-const https = require('https'),
-  fs = require('fs');
+const https = require('https')
+const fs = require('fs')
 
 const main = async () => {
-  const agent = new https.Agent({});
+  const agent = new https.Agent({})
   https.globalAgent.on('keylog', (line, tlsSocket) => {
-    console.log('keylog', line);
-    fs.appendFileSync('/tmp/ssl-keys.log', line, { mode: 0o600 });
-  });
+    console.log('keylog', line)
+    fs.appendFileSync('/tmp/ssl-keys.log', line, { mode: 0o600 })
+  })
 
-  
   https.request(
     {
       hostname: 'insteon-hub',
@@ -18,14 +17,14 @@ const main = async () => {
       path: '/',
       method: 'GET',
       protocol: 'https:',
-      agent
+      agent,
     },
     (res) => {
-      console.log(res);
+      console.log(res)
     }
-  );
+  )
 
-  console.log('main');
-};
+  console.log('main')
+}
 
-main();
+main()

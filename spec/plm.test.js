@@ -1,11 +1,11 @@
-'use strict';
-const {createPlm} = require('../lib/plm'),
-  {fixture} = require('./helpers/fixture.js'),
-  {mockServer} = require('./helpers/mock-server.js');
+'use strict'
+const { createPlm } = require('../lib/plm')
+const { fixture } = require('./helpers/fixture.js')
+const { mockServer } = require('./helpers/mock-server.js')
 
 describe('plm.createPlm', () => {
   /* eslint no-undefined: "off" */
-  let server, host, port, username, password, authorization, userAgent, plm;
+  let server, host, port, username, password, authorization, userAgent, plm
 
   const deviceNames = {
     'im-hub': 'im-hub',
@@ -20,102 +20,102 @@ describe('plm.createPlm', () => {
     561234: 'front lights',
     571234: 'foyer chandelier',
     581234: 'foyer lamps',
-    591234: 'dining outlet'
-  };
+    591234: 'dining outlet',
+  }
 
   beforeAll(async () => {
     server = mockServer([
       {
         path: '/0',
-        name: 'allLinkCommand'
+        name: 'allLinkCommand',
       },
       {
         path: '/1',
-        name: 'hubCommand'
+        name: 'hubCommand',
       },
       {
         path: '/2',
-        name: 'sceneCommand'
+        name: 'sceneCommand',
       },
       {
         path: '/3',
-        name: 'deviceControlCommand'
+        name: 'deviceControlCommand',
       },
       {
         path: '/sx.xml',
-        name: 'deviceControlCommandSync'
+        name: 'deviceControlCommandSync',
       },
       {
         path: '/buffstatus.xml',
-        name: 'bufferStatus'
+        name: 'bufferStatus',
       },
       {
         path: '/index.htm',
-        name: 'hubInfo'
+        name: 'hubInfo',
       },
       {
         path: '/Linkstatus.xml',
-        name: 'linkStatus'
+        name: 'linkStatus',
       },
       {
         path: '/rstatus.xml',
-        name: 'rStatus'
+        name: 'rStatus',
       },
       {
         path: '/status.xml',
-        name: 'status'
+        name: 'status',
       },
       {
         path: '/statusD.xml',
-        name: 'statusD'
-      }
-    ]);
-    await server.start();
-  });
+        name: 'statusD',
+      },
+    ])
+    await server.start()
+  })
 
-  afterAll(() => server.stop());
+  afterAll(() => server.stop())
 
   beforeEach(() => {
-    host = server.env().SERVER_HOSTNAME;
-    port = server.env().SERVER_PORT;
-    username = 'username';
-    password = 'password';
-    authorization = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=';
-    userAgent = 'got (https://github.com/sindresorhus/got)';
-    plm = createPlm({username, password, host, port});
-    plm.startPolling(deviceNames);
-  });
+    host = server.env().SERVER_HOSTNAME
+    port = server.env().SERVER_PORT
+    username = 'username'
+    password = 'password'
+    authorization = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
+    userAgent = 'got (https://github.com/sindresorhus/got)'
+    plm = createPlm({ username, password, host, port })
+    plm.startPolling(deviceNames)
+  })
 
   afterEach(async () => {
-    await plm.stopPolling();
-  });
+    await plm.stopPolling()
+  })
 
   describe('plm.getHubInfo', () => {
-    let hubInfo;
+    let hubInfo
 
     beforeEach(async () => {
-      const response = await fixture('getHubInfo-response.html');
+      const response = await fixture('getHubInfo-response.html')
       server.hubInfo.mockReturnValue({
-        headers: [{'content-type': 'text/html'}],
-        body: response
-      });
-      hubInfo = await plm.getHubInfo();
-    });
+        headers: [{ 'content-type': 'text/html' }],
+        body: response,
+      })
+      hubInfo = await plm.getHubInfo()
+    })
 
     afterEach(() => {
-      server.hubInfo.mockClear();
-    });
+      server.hubInfo.mockClear()
+    })
 
     it('should send the request', () =>
       expect(server.hubInfo).toBeCalledWith(
         expect.objectContaining({
           headers: expect.objectContaining({
             authorization,
-            host: `${host}:${port}`
+            host: `${host}:${port}`,
           }),
-          path: '/index.htm'
+          path: '/index.htm',
         }))
-    );
+    )
 
     it('should return the Hub Info', () => {
       expect(hubInfo).toEqual({
@@ -124,33 +124,33 @@ describe('plm.createPlm', () => {
         hubVersion: '1019',
         firmwareBuildDate: 'Nov 18 2019  13:45:08',
         firmware: 'A5',
-        imId: '010203'
-      });
-    });
-  });
+        imId: '010203',
+      })
+    })
+  })
 
   describe('plm.getHubStatus', () => {
-    let hubStatus;
+    let hubStatus
     beforeEach(async () => {
       server.hubInfo.mockReturnValue({
-        headers: [{'content-type': 'text/html'}],
-        body: await fixture('getHubInfo-response.html')
-      });
+        headers: [{ 'content-type': 'text/html' }],
+        body: await fixture('getHubInfo-response.html'),
+      })
       server.status.mockReturnValue({
-        headers: [{'content-type': 'text/xml'}],
-        body: await fixture('status-response.xml')
-      });
+        headers: [{ 'content-type': 'text/xml' }],
+        body: await fixture('status-response.xml'),
+      })
       server.linkStatus.mockReturnValue({
-        headers: [{'content-type': 'text/xml'}],
-        body: await fixture('LinkStatus-response.xml')
-      });
+        headers: [{ 'content-type': 'text/xml' }],
+        body: await fixture('LinkStatus-response.xml'),
+      })
       server.statusD.mockReturnValue({
-        headers: [{'content-type': 'text/xml'}],
-        body: await fixture('statusD-response.xml')
-      });
+        headers: [{ 'content-type': 'text/xml' }],
+        body: await fixture('statusD-response.xml'),
+      })
 
-      hubStatus = plm.getHubStatus();
-    });
+      hubStatus = plm.getHubStatus()
+    })
 
     it('should return hub status', () =>
       expect(hubStatus).resolves.toEqual({
@@ -159,57 +159,57 @@ describe('plm.createPlm', () => {
         clsi: '',
         cds: '9999999999999999',
         day: 'Sunday',
-        time: '20:04:24'
-      }));
-  });
+        time: '20:04:24',
+      }))
+  })
 
   describe('plm.setUsernamePassword', () => {
     beforeEach(async () => {
-      username = 'newuser';
-      password = 'newpassword';
+      username = 'newuser'
+      password = 'newpassword'
       server.hubCommand.mockReturnValue({
-        headers: [{'content-type': 'text/html'}],
-        body: ''
-      });
-      await plm.setUsernamePassword(username, password);
-    });
+        headers: [{ 'content-type': 'text/html' }],
+        body: '',
+      })
+      await plm.setUsernamePassword(username, password)
+    })
 
     it('should send the request', () =>
       expect(server.hubCommand).toBeCalledWith(
         expect.objectContaining({
           headers: expect.objectContaining({
             authorization,
-            host: `${host}:${port}`
+            host: `${host}:${port}`,
           }),
           path: '/1',
           query: {
-            L: `${username}=1=${password}`
-          }
+            L: `${username}=1=${password}`,
+          },
         }))
-    );
-  });
+    )
+  })
 
   describe('get IM info', () => {
-    let result, log;
+    let result, log
 
     beforeEach(async () => {
-      server.deviceControlCommand.mockReset();
-      server.bufferStatus.mockReset();
+      server.deviceControlCommand.mockReset()
+      server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
-            headers: [{'content-type': 'text/xml'}],
-            body: '<response><BS>026049EA700333A50612</BS></response>\n'
-          };
-        });
-        return {};
-      });
-      plm.startLogging();
+            headers: [{ 'content-type': 'text/xml' }],
+            body: '<response><BS>026049EA700333A50612</BS></response>\n',
+          }
+        })
+        return {}
+      })
+      plm.startLogging()
       result = await plm.sendModemCommand({
-        command: 'Get IM Info'
-      });
-      log = plm.stopLogging();
-    });
+        command: 'Get IM Info',
+      })
+      log = plm.stopLogging()
+    })
 
     it('should call deviceControlCommand', async () => {
       expect(server.deviceControlCommand).toHaveBeenCalledWith({
@@ -219,14 +219,14 @@ describe('plm.createPlm', () => {
           authorization,
           connection: 'close',
           host: `${host}:${port}`,
-          'user-agent': userAgent
+          'user-agent': userAgent,
         },
         path: '/3',
         query: {
-          '0260': 'I=3'
-        }
-      });
-    });
+          '0260': 'I=3',
+        },
+      })
+    })
 
     it('should return IM info', async () => {
       expect(result).toMatchObject({
@@ -234,46 +234,46 @@ describe('plm.createPlm', () => {
         bytes: '026049EA700333A506',
         code: '60',
         command: 'Get IM Info',
-        length: 14
-      });
-    });
+        length: 14,
+      })
+    })
 
     it('should return the plmStream log', () => {
       expect(log).toEqual([
         expect.objectContaining({
           buffer: null,
           chunk: undefined,
-          timestamp: expect.any(Date)
+          timestamp: expect.any(Date),
         }),
         expect.objectContaining({
           buffer: '026049EA700333A50612',
           chunk: '026049EA700333A506',
-          timestamp: expect.any(Date)
-        })
-      ]);
-    });
-  });
+          timestamp: expect.any(Date),
+        }),
+      ])
+    })
+  })
 
   describe('get engine version', () => {
-    let result;
+    let result
 
     beforeEach(async () => {
-      server.deviceControlCommand.mockReset();
-      server.bufferStatus.mockReset();
+      server.deviceControlCommand.mockReset()
+      server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
-            headers: [{'content-type': 'text/xml'}],
-            body: '<response><BS>02625212340F0D00060250521234070809200D02062A</BS></response>\n'
-          };
-        });
-        return {};
-      });
+            headers: [{ 'content-type': 'text/xml' }],
+            body: '<response><BS>02625212340F0D00060250521234070809200D02062A</BS></response>\n',
+          }
+        })
+        return {}
+      })
       result = await plm.sendModemCommand({
         command: 'Get INSTEON Engine Version',
-        toAddress: '521234'
-      });
-    });
+        toAddress: '521234',
+      })
+    })
 
     it('should call deviceControlCommand', async () => {
       expect(server.deviceControlCommand).toHaveBeenCalledWith({
@@ -283,14 +283,14 @@ describe('plm.createPlm', () => {
           authorization,
           connection: 'close',
           host: `${host}:${port}`,
-          'user-agent': userAgent
+          'user-agent': userAgent,
         },
         path: '/3',
         query: {
-          '02625212340F0D00': 'I=3'
-        }
-      });
-    });
+          '02625212340F0D00': 'I=3',
+        },
+      })
+    })
 
     it('should return engine version', () => {
       expect(result).toMatchObject({
@@ -309,34 +309,34 @@ describe('plm.createPlm', () => {
         command1: '0D',
         command2: '02',
         insteonCommand: expect.objectContaining({
-          engineVersion: 2
+          engineVersion: 2,
         }),
         bytes: '0250521234070809200D02',
         fromDevice: 'porch outlets',
-        toDevice: 'hub controller'
-      });
-    });
-  });
+        toDevice: 'hub controller',
+      })
+    })
+  })
 
   describe('Get First ALL-Link Record', () => {
-    let result;
+    let result
 
     beforeEach(async () => {
-      server.deviceControlCommand.mockReset();
-      server.bufferStatus.mockReset();
+      server.deviceControlCommand.mockReset()
+      server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
-            headers: [{'content-type': 'text/xml'}],
-            body: '<response><BS>0269060257EA005212340139441A</BS></response>\n'
-          };
-        });
-        return {};
-      });
+            headers: [{ 'content-type': 'text/xml' }],
+            body: '<response><BS>0269060257EA005212340139441A</BS></response>\n',
+          }
+        })
+        return {}
+      })
       result = await plm.sendModemCommand({
-        command: 'Get First ALL-Link Record'
-      });
-    });
+        command: 'Get First ALL-Link Record',
+      })
+    })
 
     it('should return first record', () => {
       expect(result).toMatchObject({
@@ -360,30 +360,30 @@ describe('plm.createPlm', () => {
         numberRetries: 1,
         controllerGroupNumber: 68,
         data: '013944',
-        bytes: '0257EA00521234013944'
-      });
-    });
-  });
+        bytes: '0257EA00521234013944',
+      })
+    })
+  })
 
   describe('Get Next ALL-Link Record', () => {
-    let result;
+    let result
 
     beforeEach(async () => {
-      server.deviceControlCommand.mockReset();
-      server.bufferStatus.mockReset();
+      server.deviceControlCommand.mockReset()
+      server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
-            headers: [{'content-type': 'text/xml'}],
-            body: '<response><BS>026A060257E2005612340120451A</BS></response>\n'
-          };
-        });
-        return {};
-      });
+            headers: [{ 'content-type': 'text/xml' }],
+            body: '<response><BS>026A060257E2005612340120451A</BS></response>\n',
+          }
+        })
+        return {}
+      })
       result = await plm.sendModemCommand({
-        command: 'Get Next ALL-Link Record'
-      });
-    });
+        command: 'Get Next ALL-Link Record',
+      })
+    })
 
     it('should return next record', () => {
       expect(result).toMatchObject({
@@ -407,30 +407,30 @@ describe('plm.createPlm', () => {
         numberRetries: 1,
         controllerGroupNumber: 69,
         data: '012045',
-        bytes: '0257E200561234012045'
-      });
-    });
-  });
+        bytes: '0257E200561234012045',
+      })
+    })
+  })
 
   describe('Get ALL-Link Record for Sender', () => {
-    let result;
+    let result
 
     beforeEach(async () => {
-      server.deviceControlCommand.mockReset();
-      server.bufferStatus.mockReset();
+      server.deviceControlCommand.mockReset()
+      server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
-            headers: [{'content-type': 'text/xml'}],
-            body: '<response><BS>026C060257E2005912340120451A</BS></response>\n'
-          };
-        });
-        return {};
-      });
+            headers: [{ 'content-type': 'text/xml' }],
+            body: '<response><BS>026C060257E2005912340120451A</BS></response>\n',
+          }
+        })
+        return {}
+      })
       result = await plm.sendModemCommand({
-        command: 'Get ALL-Link Record for Sender'
-      });
-    });
+        command: 'Get ALL-Link Record for Sender',
+      })
+    })
 
     it('should return first record', () => {
       expect(result).toMatchObject({
@@ -454,26 +454,26 @@ describe('plm.createPlm', () => {
         controllerGroupNumber: 69,
         data: '012045',
         bytes: '0257E200591234012045',
-        device: 'dining outlet'
-      });
-    });
-  });
+        device: 'dining outlet',
+      })
+    })
+  })
 
   describe('Set IM Configuration', () => {
-    let result;
+    let result
 
     beforeEach(async () => {
-      server.deviceControlCommand.mockReset();
-      server.bufferStatus.mockReset();
+      server.deviceControlCommand.mockReset()
+      server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
-            headers: [{'content-type': 'text/xml'}],
-            body: '<response><BS>026A06026B43060E</BS></response>\n'
-          };
-        });
-        return {};
-      });
+            headers: [{ 'content-type': 'text/xml' }],
+            body: '<response><BS>026A06026B43060E</BS></response>\n',
+          }
+        })
+        return {}
+      })
       result = await plm.sendModemCommand({
         command: 'Set IM Configuration',
         imConfigurationFlags: {
@@ -481,10 +481,10 @@ describe('plm.createPlm', () => {
           monitorMode: true,
           disableAutomaticLed: false,
           disableHostComunications: false,
-          reserved: 3
-        }
-      });
-    });
+          reserved: 3,
+        },
+      })
+    })
 
     it('should return the response', () => {
       expect(result).toMatchObject({
@@ -500,34 +500,34 @@ describe('plm.createPlm', () => {
           bit4: false,
           bit3: false,
           bit2: true,
-          bit1: true
+          bit1: true,
         },
         ack: true,
-        bytes: '026B4306'
-      });
-    });
-  });
+        bytes: '026B4306',
+      })
+    })
+  })
 
   describe('Read 8 bytes from Database', () => {
-    let result;
+    let result
 
     beforeEach(async () => {
-      server.deviceControlCommand.mockReset();
-      server.bufferStatus.mockReset();
+      server.deviceControlCommand.mockReset()
+      server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {
         server.bufferStatus.mockImplementation(() => {
           return {
-            headers: [{'content-type': 'text/xml'}],
-            body: '<response><BS>027500000602590000500357123401000022</BS></response>\n'
-          };
-        });
-        return {};
-      });
+            headers: [{ 'content-type': 'text/xml' }],
+            body: '<response><BS>027500000602590000500357123401000022</BS></response>\n',
+          }
+        })
+        return {}
+      })
       result = await plm.sendModemCommand({
         command: 'Read 8 bytes from Database',
-        address: '0000'
-      });
-    });
+        address: '0000',
+      })
+    })
 
     it('should return the response', () => {
       expect(result).toMatchObject({
@@ -546,31 +546,31 @@ describe('plm.createPlm', () => {
         groupNumber: 3,
         id: '571234',
         device: 'foyer chandelier',
-        bytes: '025900005003571234010000'
-      });
-    });
-  });
+        bytes: '025900005003571234010000',
+      })
+    })
+  })
 
   describe('stopPolling', () => {
-    let result;
+    let result
 
     beforeEach(async () => {
-      result = await plm.stopPolling();
-    });
+      result = await plm.stopPolling()
+    })
 
     it('should stop polling', () => {
-      expect(result).toBe(undefined);
-    });
+      expect(result).toBe(undefined)
+    })
 
     describe('and stopPolling is called a second time', () => {
       beforeEach(async () => {
-        result = await plm.stopPolling();
-      });
+        result = await plm.stopPolling()
+      })
 
       it('should stop polling', () => {
         /* eslint no-undefined: "off" */
-        expect(result).toBe(undefined);
-      });
-    });
-  });
-});
+        expect(result).toBe(undefined)
+      })
+    })
+  })
+})

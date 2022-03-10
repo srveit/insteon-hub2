@@ -1,45 +1,44 @@
-'use strict';
-const { parseStringPromise } = require('xml2js'),
-  unzipper = require('unzipper'),
-  fetch = require('node-fetch'),
-  URL = 'https://www.insteon.com/s/houselinc-device-definitions-2987-bjb7.zip';
+'use strict'
+const { parseStringPromise } = require('xml2js')
+const unzipper = require('unzipper')
+const fetch = require('node-fetch')
+const URL = 'https://www.insteon.com/s/houselinc-device-definitions-2987-bjb7.zip'
 
 const getDevicesXml = async () => {
   try {
-    const response = await fetch(URL);
-    const directory = await unzipper.Open.buffer(await response.buffer()),
-      file = directory.files[0],
-      content = await file.buffer();
+    const response = await fetch(URL)
+    const directory = await unzipper.Open.buffer(await response.buffer())
+    const file = directory.files[0]
+    const content = await file.buffer()
 
-    return content;
+    return content
   } catch (error) {
-    console.warn(error);
-    return undefined;
+    console.warn(error)
+    return undefined
   }
-};
+}
 
-
-function extractNode(node, alwaysArray) {
-  let base = {};
+function extractNode (node, alwaysArray) {
+  let base = {}
   if (typeof node === 'string') {
-    return node;
+    return node
   }
 
   if (Array.isArray(node)) {
     if (node.length === 1 && !alwaysArray) {
-      return extractNode(node[0]);
+      return extractNode(node[0])
     }
-    return node.map(extractNode);
+    return node.map(extractNode)
   }
 
   for (const key in node) {
     if (key === '$') {
-      base = Object.assign(base, node[key]);
+      base = Object.assign(base, node[key])
     } else {
-      base[key] = extractNode(node[key], ['device'].includes(key));
+      base[key] = extractNode(node[key], ['device'].includes(key))
     }
   }
-  return base;
+  return base
 }
 
 const examplesOfDevices = {
@@ -59,60 +58,60 @@ const examplesOfDevices = {
   '0D': 'PC On/Off, UPS Control, App Activation, Remote Mouse, Keyboards',
   '0E': 'Drapes, Blinds, Awnings',
   '0F': 'Automatic Doors, Gates, Windows, Locks',
-  '10': 'Door and Window Sensors, Motion Sensors, Scales',
-  '11': 'Video Camera Control, Time-lapse Recorders, Security System Links',
-  '12': 'Remote Starters, Car Alarms, Car Door Locks',
-  '13': 'Pet Feeders, Trackers',
-  '14': 'Model Trains, Robots',
-  '15': 'Clocks, Alarms, Timers',
-  '16': 'Christmas Lights, Displays',
-  'FF': 'For devices that will be assigned a DevCat and SubCat by software'
-};
+  10: 'Door and Window Sensors, Motion Sensors, Scales',
+  11: 'Video Camera Control, Time-lapse Recorders, Security System Links',
+  12: 'Remote Starters, Car Alarms, Car Door Locks',
+  13: 'Pet Feeders, Trackers',
+  14: 'Model Trains, Robots',
+  15: 'Clocks, Alarms, Timers',
+  16: 'Christmas Lights, Displays',
+  FF: 'For devices that will be assigned a DevCat and SubCat by software',
+}
 
 // TODO: add missing devices
-function devicesStruct(categories) {
+function devicesStruct (categories) {
   return categories.reduce(
     (devices, category) => {
-      const categoryId = category.devCat.slice(2),
-        categoryName = category.description,
-        subcategories = category.device ? category.device.reduce(
+      const categoryId = category.devCat.slice(2)
+      const categoryName = category.description
+      const subcategories = category.device
+        ? category.device.reduce(
           (devices, xmlDevice) => {
-            
-            const subcategoryId = xmlDevice.subcategory.slice(-2),
-              device = devices[subcategoryId] || {},
-              [deviceDescription, modelNumber] =
-              xmlDevice.description.split(/ *\[/);
-            device.categoryId = categoryId;
-            device.subcategoryId = subcategoryId;
-            device.productKey = xmlDevice.productKey.slice(-6);
-            device.deviceDescription = deviceDescription;
+            const subcategoryId = xmlDevice.subcategory.slice(-2)
+            const device = devices[subcategoryId] || {}
+            const [deviceDescription, modelNumber] =
+              xmlDevice.description.split(/ *\[/)
+            device.categoryId = categoryId
+            device.subcategoryId = subcategoryId
+            device.productKey = xmlDevice.productKey.slice(-6)
+            device.deviceDescription = deviceDescription
             if (modelNumber) {
-              device.modelNumber = modelNumber.replace(']', '');
+              device.modelNumber = modelNumber.replace(']', '')
             }
-            devices[subcategoryId] = device;
-            return devices;
+            devices[subcategoryId] = device
+            return devices
           },
           {}
-        ) :
-        {};
+        )
+        : {}
       devices[categoryId] = {
         categoryId,
         categoryName,
         examplesOfDevices: examplesOfDevices[categoryId],
-        subcategories
-      };
-      return devices;
+        subcategories,
+      }
+      return devices
     },
     {}
-  );
+  )
 }
 
-async function decodeDevicesXml() {
-  const contents = await getDevicesXml(),
-    xml = await parseStringPromise(contents.toString()),
-    availableDevices = xml.deviceFactory.availableDevices;
+async function decodeDevicesXml () {
+  const contents = await getDevicesXml()
+  const xml = await parseStringPromise(contents.toString())
+  const availableDevices = xml.deviceFactory.availableDevices
 
-  return devicesStruct(extractNode(availableDevices[0].category));
+  return devicesStruct(extractNode(availableDevices[0].category))
 }
 
-module.exports = decodeDevicesXml;
+module.exports = decodeDevicesXml

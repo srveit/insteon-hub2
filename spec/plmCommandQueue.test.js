@@ -1,172 +1,172 @@
-'use strict';
-const {createPlmCommandQueue} = require('../lib/plmCommandQueue');
+'use strict'
+const { createPlmCommandQueue } = require('../lib/plmCommandQueue')
 
 describe('plmCommandQueue.createPlmCommandQueue', () => {
   /* eslint no-undefined: "off" */
-  let plmCommandQueue, sendCommandBuffer;
+  let plmCommandQueue, sendCommandBuffer
 
   beforeEach(() => {
-    jest.useFakeTimers();
-    sendCommandBuffer = jest.fn();
-    plmCommandQueue = createPlmCommandQueue(sendCommandBuffer);
-  });
+    jest.useFakeTimers()
+    sendCommandBuffer = jest.fn()
+    plmCommandQueue = createPlmCommandQueue(sendCommandBuffer)
+  })
 
   afterEach(() => {
-    jest.clearAllTimers();
-  });
+    jest.clearAllTimers()
+  })
 
   describe('addCommand with no retries', () => {
-    let responseHandler;
+    let responseHandler
 
-    const delay = 0.1,
-      commandBuffer = '01020304',
-      responseMatcher = response => response.match;
+    const delay = 0.1
+    const commandBuffer = '01020304'
+    const responseMatcher = response => response.match
 
     beforeEach(() => {
       responseHandler =
         plmCommandQueue.addCommand(
           commandBuffer,
           responseMatcher,
-          {maxNumberRetries: 0, delay}
-        );
-    });
+          { maxNumberRetries: 0, delay }
+        )
+    })
 
     it('should call sendCommandBuffer', () => {
-      expect(sendCommandBuffer).toHaveBeenCalledWith(commandBuffer);
-    });
+      expect(sendCommandBuffer).toHaveBeenCalledWith(commandBuffer)
+    })
 
     it('should not queue commandBuffer', () => {
-      expect(plmCommandQueue.queueLength()).toBe(0);
-    });
+      expect(plmCommandQueue.queueLength()).toBe(0)
+    })
 
     describe('and addCommand called again', () => {
-      let responseHandler2;
+      let responseHandler2
 
-      const secondCommandBuffer = '05060708';
+      const secondCommandBuffer = '05060708'
 
       beforeEach(() => {
         responseHandler2 =
           plmCommandQueue.addCommand(
             secondCommandBuffer,
             responseMatcher,
-            {delay}
-          );
-      });
+            { delay }
+          )
+      })
 
       it('should not call sendCommandBuffer again', () => {
-        expect(sendCommandBuffer).not.toHaveBeenCalledWith(secondCommandBuffer);
-      });
+        expect(sendCommandBuffer).not.toHaveBeenCalledWith(secondCommandBuffer)
+      })
 
       it('should queue secondCommandBuffer', () => {
-        expect(plmCommandQueue.queueLength()).toBe(1);
-      });
+        expect(plmCommandQueue.queueLength()).toBe(1)
+      })
 
       describe('and handleResponse with matching response called', () => {
         const response = {
           id: 1,
-          match: true
-        };
+          match: true,
+        }
 
         beforeEach(() => {
-          plmCommandQueue.handleResponse(response);
-        });
+          plmCommandQueue.handleResponse(response)
+        })
 
         it('should call sendCommandBuffer', () => {
-          expect(sendCommandBuffer).toHaveBeenCalledWith(secondCommandBuffer);
-        });
+          expect(sendCommandBuffer).toHaveBeenCalledWith(secondCommandBuffer)
+        })
 
         it('should empty queue', () => {
-          expect(plmCommandQueue.queueLength()).toBe(0);
-        });
+          expect(plmCommandQueue.queueLength()).toBe(0)
+        })
 
         it('should resolve responseHandler', () => {
-          expect(responseHandler).resolves.toEqual(response);
-        });
+          expect(responseHandler).resolves.toEqual(response)
+        })
 
         describe('and non-matching response received', () => {
           beforeEach(() => {
             plmCommandQueue.handleResponse({
               id: 3,
-              match: false
-            });
-          });
+              match: false,
+            })
+          })
 
           describe('and second response is received', () => {
             const response2 = {
               id: 2,
-              match: true
-            };
+              match: true,
+            }
 
             beforeEach(() => {
-              plmCommandQueue.handleResponse(response2);
-            });
+              plmCommandQueue.handleResponse(response2)
+            })
 
             it('should resolve responseHandler', () => {
-              expect(responseHandler2).resolves.toEqual(response2);
-            });
-          });
-        });
-      });
-    });
-  });
+              expect(responseHandler2).resolves.toEqual(response2)
+            })
+          })
+        })
+      })
+    })
+  })
 
   describe('addCommand with default retries', () => {
-    let responseHandler;
+    let responseHandler
 
-    const defaultDelay = 1,
-      commandBuffer = '01020304',
-      responseMatcher = response => response.match;
+    const defaultDelay = 1
+    const commandBuffer = '01020304'
+    const responseMatcher = response => response.match
 
     beforeEach(() => {
       responseHandler =
         plmCommandQueue.addCommand(
           commandBuffer,
           responseMatcher
-        );
-    });
+        )
+    })
 
     it('should call sendCommandBuffer', () => {
-      expect(sendCommandBuffer).toHaveBeenCalledWith(commandBuffer);
-      expect(setTimeout).toHaveBeenCalledTimes(1);
-    });
+      expect(sendCommandBuffer).toHaveBeenCalledWith(commandBuffer)
+      expect(setTimeout).toHaveBeenCalledTimes(1)
+    })
 
     describe('and timeout expires', () => {
       beforeEach(() => {
-        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
-        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
-        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
-      });
+        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
+        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
+        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
+      })
 
       it('should call sendCommandBuffer again', () => {
-        expect(sendCommandBuffer).toHaveBeenCalledTimes(4);
-      });
+        expect(sendCommandBuffer).toHaveBeenCalledTimes(4)
+      })
 
       describe('and timeout expires again', () => {
         beforeEach(() => {
-          jest.advanceTimersByTime(defaultDelay * 1.1 * 1000);
-        });
+          jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
+        })
 
         it('should reject responseHandler', () => {
           expect(responseHandler).rejects.toEqual({
-            message: 'response not received'
-          });
-        });
-      });
-    });
-  });
+            message: 'response not received',
+          })
+        })
+      })
+    })
+  })
 
   describe('and handleResponse with not outstanding command called', () => {
     const response = {
       id: 1,
-      match: true
-    };
+      match: true,
+    }
 
     beforeEach(() => {
-      plmCommandQueue.handleResponse(response);
-    });
+      plmCommandQueue.handleResponse(response)
+    })
 
     it('should not call sendCommandBuffer', () => {
-      expect(sendCommandBuffer).not.toHaveBeenCalled();
-    });
-  });
-});
+      expect(sendCommandBuffer).not.toHaveBeenCalled()
+    })
+  })
+})

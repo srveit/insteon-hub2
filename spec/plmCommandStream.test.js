@@ -1,41 +1,41 @@
-'use strict';
+'use strict'
 
-const {createPlmCommandStream} = require('../lib/plmCommandStream.js'),
+const { createPlmCommandStream } = require('../lib/plmCommandStream.js')
 
-  iso8601Regex =
-    new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z'),
+const iso8601Regex =
+    /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
 
-  waitForReadable = stream => new Promise(resolve => {
-    if (stream.readable) {
-      resolve();
-    } else {
-      stream.once('readable', resolve);
-    }
-  });
+const waitForReadable = stream => new Promise(resolve => {
+  if (stream.readable) {
+    resolve()
+  } else {
+    stream.once('readable', resolve)
+  }
+})
 
 describe('createPlmCommandStream', () => {
-  let plmCommandStream;
+  let plmCommandStream
   beforeEach(() => {
-    plmCommandStream = createPlmCommandStream();
-  });
+    plmCommandStream = createPlmCommandStream()
+  })
 
   it('should have a write method', () => {
-    expect(plmCommandStream.write).toEqual(expect.any(Function));
-  });
+    expect(plmCommandStream.write).toEqual(expect.any(Function))
+  })
 
   describe('when writing a buffer with a single command', () => {
-    const buffer = '026201020305190006';
+    const buffer = '026201020305190006'
 
     beforeEach(() => {
-      plmCommandStream.write(buffer);
-    });
+      plmCommandStream.write(buffer)
+    })
 
     describe('then reading a command', () => {
-      let command;
+      let command
       beforeEach(async () => {
-        await waitForReadable(plmCommandStream);
-        command = plmCommandStream.read();
-      });
+        await waitForReadable(plmCommandStream)
+        command = plmCommandStream.read()
+      })
 
       it('should return a parsed command', () => {
         expect(command).toEqual({
@@ -58,41 +58,41 @@ describe('createPlmCommandStream', () => {
             command: 'Light Status Request',
             messageType: 'direct',
             fromAddress: 'im-hub',
-            toAddress: '010203'
+            toAddress: '010203',
           },
-          bytes: '026201020305190006'
-        });
-      });
+          bytes: '026201020305190006',
+        })
+      })
 
       describe('then reading a second time', () => {
-        let secondCommand;
+        let secondCommand
         beforeEach(async () => {
-          await waitForReadable(plmCommandStream);
-          secondCommand = plmCommandStream.read();
-        });
+          await waitForReadable(plmCommandStream)
+          secondCommand = plmCommandStream.read()
+        })
 
         it('should return null', () => {
-          expect(secondCommand).toBe(null);
-        });
-      });
-    });
-  });
+          expect(secondCommand).toBe(null)
+        })
+      })
+    })
+  })
 
   describe('when writing a buffer in two parts with a single command', () => {
-    const buffer1 = '02',
-      buffer2 = '6201020305190006';
+    const buffer1 = '02'
+    const buffer2 = '6201020305190006'
 
     beforeEach(() => {
-      plmCommandStream.write(buffer1);
-      plmCommandStream.write(buffer2);
-    });
+      plmCommandStream.write(buffer1)
+      plmCommandStream.write(buffer2)
+    })
 
     describe('then reading a command', () => {
-      let command;
+      let command
       beforeEach(async () => {
-        await waitForReadable(plmCommandStream);
-        command = plmCommandStream.read();
-      });
+        await waitForReadable(plmCommandStream)
+        command = plmCommandStream.read()
+      })
 
       it('should return a parsed command', () => {
         expect(command).toEqual({
@@ -115,29 +115,29 @@ describe('createPlmCommandStream', () => {
             command: 'Light Status Request',
             messageType: 'direct',
             fromAddress: 'im-hub',
-            toAddress: '010203'
+            toAddress: '010203',
           },
-          bytes: '026201020305190006'
-        });
-      });
-    });
-  });
+          bytes: '026201020305190006',
+        })
+      })
+    })
+  })
 
   describe('when writing a buffer in two parts with a beep command', () => {
-    const buffer1 = '027700',
-      buffer2 = '06';
+    const buffer1 = '027700'
+    const buffer2 = '06'
 
     beforeEach(() => {
-      plmCommandStream.write(buffer1);
-      plmCommandStream.write(buffer2);
-    });
+      plmCommandStream.write(buffer1)
+      plmCommandStream.write(buffer2)
+    })
 
     describe('then reading a command', () => {
-      let command;
+      let command
       beforeEach(async () => {
-        await waitForReadable(plmCommandStream);
-        command = plmCommandStream.read();
-      });
+        await waitForReadable(plmCommandStream)
+        command = plmCommandStream.read()
+      })
 
       it('should return a parsed command', () => {
         expect(command).toEqual({
@@ -147,131 +147,131 @@ describe('createPlmCommandStream', () => {
           length: 4,
           data: '00',
           ack: true,
-          bytes: '02770006'
-        });
-      });
-    });
-  });
+          bytes: '02770006',
+        })
+      })
+    })
+  })
 
   describe('when writing a buffer with an unknown command', () => {
-    const buffer = '027E0102030519000602';
+    const buffer = '027E0102030519000602'
 
     beforeEach(() => {
-      plmCommandStream.write(buffer);
-    });
+      plmCommandStream.write(buffer)
+    })
 
     describe('then reading a command', () => {
-      let command;
+      let command
       beforeEach(async () => {
-        await waitForReadable(plmCommandStream);
-        command = plmCommandStream.read();
-      });
+        await waitForReadable(plmCommandStream)
+        command = plmCommandStream.read()
+      })
 
       it('should return an unknown command', () => {
         expect(command).toEqual({
           received: expect.stringMatching(iso8601Regex),
           discarded: true,
           reason: 'unknown command number: 7E',
-          bytes: '027E'
-        });
-      });
+          bytes: '027E',
+        })
+      })
 
       describe('then reading a second time', () => {
-        let secondCommand;
+        let secondCommand
         beforeEach(async () => {
-          await waitForReadable(plmCommandStream);
-          secondCommand = plmCommandStream.read();
-        });
+          await waitForReadable(plmCommandStream)
+          secondCommand = plmCommandStream.read()
+        })
 
         it('should return a discarded command', () => {
           expect(secondCommand).toEqual({
             received: expect.stringMatching(iso8601Regex),
             discarded: true,
             reason: 'data before start of text byte',
-            bytes: '01'
-          });
-        });
+            bytes: '01',
+          })
+        })
 
         describe('then reading a third time', () => {
-          let thirdCommand;
+          let thirdCommand
           beforeEach(async () => {
-            await waitForReadable(plmCommandStream);
-            thirdCommand = plmCommandStream.read();
-          });
+            await waitForReadable(plmCommandStream)
+            thirdCommand = plmCommandStream.read()
+          })
 
           it('should return an unknown command', () => {
             expect(thirdCommand).toEqual({
               received: expect.stringMatching(iso8601Regex),
               discarded: true,
               reason: 'unknown command number: 03',
-              bytes: '0203'
-            });
-          });
+              bytes: '0203',
+            })
+          })
 
           describe('then reading a fourth time', () => {
-            let fourthCommand;
+            let fourthCommand
             beforeEach(async () => {
-              await waitForReadable(plmCommandStream);
-              fourthCommand = plmCommandStream.read();
-            });
+              await waitForReadable(plmCommandStream)
+              fourthCommand = plmCommandStream.read()
+            })
 
             it('should return a discarded command', () => {
               expect(fourthCommand).toEqual({
                 received: expect.stringMatching(iso8601Regex),
                 discarded: true,
                 reason: 'data before start of text byte',
-                bytes: '05190006'
-              });
-            });
+                bytes: '05190006',
+              })
+            })
 
             describe('then reading a fifth time', () => {
-              let fifthCommand;
+              let fifthCommand
               beforeEach(async () => {
-                await waitForReadable(plmCommandStream);
-                fifthCommand = plmCommandStream.read();
-              });
+                await waitForReadable(plmCommandStream)
+                fifthCommand = plmCommandStream.read()
+              })
 
               it('should return a null command', () => {
-                expect(fifthCommand).toBe(null);
-              });
+                expect(fifthCommand).toBe(null)
+              })
 
               describe('then ending the stream', () => {
-                let sixthCommand;
+                let sixthCommand
                 beforeEach(async () => {
-                  plmCommandStream.end();
-                  await waitForReadable(plmCommandStream);
-                  sixthCommand = plmCommandStream.read();
-                });
+                  plmCommandStream.end()
+                  await waitForReadable(plmCommandStream)
+                  sixthCommand = plmCommandStream.read()
+                })
 
                 it('should return a discarded command', () => {
                   expect(sixthCommand).toEqual({
                     received: expect.stringMatching(iso8601Regex),
                     discarded: true,
                     reason: 'data before start of text byte',
-                    bytes: '02'
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-  });
+                    bytes: '02',
+                  })
+                })
+              })
+            })
+          })
+        })
+      })
+    })
+  })
 
   describe('when writing a buffer with a two commands', () => {
-    const buffer = '02620102030519000602500102030405062000FF';
+    const buffer = '02620102030519000602500102030405062000FF'
 
     beforeEach(() => {
-      plmCommandStream.write(buffer);
-    });
+      plmCommandStream.write(buffer)
+    })
 
     describe('then reading a command', () => {
-      let command;
+      let command
       beforeEach(async () => {
-        await waitForReadable(plmCommandStream);
-        command = plmCommandStream.read();
-      });
+        await waitForReadable(plmCommandStream)
+        command = plmCommandStream.read()
+      })
 
       it('should return a parsed command', () => {
         expect(command).toEqual({
@@ -294,18 +294,18 @@ describe('createPlmCommandStream', () => {
             command: 'Light Status Request',
             messageType: 'direct',
             fromAddress: 'im-hub',
-            toAddress: '010203'
+            toAddress: '010203',
           },
-          bytes: '026201020305190006'
-        });
-      });
+          bytes: '026201020305190006',
+        })
+      })
 
       describe('then reading a second time', () => {
-        let secondCommand;
+        let secondCommand
         beforeEach(async () => {
-          await waitForReadable(plmCommandStream);
-          secondCommand = plmCommandStream.read();
-        });
+          await waitForReadable(plmCommandStream)
+          secondCommand = plmCommandStream.read()
+        })
 
         it('should return null', () => {
           expect(secondCommand).toEqual({
@@ -329,57 +329,57 @@ describe('createPlmCommandStream', () => {
               allLinkDatabaseDelta: 0,
               messageType: 'directAck',
               fromAddress: '010203',
-              toAddress: '040506'
+              toAddress: '040506',
             },
-            bytes: '02500102030405062000FF'
-          });
-        });
+            bytes: '02500102030405062000FF',
+          })
+        })
 
         describe('then ending the stream', () => {
-          let thirdCommand;
+          let thirdCommand
           beforeEach(async () => {
-            plmCommandStream.end();
-            await waitForReadable(plmCommandStream);
-            thirdCommand = plmCommandStream.read();
-          });
+            plmCommandStream.end()
+            await waitForReadable(plmCommandStream)
+            thirdCommand = plmCommandStream.read()
+          })
 
           it('should return a null command', () => {
-            expect(thirdCommand).toBe(null);
-          });
-        });
-      });
-    });
-  });
+            expect(thirdCommand).toBe(null)
+          })
+        })
+      })
+    })
+  })
 
   describe('when writing a buffer with a noise in front of command', () => {
-    const buffer = 'ABCDEF02500102030405062000FF';
+    const buffer = 'ABCDEF02500102030405062000FF'
 
     beforeEach(() => {
-      plmCommandStream.write(buffer);
-    });
+      plmCommandStream.write(buffer)
+    })
 
     describe('then reading a command', () => {
-      let command;
+      let command
       beforeEach(async () => {
-        await waitForReadable(plmCommandStream);
-        command = plmCommandStream.read();
-      });
+        await waitForReadable(plmCommandStream)
+        command = plmCommandStream.read()
+      })
 
       it('should return a "discarded" command', () => {
         expect(command).toEqual({
           received: expect.stringMatching(iso8601Regex),
           discarded: true,
           reason: 'data before start of text byte',
-          bytes: 'ABCDEF'
-        });
-      });
+          bytes: 'ABCDEF',
+        })
+      })
 
       describe('then reading a second time', () => {
-        let secondCommand;
+        let secondCommand
         beforeEach(async () => {
-          await waitForReadable(plmCommandStream);
-          secondCommand = plmCommandStream.read();
-        });
+          await waitForReadable(plmCommandStream)
+          secondCommand = plmCommandStream.read()
+        })
 
         it('should return null', () => {
           expect(secondCommand).toEqual({
@@ -397,10 +397,10 @@ describe('createPlmCommandStream', () => {
             maxHops: 0,
             command1: '00',
             command2: 'FF',
-            bytes: '02500102030405062000FF'
-          });
-        });
-      });
-    });
-  });
-});
+            bytes: '02500102030405062000FF',
+          })
+        })
+      })
+    })
+  })
+})

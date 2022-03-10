@@ -1,15 +1,15 @@
-'use strict';
-const parser = require('../lib/parsers')['57'];
+'use strict'
+const parser = require('../lib/parsers')['57']
 
 describe('ALL-Link Record Response ', () => {
-  let allLinkRecordResponse;
+  let allLinkRecordResponse
 
   describe('from controller', () => {
-    const buffer = 'E21155123401394414';
+    const buffer = 'E21155123401394414'
 
     beforeEach(() => {
-      allLinkRecordResponse = parser(buffer);
-    });
+      allLinkRecordResponse = parser(buffer)
+    })
 
     it('should have properties', () => {
       expect(allLinkRecordResponse).toMatchObject({
@@ -32,17 +32,17 @@ describe('ALL-Link Record Response ', () => {
         groupNumber: 17,
         id: '551234',
         length: 16,
-        received: expect.any(String)
-      });
-    });
-  });
+        received: expect.any(String),
+      })
+    })
+  })
 
   describe('from device', () => {
-    const buffer = 'A21155123401394414';
+    const buffer = 'A21155123401394414'
 
     beforeEach(() => {
-      allLinkRecordResponse = parser(buffer);
-    });
+      allLinkRecordResponse = parser(buffer)
+    })
 
     it('should have properties', () => {
       expect(allLinkRecordResponse).toMatchObject({
@@ -63,8 +63,8 @@ describe('ALL-Link Record Response ', () => {
         groupNumber: 17,
         id: '551234',
         length: 16,
-        received: expect.any(String)
-      });
-    });
-  });
-});
+        received: expect.any(String),
+      })
+    })
+  })
+})

@@ -1,12 +1,12 @@
-'use strict';
+'use strict'
 
-const {createAllLinkDatabase} = require('../lib/allLinkDatabase.js');
+const { createAllLinkDatabase } = require('../lib/allLinkDatabase.js')
 
 describe('createAllLinkDatabase', () => {
-  let allLinkDatabase;
+  let allLinkDatabase
   beforeEach(() => {
-    allLinkDatabase = createAllLinkDatabase();
-  });
+    allLinkDatabase = createAllLinkDatabase()
+  })
 
   describe('allLinkDatabase.addAllLinkRecord', () => {
     describe('when not in use', () => {
@@ -30,18 +30,18 @@ describe('createAllLinkDatabase', () => {
         groupNumber: 17,
         id: '551234',
         length: 16,
-        received: expect.any(String)
-      };
+        received: expect.any(String),
+      }
 
       beforeEach(() => {
-        allLinkDatabase.addAllLinkRecord(allLinkRecord);
-      });
+        allLinkDatabase.addAllLinkRecord(allLinkRecord)
+      })
 
       it('should not add any links', () => {
         expect(allLinkDatabase.links()).toEqual({
-        });
-      });
-    });
+        })
+      })
+    })
 
     describe('when controller', () => {
       const allLinkRecord = {
@@ -64,12 +64,12 @@ describe('createAllLinkDatabase', () => {
         groupNumber: 17,
         id: '551234',
         length: 16,
-        received: expect.any(String)
-      };
+        received: expect.any(String),
+      }
 
       beforeEach(() => {
-        allLinkDatabase.addAllLinkRecord(allLinkRecord);
-      });
+        allLinkDatabase.addAllLinkRecord(allLinkRecord)
+      })
 
       it('should add a link', () => {
         expect(allLinkDatabase.links()).toEqual({
@@ -81,13 +81,13 @@ describe('createAllLinkDatabase', () => {
             controllerGroups: {
               17: {
                 bit5: true,
-                groupNumber: 17
-              }
+                groupNumber: 17,
+              },
             },
-            responderGroups: {}
-          }
-        });
-      });
+            responderGroups: {},
+          },
+        })
+      })
 
       describe('and adding responder', () => {
         const allLinkRecord2 = {
@@ -108,12 +108,12 @@ describe('createAllLinkDatabase', () => {
           groupNumber: 17,
           id: '551234',
           length: 16,
-          received: expect.any(String)
-        };
+          received: expect.any(String),
+        }
 
         beforeEach(() => {
-          allLinkDatabase.addAllLinkRecord(allLinkRecord2);
-        });
+          allLinkDatabase.addAllLinkRecord(allLinkRecord2)
+        })
 
         it('should add a responder', () => {
           expect(allLinkDatabase.links()).toEqual({
@@ -125,21 +125,21 @@ describe('createAllLinkDatabase', () => {
               controllerGroups: {
                 17: {
                   bit5: true,
-                  groupNumber: 17
-                }
+                  groupNumber: 17,
+                },
               },
               responderGroups: {
                 17: {
                   bit5: true,
                   data: '013944',
-                  groupNumber: 17
-                }
-              }
-            }
-          });
-        });
-      });
-    });
+                  groupNumber: 17,
+                },
+              },
+            },
+          })
+        })
+      })
+    })
 
     describe('when controller Database Record Found', () => {
       const allLinkRecord = {
@@ -164,11 +164,11 @@ describe('createAllLinkDatabase', () => {
         numberRetries: 1,
         controllerGroupNumber: 68,
         data: '013944',
-        bytes: '02591EB8E20D551234013944'
-      };
+        bytes: '02591EB8E20D551234013944',
+      }
       beforeEach(() => {
-        allLinkDatabase.addAllLinkRecord(allLinkRecord);
-      });
+        allLinkDatabase.addAllLinkRecord(allLinkRecord)
+      })
 
       it('should add a link', () => {
         expect(allLinkDatabase.links()).toEqual({
@@ -180,13 +180,13 @@ describe('createAllLinkDatabase', () => {
             controllerGroups: {
               13: {
                 bit5: true,
-                groupNumber: 13
-              }
+                groupNumber: 13,
+              },
             },
-            responderGroups: {}
-          }
-        });
-      });
+            responderGroups: {},
+          },
+        })
+      })
 
       describe('and controller Database Record Found again', () => {
         const allLinkRecord2 = {
@@ -212,12 +212,12 @@ describe('createAllLinkDatabase', () => {
           controllerGroupNumber: 68,
           data: '013944',
           bytes: '02591EC8E200551234013944',
-          device: 'activity outlet'
-        };
+          device: 'activity outlet',
+        }
 
         beforeEach(() => {
-          allLinkDatabase.addAllLinkRecord(allLinkRecord2);
-        });
+          allLinkDatabase.addAllLinkRecord(allLinkRecord2)
+        })
 
         it('should add a link', () => {
           expect(allLinkDatabase.links()).toEqual({
@@ -229,19 +229,19 @@ describe('createAllLinkDatabase', () => {
               controllerGroups: {
                 0: {
                   bit5: true,
-                  groupNumber: 0
+                  groupNumber: 0,
                 },
                 13: {
                   bit5: true,
-                  groupNumber: 13
-                }
+                  groupNumber: 13,
+                },
               },
-              responderGroups: {}
-            }
-          });
-        });
-      });
-    });
+              responderGroups: {},
+            },
+          })
+        })
+      })
+    })
 
     describe('when device Database Record Found', () => {
       const allLinkRecord2 = {
@@ -284,16 +284,16 @@ describe('createAllLinkDatabase', () => {
           toAddress: '561234',
           fromDevice: 'family outlet south',
           toDevice: 'hub controller',
-          device: 'hub controller'
+          device: 'hub controller',
         },
         bytes: '0251551234561234112F0000010FFF00AA00561234FF1C0159',
         fromDevice: 'family outlet south',
-        toDevice: 'hub controller'
-      };
+        toDevice: 'hub controller',
+      }
 
       beforeEach(() => {
-        allLinkDatabase.addAllLinkRecord(allLinkRecord2);
-      });
+        allLinkDatabase.addAllLinkRecord(allLinkRecord2)
+      })
 
       it('should add a link', () => {
         expect(allLinkDatabase.links()).toEqual({
@@ -304,12 +304,12 @@ describe('createAllLinkDatabase', () => {
               0: {
                 bit5: true,
                 data: 'FF1C01',
-                groupNumber: 0
-              }
-            }
-          }
-        });
-      });
+                groupNumber: 0,
+              },
+            },
+          },
+        })
+      })
 
       describe('and device Database Record Found again', () => {
         const allLinkRecord = {
@@ -354,16 +354,16 @@ describe('createAllLinkDatabase', () => {
             toAddress: '561234',
             fromDevice: 'family outlet south',
             toDevice: 'hub controller',
-            device: 'hub controller'
+            device: 'hub controller',
           },
           bytes: '0251551234561234112F0000010FF700E20156123401000043',
           fromDevice: 'family outlet south',
-          toDevice: 'hub controller'
-        };
+          toDevice: 'hub controller',
+        }
 
         beforeEach(() => {
-          allLinkDatabase.addAllLinkRecord(allLinkRecord);
-        });
+          allLinkDatabase.addAllLinkRecord(allLinkRecord)
+        })
 
         it('should add a link', () => {
           expect(allLinkDatabase.links()).toEqual({
@@ -375,20 +375,20 @@ describe('createAllLinkDatabase', () => {
               controllerGroups: {
                 1: {
                   bit5: true,
-                  groupNumber: 1
-                }
+                  groupNumber: 1,
+                },
               },
               responderGroups: {
                 0: {
                   bit5: true,
                   data: 'FF1C01',
-                  groupNumber: 0
-                }
-              }
-            }
-          });
-        });
-      });
-    });
-  });
-});
+                  groupNumber: 0,
+                },
+              },
+            },
+          })
+        })
+      })
+    })
+  })
+})

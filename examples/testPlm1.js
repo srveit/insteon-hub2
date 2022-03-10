@@ -1,7 +1,7 @@
-'use strict';
-const util = require('util'),
-  { createPlm } = require('../index'),
-  deviceNames = require('./deviceNames.json');
+'use strict'
+
+const { createPlm } = require('../index')
+const deviceNames = require('./deviceNames.json')
 
 const main = async () => {
   const plm = createPlm({
@@ -9,11 +9,11 @@ const main = async () => {
     password: process.env.HUB_PASSWORD,
     host: 'insteon-hub',
     port: 25105,
-    deviceNames
-  });
-  plm.startPolling(deviceNames);
+    deviceNames,
+  })
+  plm.startPolling(deviceNames)
 
-  let result;
+  let result
   // result = await plm.sendModemCommand({
   //   command: 'Product Data Request',
   //   toAddress: '4A3A6F'
@@ -24,22 +24,22 @@ const main = async () => {
   //   toAddress: '4A3A6F'
   // });
   // console.log('result', result);
-  console.log('========');
+  console.log('========')
   try {
     result = await plm.sendModemCommand({
       command: 'Get Operating Flags',
-      toAddress: '515454'
-    });
+      toAddress: '515454',
+    })
   } catch (e) {
-    console.log(e);
+    console.log(e)
   }
-  console.log('result', result);
+  console.log('result', result)
   // result = await plm.sendModemCommand({
   //   command: 'Light Status LED Request',
   //   toAddress: '515454'
   // });
   // console.log('result', result);
-  await plm.stopPolling();
-};
+  await plm.stopPolling()
+}
 
-main();
+main()

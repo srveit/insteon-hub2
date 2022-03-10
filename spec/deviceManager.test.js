@@ -1,31 +1,31 @@
-'use strict';
-const {createDeviceManager} = require('../lib/deviceManager');
+'use strict'
+const { createDeviceManager } = require('../lib/deviceManager')
 
 describe('createDeviceManager', () => {
-  let deviceManager;
+  let deviceManager
   const deviceNames = {
     'im-hub': 'im-hub',
     170809: 'hub controller',
     210203: 'device1',
-    340506: 'device2'
-  };
+    340506: 'device2',
+  }
 
   beforeEach(() => {
-    deviceManager = createDeviceManager({deviceNames});
-  });
+    deviceManager = createDeviceManager({ deviceNames })
+  })
 
   describe('deviceManager.devices', () => {
     it('should return device map', () => {
       expect(deviceManager.devices).toEqual(expect.objectContaining({
         210203: expect.objectContaining({
-          name: 'device1'
-        })
-      }));
-    });
-  });
+          name: 'device1',
+        }),
+      }))
+    })
+  })
 
   describe('updateDeviceInfo', () => {
     beforeEach(() => {
-    });
-  });
-});
+    })
+  })
+})
