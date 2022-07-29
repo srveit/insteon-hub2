@@ -52,8 +52,9 @@
     "coverageDirectory": "./coverage/",
     "coverageReporters": [
       "clover",
-      "json",
       "html",
+      "json",
+      "lcov",
       "text-summary"
     ],
     "coverageThreshold": {
@@ -83,10 +84,9 @@
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
     "jest-html-reporter": "^3.4.2",
-    "jest-spec-reporter": "^1.0.17",
     "jsdoc": "^3.6.10",
     "markdownlint-cli2": "^0.4.0",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^3.2.8",
     "pdf2json": "^2.0.0",
     "standard": "^16.0.4",
     "typescript": "^3.9.7",
@@ -99,5 +99,6 @@
   "bundledDependencies": [],
   "engines": {
     "node": ">= 14.0.0"
-  }
+  },
+  "bundleDependencies": []
 }

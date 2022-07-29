@@ -3,7 +3,7 @@ const { createPlmCommandQueue } = require('../lib/plmCommandQueue')
 
 describe('plmCommandQueue.createPlmCommandQueue', () => {
   /* eslint no-undefined: "off" */
-  let plmCommandQueue, sendCommandBuffer
+  let plmCommandQueue, sendCommandBuffer, setTimeout
 
   beforeEach(() => {
     jest.useFakeTimers()
@@ -129,13 +129,17 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
     it('should call sendCommandBuffer', () => {
       expect(sendCommandBuffer).toHaveBeenCalledWith(commandBuffer)
       expect(setTimeout).toHaveBeenCalledTimes(1)
+      expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), defaultDelay * 1000)
     })
 
     describe('and timeout expires', () => {
+      let handler
+
       beforeEach(() => {
-        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
-        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
-        jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
+        handler = setTimeout.mock.calls[0][0]
+        handler()
+        handler()
+        handler()
       })
 
       it('should call sendCommandBuffer again', () => {
@@ -144,7 +148,7 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
 
       describe('and timeout expires again', () => {
         beforeEach(() => {
-          jest.advanceTimersByTime(defaultDelay * 1.1 * 1000)
+          handler()
         })
 
         it('should reject responseHandler', () => {
