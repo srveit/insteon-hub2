@@ -1,5 +1,4 @@
 'use strict'
-const { isExternalModuleNameRelative } = require('typescript')
 const unroll = require('unroll')
 
 unroll.use(it)
