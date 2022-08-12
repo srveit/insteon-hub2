@@ -16,7 +16,7 @@ describe('encodeCommand', () => {
         ['command', 'expected'],
         // Modem commands
         [
-          { command: 'Get IM Info'},
+          { command: 'Get IM Info' },
           '0260',
         ],
         [
@@ -24,7 +24,7 @@ describe('encodeCommand', () => {
           '0261010203',
         ],
         [
-          { command: 'Send ALL-Link Command', groupNumber: 1, allLinkCommand: '02'},
+          { command: 'Send ALL-Link Command', groupNumber: 1, allLinkCommand: '02' },
           '0261010200',
         ],
         [
@@ -154,7 +154,7 @@ describe('encodeCommand', () => {
           '026E',
         ],
         [
-          { 
+          {
             command: 'Set INSTEON NAK Message Byte',
             command2Data: '12',
           },
