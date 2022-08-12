@@ -16,7 +16,12 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
 ## Architucture
 
 The Insteon Hub 2 has a HTTP port that allows for controlling and monitoring
-the hub and the devices controlled by it. To send a command to the hub, you send a HTTP request. To read responses from the hub is a little trickier. You send a HTTP request to get the buffer which returns a string of hexadecimal characters. This string implements a [ring (or circular) buffer][circular-buffer-url]. In order to not miss and messages, this buffer must be read at a rate of 10 times per second.
+the hub and the devices controlled by it. To send a command to the hub, you
+send a HTTP request. To read responses from the hub is a little trickier.
+You send a HTTP request to get the buffer which returns a string of
+hexadecimal characters. This string implements a
+[ring (or circular) buffer][circular-buffer-url]. In order to not miss and
+messages, this buffer must be read at a rate of 10 times per second.
 
 ## Files
 
@@ -136,8 +141,8 @@ the hub and the devices controlled by it. To send a command to the hub, you send
 [node-version-url]: https://nodejs.org/en/download/
 [npm-image]: https://img.shields.io/npm/v/insteon-plm.svg
 [npm-url]: https://npmjs.org/package/insteon-plm
-[snyk-badge]: https://snyk.io/test/github/srveit/mechanize-js/badge.svg
-[snyk-url]: https://snyk.io/test/github/srveit/mechanize-js
+[snyk-badge]: https://snyk.io/test/github/srveit/insteon-plm/badge.svg
+[snyk-url]: https://snyk.io/test/github/srveit/insteon-plm
 
 <!--
 
