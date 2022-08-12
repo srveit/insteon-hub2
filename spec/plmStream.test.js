@@ -84,7 +84,7 @@ describe('createPlmStream', () => {
           server.bufferStatus.mockReturnValueOnce({
             error: 'test error',
           })
-          await sleep(100)
+          await sleep(200)
         })
 
         describe('and stopLogging', () => {
@@ -107,11 +107,6 @@ describe('createPlmStream', () => {
               }),
               expect.objectContaining({
                 error: expect.any(Error),
-                timestamp: expect.any(Date),
-              }),
-              expect.objectContaining({
-                buffer: null,
-                chunk: undefined,
                 timestamp: expect.any(Date),
               }),
             ])

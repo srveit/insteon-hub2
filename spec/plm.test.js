@@ -241,11 +241,6 @@ describe('plm.createPlm', () => {
     it('should return the plmStream log', () => {
       expect(log).toEqual([
         expect.objectContaining({
-          buffer: null,
-          chunk: undefined,
-          timestamp: expect.any(Date),
-        }),
-        expect.objectContaining({
           buffer: '026049EA700333A50612',
           chunk: '026049EA700333A506',
           timestamp: expect.any(Date),
