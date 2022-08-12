@@ -5,22 +5,27 @@
 [![MIT License][license-image]][license-url]
 [![Node.js Version][node-version-image]][node-version-url]
 [![GitHub Build Status][github-build-badge]][github-build-url]
-[![AppVeyor Build Status][appveyor-image]][appveyor-url]
 [![Codecov Status][codecov-image]][codecov-url]
 [![Code Climate][code-climate-image]][code-climate-url]
 [![Gitter][gitter-image]][gitter-url]
-[![Dependency Status][dependency-image]][dependency-url]
-[![Greenkeeper badge][greenkeeper-image]][greenkeeper-url]
+[![Known Vulnerabilities][snyk-badge]][snyk-url]
 <!-- [![js-canonical-style][canonical-image]][canonical-url] -->
 
 Library for monitoring and controlling Insteon devices through an Insteon hub.
 
+## Architucture
+
+The Insteon Hub 2 has a HTTP port that allows for controlling and monitoring
+the hub and the devices controlled by it. To send a command to the hub, you send a HTTP request. To read responses from the hub is a little trickier. You send a HTTP request to get the buffer which returns a string of hexadecimal characters. This string implements a [ring (or circular) buffer][circular-buffer-url]. In order to not miss and messages, this buffer must be read at a rate of 10 times per second.
+
 ## Files
 
-- allLinkDatabase.js  (36%)
+- allLinkDatabase.js
   - createAllLinkDatabase
-- allLinkRecord.js (81%)
+- allLinkRecord.js
   - createAllLinkRecord
+- commandAnnotator.js
+  - createCommandAnnotator
 - constants.js
   - ALL\_LINK\_CODES
   - ALL\_LINK\_CONTROL\_CODES
@@ -32,9 +37,13 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
   - OPERATING\_FLAGS
   - OUTLET\_CODES
   - OUTLET\_NAMES
+  - ENGINE\_VERSION\_CODES
+  - ENGINE\_VERSION\_NAMES
   - X10\_COMMANDS
   - X10\_HOUSE\_CODES
   - X10\_UNIT\_CODES
+- device.js
+  - createDevice
 - deviceCategories.js
   - '00'
   - '01'
@@ -62,15 +71,27 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
   - '17'
   - FE
   - FF
-- encodeCommand.js (67%)
-- parseInsteonCommand.js (70%)
-- parsers.js (49%)
+- deviceManager.js
+  - createDeviceManager
+- encodeCommand.js
+  - encodeCommand
+  - commandResponseMatcher
+- house.js
+  - createHouse
+- parseInsteonCommand.js
+  - parseInsteonCommand
+- parsePlmBuffer.js
+  - parsePlmBuffer
+- parsers.js
+  - parsers
 - plm.js (TODO: rewrite to use stream)
   - createPlm
 - plmBase.js
   - createPlmBase
 - plmBufferProcessor.js
   - createPlmBufferProcessor
+- plmCommandQueue.js
+  - createPlmCommandQueue
 - plmCommandStream.js
   - createPlmCommandStream
 - plmStream.js
@@ -92,32 +113,31 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
 - [Insteon Direct Commands](http://www.richstevenson.com/2014/01/06/insteon-direct-commands/)
 - [Insteon Hub Commands](https://openremote.github.io/archive-dotorg/forums/attachments/22882151/23036480.pdf)
 
-[npm-image]: https://img.shields.io/npm/v/insteon-plm.svg
-[npm-url]: https://npmjs.org/package/insteon-plm
-[downloads-image]: https://img.shields.io/npm/dm/insteon-plm.svg
-[downloads-url]: https://npmjs.org/package/insteon-plm
-[node-version-image]: https://img.shields.io/node/v/insteon-plm.svg
-[node-version-url]: https://nodejs.org/en/download/
-[github-build-badge]: https://img.shields.io/github/workflow/status/srveit/insteaon-plm/build-actions
-[github-build-url]: https://github.com/srveit/insteaon-plm/actions/workflows/test-actions.yml
-[coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-plm/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/srveit/insteon-plm?branch=master
-[code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-plm.svg
-[code-climate-url]: https://codeclimate.com/github/srveit/insteon-plm
-[gitter-image]: https://img.shields.io/gitter/room/insteon-plm/Lobby.svg
-[gitter-url]: https://gitter.im/insteon-plm/Lobby
 [bithound-image]: https://www.bithound.io/github/srveit/insteon-plm/badges/score.svg
 [bithound-url]: https://www.bithound.io/github/srveit/insteon-plm
-[dependency-image]: https://img.shields.io/david/srveit/insteon-plm.svg
-[dependency-url]: https://david-dm.org/srveit/insteon-plm
-[codecov-image]: https://img.shields.io/codecov/c/github/babel/babylon/master.svg?style=flat
-[codecov-url]: https://codecov.io/gh/babel/babylon
-[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
-[license-url]: http://choosealicense.com/licenses/mit/
 [canonical-image]: https://img.shields.io/badge/code%20style-canonical-brightgreen.svg?style=flat
 [canonical-url]: https://github.com/gajus/eslint-config-canonical
-[greenkeeper-image]: https://badges.greenkeeper.io/srveit/insteon-plm.svg
-[greenkeeper-url]: https://greenkeeper.io/
+[circular-buffer-url]: https://en.wikipedia.org/wiki/Circular_buffer
+[code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-plm.svg
+[code-climate-url]: https://codeclimate.com/github/srveit/insteon-plm
+[codecov-image]: https://img.shields.io/codecov/c/github/babel/babylon/master.svg?style=flat
+[codecov-url]: https://codecov.io/gh/babel/babylon
+[coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-plm/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/srveit/insteon-plm?branch=master
+[downloads-image]: https://img.shields.io/npm/dm/insteon-plm.svg
+[downloads-url]: https://npmjs.org/package/insteon-plm
+[github-build-badge]: https://img.shields.io/github/workflow/status/srveit/insteaon-plm/build-actions
+[github-build-url]: https://github.com/srveit/insteaon-plm/actions/workflows/test-actions.yml
+[gitter-image]: https://img.shields.io/gitter/room/insteon-plm/Lobby.svg
+[gitter-url]: https://gitter.im/insteon-plm/Lobby
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: http://choosealicense.com/licenses/mit/
+[node-version-image]: https://img.shields.io/node/v/insteon-plm.svg
+[node-version-url]: https://nodejs.org/en/download/
+[npm-image]: https://img.shields.io/npm/v/insteon-plm.svg
+[npm-url]: https://npmjs.org/package/insteon-plm
+[snyk-badge]: https://snyk.io/test/github/srveit/mechanize-js/badge.svg
+[snyk-url]: https://snyk.io/test/github/srveit/mechanize-js
 
 <!--
 

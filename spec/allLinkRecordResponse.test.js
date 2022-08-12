@@ -1,5 +1,6 @@
 'use strict'
-const parser = require('../lib/parsers')['57']
+const { parsers } = require('../lib/parsers')
+const parser = parsers['57']
 
 describe('ALL-Link Record Response ', () => {
   let allLinkRecordResponse

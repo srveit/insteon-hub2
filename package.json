@@ -48,6 +48,10 @@
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "node_modules",
+      "mock-server.js"
+    ],
     "coverageProvider": "v8",
     "coverageDirectory": "./coverage/",
     "coverageReporters": [
@@ -99,6 +103,5 @@
   "bundledDependencies": [],
   "engines": {
     "node": ">= 14.0.0"
-  },
-  "bundleDependencies": []
+  }
 }

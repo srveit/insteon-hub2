@@ -1,6 +1,6 @@
 'use strict'
 const unroll = require('unroll')
-const parseInsteonCommand = require('../lib/parseInsteonCommand')
+const { parseInsteonCommand } = require('../lib/parseInsteonCommand')
 
 unroll.use(it)
 
@@ -367,6 +367,11 @@ describe('parseInsteonCommand', () => {
             { command: 'Device Text String Request' },
           ],
           [
+            { command1: '03', command2: '03' },
+            { command: 'Device Info Request', command2: '03' },
+          ],
+          // 04-08 Reserved
+          [
             { command1: '09', command2: '04' },
             { command: 'Enter Linking Mode', groupNumber: 4 },
           ],
@@ -374,14 +379,12 @@ describe('parseInsteonCommand', () => {
             { command1: '0A', command2: '05' },
             { command: 'Enter Unlinking Mode', groupNumber: 5 },
           ],
+          // 0B-0C Reserved
           [
             { command1: '0D', command2: '00' },
-            { command: 'Get INSTEON Engine Version', engineVersion: 0 },
+            { command: 'Get INSTEON Engine Version', engineVersion: 'i1' },
           ],
-          // [
-          //   { command1: '0D', command2: '01' },
-          //   { command: 'Get INSTEON Engine Version', engineVersion: 1 },
-          // ],
+          // 0E Reserved
           [
             { command1: '0F', command2: '33' },
             { command: 'Ping', data: 51 },
@@ -444,8 +447,9 @@ describe('parseInsteonCommand', () => {
           ],
           [
             { command1: '19', command2: '04' },
-            { command: '19--', allLinkDatabaseDelta: 25, command2: '04' },
+            { command: '19-- Response', allLinkDatabaseDelta: 25, command2: '04' },
           ],
+          // 1A-1E Reserved
           [
             { command1: '1F', command2: '00' },
             {
@@ -544,7 +548,7 @@ describe('parseInsteonCommand', () => {
           ],
           [
             { command1: '2F', command2: '00' },
-            { command: '2F--' },
+            { command: '2F-- Response' },
           ],
           [
             { command1: '30', command2: '00' },
@@ -565,6 +569,398 @@ describe('parseInsteonCommand', () => {
           [
             { command1: '33', command2: '01' },
             { command: 'Outlet OFF (undefined)' },
+          ],
+        ]
+      )
+    })
+
+    describe('with previousCommand', () => {
+      unroll(
+        '#previous, #response should be parsed as #command',
+        testArgs => {
+          const response = Object.assign({ messageType: 'directAck' }, testArgs.response)
+          const result1 = parseInsteonCommand(response, testArgs.previous)
+          const command = Object.assign({ messageType: 'directAck' }, testArgs.command)
+          expect(result1).toEqual(command)
+        },
+        [
+          ['previous', 'response', 'command'],
+          [
+            { command1: '01', command2: '02' },
+            { command1: '01', command2: '02' },
+            { command: 'Assign to ALL-Link Group', groupNumber: 2 },
+          ],
+          [
+            { command1: '02', command2: '03' },
+            { command1: '02', command2: '03' },
+            { command: 'Delete from ALL-Link Group', groupNumber: 3 },
+          ],
+          [
+            { command1: '03', command2: '00' },
+            { command1: '03', command2: '00' },
+            { command: 'Product Data Request' },
+          ],
+          [
+            { command1: '03', command2: '01' },
+            { command1: '03', command2: '01' },
+            { command: 'FX Username Request' },
+          ],
+          [
+            { command1: '03', command2: '02' },
+            { command1: '03', command2: '02' },
+            { command: 'Device Text String Request' },
+          ],
+          [
+            { command1: '03', command2: '12' },
+            { command1: '03', command2: '03' },
+            { command: 'Device Info Request', command2: '12' },
+          ],
+          // 04-08 Reserved
+          [
+            { command1: '09', command2: '04' },
+            { command1: '09', command2: '04' },
+            { command: 'Enter Linking Mode', groupNumber: 4 },
+          ],
+          [
+            { command1: '0A', command2: '05' },
+            { command1: '0A', command2: '05' },
+            { command: 'Enter Unlinking Mode', groupNumber: 5 },
+          ],
+          // 0B-0C Reserved
+          [
+            { command1: '0D', command2: '00' },
+            { command1: '0D', command2: '00' },
+            { command: 'Get INSTEON Engine Version', engineVersion: 'i1' },
+          ],
+          [
+            { command1: '0D', command2: '00' },
+            { command1: '0D', command2: '01' },
+            { command: 'Get INSTEON Engine Version', engineVersion: 'i2' },
+          ],
+          [
+            { command1: '0D', command2: '00' },
+            { command1: '0D', command2: '02' },
+            { command: 'Get INSTEON Engine Version', engineVersion: '02' },
+          ],
+          // 0E Reserved
+          [
+            { command1: '0F', command2: '33' },
+            { command1: '0F', command2: '33' },
+            { command: 'Ping', data: 51 },
+          ],
+          [
+            { command1: '10', command2: '44' },
+            { command1: '10', command2: '44' },
+            { command: 'ID Request', data: 68 },
+          ],
+          [
+            { command1: '11', command2: '00' },
+            { command1: '11', command2: '00' },
+            { command: 'Light ON', onLevel: 0 },
+          ],
+          [
+            { command1: '12', command2: 'FF' },
+            { command1: '12', command2: 'FF' },
+            { command: 'Light ON Fast', onLevel: 255 },
+          ],
+          [
+            { command1: '13', command2: '00' },
+            { command1: '13', command2: '00' },
+            { command: 'Light OFF' },
+          ],
+          [
+            { command1: '14', command2: '00' },
+            { command1: '14', command2: '00' },
+            { command: 'Light OFF Fast' },
+          ],
+          [
+            { command1: '15', command2: '00' },
+            { command1: '15', command2: '00' },
+            { command: 'Light Brighten One Step' },
+          ],
+          [
+            { command1: '16', command2: '00' },
+            { command1: '16', command2: '00' },
+            { command: 'Light Dim One Step' },
+          ],
+          [
+            { command1: '17', command2: '00' },
+            { command1: '17', command2: '00' },
+            { command: 'Light Start Manual Change', direction: 'down' },
+          ],
+          [
+            { command1: '17', command2: '01' },
+            { command1: '17', command2: '01' },
+            { command: 'Light Start Manual Change', direction: 'up' },
+          ],
+          [
+            { command1: '18', command2: '00' },
+            { command1: '18', command2: '00' },
+            { command: 'Light Stop Manual Change', data: 0 },
+          ],
+          [
+            { command1: '19', command2: '00' },
+            { command1: '19', command2: 'FF' },
+            {
+              command: 'Light Status Response',
+              allLinkDatabaseDelta: 25,
+              onLevel: 255,
+            },
+          ],
+          [
+            { command1: '19', command2: '01' },
+            { command1: '40', command2: '00' },
+            {
+              command: 'Outlet Status Response',
+              top: 'off',
+              bottom: 'off',
+              allLinkDatabaseDelta: 64,
+            },
+          ],
+          [
+            { command1: '19', command2: '02' },
+            { command1: '50', command2: '01' },
+            {
+              command: 'Outlet Status Response',
+              top: 'on',
+              bottom: 'off',
+              allLinkDatabaseDelta: 80,
+            },
+          ],
+          [
+            { command1: '19', command2: '02' },
+            { command1: '60', command2: '02' },
+            {
+              command: 'Outlet Status Response',
+              top: 'off',
+              bottom: 'on',
+              allLinkDatabaseDelta: 96,
+            },
+          ],
+          [
+            { command1: '19', command2: '03' },
+            { command1: '70', command2: '03' },
+            {
+              command: 'Outlet Status Response',
+              top: 'on',
+              bottom: 'on',
+              allLinkDatabaseDelta: 112,
+            },
+          ],
+          [
+            { command1: '19', command2: '04' },
+            { command1: '80', command2: '67' },
+            {
+              command: '1904 Response',
+              command2: '67',
+              allLinkDatabaseDelta: 128,
+            },
+          ],
+          // 1A-1E Reserved
+          [
+            { command1: '1F', command2: '00' },
+            { command1: '1F', command2: 'FF' },
+            {
+              command: 'Get Operating Flags',
+              programmingLockOn: true,
+              ledOnDuringTransmit: true,
+              resumeDimEnabled: true,
+              loadSenseTopOn: true,
+              beeperOn: true,
+              numberKeys: 8,
+              stayAwake: true,
+              loadSenseBottomOn: true,
+              receiveOnly: true,
+              backlightOn: true,
+              ledOff: true,
+              heartbeatOff: true,
+              loadSenseOn: true,
+              keybeepOn: true,
+              rfOff: true,
+              powerlineOff: true,
+            },
+          ],
+          [
+            { command1: '1F', command2: '00' },
+            { command1: '1F', command2: '00' },
+            {
+              command: 'Get Operating Flags',
+              programmingLockOn: false,
+              ledOnDuringTransmit: false,
+              resumeDimEnabled: false,
+              loadSenseTopOn: false,
+              beeperOn: false,
+              numberKeys: 6,
+              stayAwake: false,
+              loadSenseBottomOn: false,
+              receiveOnly: false,
+              backlightOn: false,
+              ledOff: false,
+              heartbeatOff: false,
+              loadSenseOn: false,
+              keybeepOn: false,
+              rfOff: false,
+              powerlineOff: false,
+            },
+          ],
+          [
+            { command1: '1F', command2: '01' },
+            { command1: '1F', command2: '7F' },
+            {
+              command: 'Get ALL-Link Database Delta',
+              allLinkDatabaseDelta: 127,
+            },
+          ],
+          [
+            { command1: '1F', command2: '02' },
+            { command1: '1F', command2: 'E0' },
+            {
+              command: 'Get Signal-to-Noise Value',
+              signalToNoise: 224,
+            },
+          ],
+          [
+            { command1: '1F', command2: '05' },
+            { command1: '1F', command2: 'FF' },
+            {
+              command: 'Get Operating Flags 2',
+              bit0: true,
+              noX10: true,
+              errorBlinkOn: true,
+              cleanupReportOn: true,
+              lockButtonsOn: true,
+              bit5: true,
+              smartHopsOff: true,
+              bit7: true,
+            },
+          ],
+          [
+            { command1: '1F', command2: '06' },
+            { command1: '1F', command2: '12' },
+            {
+              command: 'Get Operating Flags',
+              command2: '12',
+            },
+          ],
+          [
+            { command1: '20', command2: '00' },
+            { command1: '20', command2: '00' },
+            { command: 'Set Program Lock On', data: 0 },
+          ],
+          [
+            { command1: '20', command2: '01' },
+            { command1: '20', command2: '01' },
+            { command: 'Set Program Lock Off', data: 1 },
+          ],
+          [
+            { command1: '20', command2: '02' },
+            { command1: '20', command2: '02' },
+            { command: 'Set Program LED On', data: 2 },
+          ],
+          [
+            { command1: '20', command2: '03' },
+            { command1: '20', command2: '03' },
+            { command: 'Set Program LED Off', data: 3 },
+          ],
+          [
+            { command1: '20', command2: '04' },
+            { command1: '20', command2: '04' },
+            { command: 'Set Program Beeper On', data: 4 },
+          ],
+          [
+            { command1: '20', command2: '05' },
+            { command1: '20', command2: '05' },
+            { command: 'Set Program Beeper Off', data: 5 },
+          ],
+          [
+            { command1: '20', command2: '06' },
+            { command1: '20', command2: '06' },
+            { command: 'Set Program Stay Awake On', data: 6 },
+          ],
+          [
+            { command1: '20', command2: '07' },
+            { command1: '20', command2: '07' },
+            { command: 'Set Program Stay Awake Off', data: 7 },
+          ],
+          [
+            { command1: '20', command2: '08' },
+            { command1: '20', command2: '08' },
+            { command: 'Set Program Listen Only On', data: 8 },
+          ],
+          [
+            { command1: '20', command2: '09' },
+            { command1: '20', command2: '09' },
+            { command: 'Set Program Listen Only Off', data: 9 },
+          ],
+          [
+            { command1: '20', command2: '0A' },
+            { command1: '20', command2: '0A' },
+            { command: 'Set Program No I\'m Alive On', data: 10 },
+          ],
+          [
+            { command1: '20', command2: '0B' },
+            { command1: '20', command2: '0B' },
+            { command: 'Set Program No I\'m Alive Off', data: 11 },
+          ],
+          [
+            { command1: '2E', command2: 'FF' },
+            { command1: '2E', command2: 'FF' },
+            { command: 'Light ON at Ramp Rate', onLevel: 255, rampRate: 31 },
+          ],
+          [
+            { command1: '2F', command2: '00' },
+            { command1: '2F', command2: '00' },
+            { command: 'Read/Write ALL-Link Database' },
+          ],
+          [
+            { command1: '2F', command2: '01' },
+            { command1: '2F', command2: '01' },
+            { command: 'Read/Write ALL-Link Database (PLM)' },
+          ],
+          [
+            { command1: '2F', command2: '02' },
+            { command1: '2F', command2: '02' },
+            { command: 'Read/Write IR Code Database' },
+          ],
+          [
+            { command1: '2F', command2: '03' },
+            { command1: '2F', command2: '03' },
+            { command: '2F03 Response' },
+          ],
+          [
+            { command1: '30', command2: '00' },
+            { command1: '30', command2: '00' },
+            { command: 'Trigger Group', groupNumber: 0 },
+          ],
+          [
+            { command1: '32', command2: '00' },
+            { command1: '32', command2: '00' },
+            { command: 'Outlet ON (undefined)' },
+          ],
+          [
+            { command1: '32', command2: '01' },
+            { command1: '32', command2: '00' },
+            { command: 'Outlet ON (top)' },
+          ],
+          [
+            { command1: '32', command2: '02' },
+            { command1: '32', command2: '00' },
+            { command: 'Outlet ON (bottom)' },
+          ],
+          [
+            { command1: '33', command2: '00' },
+            { command1: '33', command2: '00' },
+            { command: 'Outlet OFF (undefined)' },
+          ],
+          [
+            { command1: '33', command2: '01' },
+            { command1: '33', command2: '00' },
+            { command: 'Outlet OFF (top)' },
+          ],
+          [
+            { command1: '33', command2: '02' },
+            { command1: '33', command2: '00' },
+            { command: 'Outlet OFF (bottom)' },
           ],
         ]
       )
@@ -753,7 +1149,7 @@ describe('parseInsteonCommand', () => {
           ],
           // [
           //   { command1: '2F', command2: '00' },
-          //   { command: '2F--', error: 'Reserved' },
+          //   { command: '2F-- Response', error: 'Reserved' },
           // ],
           // [
           //   { command1: '30', command2: '00' },
@@ -778,6 +1174,260 @@ describe('parseInsteonCommand', () => {
         ]
       )
     })
+    describe('with previousCommand', () => {
+      unroll(
+        '#previous, #response should be parsed as #command',
+        testArgs => {
+          const response = Object.assign({ messageType: 'directNak' }, testArgs.response)
+          const command = Object.assign({ messageType: 'directNak', previousCommand: undefined }, testArgs.command)
+          const result1 = parseInsteonCommand(response, testArgs.previous)
+          expect(result1).toEqual(command)
+        },
+        [
+          ['previous', 'response', 'command'],
+          [
+            { command2: '00' },
+            { command1: '01', command2: '02' },
+            { command: 'Assign to ALL-Link Group', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '02', command2: '03' },
+            { command: 'Delete from ALL-Link Group', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '03', command2: '00' },
+            { command: 'Device Text String Request', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '03', command2: '01' },
+            { command: 'Device Text String Request', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '03', command2: '02' },
+            { command: 'Device Text String Request', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '09', command2: '04' },
+            { command: 'Enter Linking Mode', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '0A', command2: '05' },
+            { command: 'Enter Unlinking Mode', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '0D', command2: '00' },
+            { command: 'Get INSTEON Engine Version', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '0D', command2: '01' },
+            { command: 'Get INSTEON Engine Version', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '0F', command2: '33' },
+            { command: 'Ping', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '10', command2: '44' },
+            { command: 'ID Request', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '11', command2: '00' },
+            { command: 'Light ON', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '12', command2: 'FF' },
+            { command: 'Light ON Fast', error: 'Not in ALL-Link Group', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '13', command2: '00' },
+            { command: 'Light OFF', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '14', command2: '00' },
+            { command: 'Light OFF Fast', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '15', command2: '00' },
+            { command: 'Light Brighten One Step', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '16', command2: '00' },
+            { command: 'Light Dim One Step', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '17', command2: '00' },
+            { command: 'Light Start Manual Change', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '17', command2: '01' },
+            { command: 'Light Start Manual Change', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '18', command2: '00' },
+            { command: 'Light Stop Manual Change', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '19', command2: '00' },
+            { command: 'Light Status Request 02', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '19', command2: '01' },
+            { command: 'Light Status Request 02', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '19', command2: '02' },
+            { command: 'Light Status Request 02', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '19', command2: '03' },
+            { command: 'Light Status Request 02', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '19', command2: '04' },
+            { command: 'Light Status Request 02', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '1F', command2: '00', error: 'Reserved' },
+            { command: 'Get Operating Flags 2', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '1F', command2: '01' },
+            { command: 'Get Operating Flags 2', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '1F', command2: '02' },
+            { command: 'Get Operating Flags 2', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '1F', command2: '05' },
+            { command: 'Get Operating Flags 2', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '00' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '01' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '02' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '03' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '04' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '05' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '06' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '07' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '08' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '09' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '0A' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '20', command2: '0B' },
+            { command: 'Set Program No I\'m Alive Off', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '2E', command2: 'FF' },
+            { command: 'Light ON at Ramp Rate', error: 'Not in ALL-Link Group', command2: '00' },
+          ],
+          // [
+          //   { command1: '12', command2: '00' },
+          //   { command1: '2F', command2: '00' },
+          //   { command: '2F-- Response', error: 'Reserved', command2: '00' },
+          // ],
+          // [
+          //   { command2: '00' },
+          //   { command1: '30', command2: '00' },
+          //   { command: 'Trigger Group', error: 'Reserved', command2: '00' },
+          // ],
+          [
+            { command2: '00' },
+            { command1: '32', command2: '00' },
+            { command: 'Outlet ON (bottom)', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '32', command2: '01' },
+            { command: 'Outlet ON (bottom)', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '33', command2: '00' },
+            { command: 'Outlet OFF (bottom)', error: 'Reserved', command2: '00' },
+          ],
+          [
+            { command2: '00' },
+            { command1: '33', command2: '01' },
+            { command: 'Outlet OFF (bottom)', error: 'Reserved', command2: '00' },
+          ],
+        ]
+      )
+    })
   })
 
   describe('extendedData commands', () => {
@@ -785,7 +1435,7 @@ describe('parseInsteonCommand', () => {
       unroll(
         '#response should be parsed as #command',
         testArgs => {
-          const response = Object.assign({ messageType: 'extendedData' }, testArgs.response)
+          const response = Object.assign({ extendedMessage: true }, testArgs.response)
           const command = Object.assign({ messageType: 'extendedData' }, testArgs.command)
           const result1 = parseInsteonCommand(response, undefined)
           expect(result1).toEqual(command)
@@ -849,6 +1499,133 @@ describe('parseInsteonCommand', () => {
             {
               command: 'Set ALL-Link Command Alias Extended Data',
               data: '1234567890ABCDEF1234567890AB',
+            },
+          ],
+          [
+            { command1: '09', command2: '00', data: '1234567890ABCDEF1234567890AB' },
+            {
+              command: 'Enter Linking Mode',
+              groupNumber: 18,
+              data: '567890ABCDEF1234567890AB',
+            },
+          ],
+          [
+            { command1: '2E', command2: '00', data: '1200567890ABCDEF1234567890AB' },
+            {
+              command: 'Extended Set/Get',
+              type: 'Data Request',
+              groupNumber: 18,
+            },
+          ],
+          [
+            { command1: '2E', command2: '00', data: '120156780F08CDEF1234567890AB' },
+            {
+              command: 'Extended Set/Get',
+              type: 'Data Response',
+              groupNumber: 18,
+              x10HouseCode: 'J',
+              x10UnitCode: 14,
+              rampRate: 205,
+              onLevel: 239,
+              signalToNoiseThreshold: 18,
+              ledBrightness: 18,
+            },
+          ],
+          [
+            { command1: '2E', command2: '00', data: '120407050F08CDEF1234567890AB' },
+            {
+              command: 'Extended Set/Get',
+              type: 'Set X10 Address',
+              groupNumber: 18,
+              x10HouseCode: 'I',
+              x10UnitCode: 7,
+            },
+          ],
+          [
+            { command1: '2E', command2: '00', data: '12051F050F08CDEF1234567890AB' },
+            {
+              command: 'Extended Set/Get',
+              type: 'Set Ramp Rate',
+              groupNumber: 18,
+              rampRate: 31,
+            },
+          ],
+          [
+            { command1: '2E', command2: '00', data: '12067F050F08CDEF1234567890AB' },
+            {
+              command: 'Extended Set/Get',
+              type: 'Set On-Level',
+              groupNumber: 18,
+              onLevel: 127,
+            },
+          ],
+          [
+            { command1: '2E', command2: '00', data: '12071F050F08CDEF1234567890AB' },
+            {
+              command: 'Extended Set/Get',
+              type: 'Command 07',
+              groupNumber: 18,
+              data: '1F050F08CDEF1234567890AB',
+            },
+          ],
+          [
+            { command1: '2F', command2: '00', data: '12001F080F08CDEF1234567890AB' },
+            {
+              command: 'Read/Write ALL-Link Database',
+              type: 'Record Request',
+              address: '1F08',
+              dumpAllRecords: false,
+              numberOfRecords: 15,
+            },
+          ],
+          [
+            { command1: '2F', command2: '00', data: '12011F080F08CDEF1234567890AB' },
+            {
+              command: 'Read/Write ALL-Link Database',
+              messageType: 'extendedData',
+              type: 'Record Response',
+              inUse: false,
+              isController: false,
+              bit5: false,
+              bit4: false,
+              bit3: true,
+              smartHop: 1,
+              bit2: false,
+              hasBeenUsed: false,
+              bit0: false,
+              groupNumber: 205,
+              id: 'EF1234',
+              address: '1F08',
+            },
+          ],
+          [
+            { command1: '2F', command2: '00', data: '12021F081008CDEF1234567890AB' },
+            {
+              command: 'Read/Write ALL-Link Database',
+              type: 'Write ALDB Record',
+              numberOfBytes: 16,
+              groupNumber: 205,
+              address: '1F08',
+              messageType: 'extendedData',
+              bit0: false,
+              bit2: false,
+              bit3: true,
+              bit4: false,
+              bit5: false,
+              hasBeenUsed: false,
+              id: 'EF1234',
+              inUse: false,
+              isController: false,
+              smartHop: 1,
+            },
+          ],
+          [
+            { command1: '2F', command2: '00', data: '12071F080F08CDEF1234567890AB' },
+            {
+              command: 'Read/Write ALL-Link Database',
+              type: 'Record Command 07',
+              address: '1F08',
+              data: '0F08CDEF1234567890AB',
             },
           ],
         ]

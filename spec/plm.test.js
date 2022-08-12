@@ -309,7 +309,7 @@ describe('plm.createPlm', () => {
         command1: '0D',
         command2: '02',
         insteonCommand: expect.objectContaining({
-          engineVersion: 2,
+          engineVersion: '02',
         }),
         bytes: '0250521234070809200D02',
         fromDevice: 'porch outlets',
