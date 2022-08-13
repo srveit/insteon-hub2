@@ -71,7 +71,7 @@ describe('createPlmStream', () => {
           headers: { 'content-type': 'text/xml' },
           body: '<response><BS>BBBBAA04</BS></response>',
         })
-        await sleep(100)
+        await waitForReadable(plmStream)
         segment2 = plmStream.read()
       })
 
@@ -134,7 +134,6 @@ describe('createPlmStream', () => {
 
     describe('and read a second time', () => {
       beforeEach(async () => {
-        await sleep(100)
         segment = plmStream.read()
       })
 
@@ -148,7 +147,6 @@ describe('createPlmStream', () => {
         server.bufferStatus.mockReturnValueOnce({
           error: 'test error',
         })
-        await sleep(100)
         server.bufferStatus.mockReturnValueOnce({
           headers: { 'content-type': 'text/xml' },
           body: '<response><BS>CCCCCC06</BS></response>',
