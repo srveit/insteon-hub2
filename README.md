@@ -21,7 +21,7 @@ send a HTTP request. To read responses from the hub is a little trickier.
 You send a HTTP request to get the buffer which returns a string of
 hexadecimal characters. This string implements a
 [ring (or circular) buffer][circular-buffer-url]. In order to not miss and
-messages, this buffer must be read at a rate of 10 times per second.
+messages, this buffer must be read at a rate of 20 times per second.
 
 ## Files
 

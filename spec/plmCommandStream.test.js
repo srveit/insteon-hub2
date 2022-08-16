@@ -324,7 +324,7 @@ describe('createPlmCommandStream', () => {
             command1: '00',
             command2: 'FF',
             insteonCommand: {
-              command: 'Light Status Response',
+              command: 'Light Status',
               onLevel: 255,
               allLinkDatabaseDelta: 0,
               messageType: 'directAck',

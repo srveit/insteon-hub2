@@ -85,11 +85,11 @@ describe('device.createDevice', () => {
       })
     })
 
-    describe('with Product Data Response', () => {
+    describe('with Product Data', () => {
       describe('with exisiting category', () => {
         beforeEach(() => {
           device.update({
-            command: 'Product Data Response',
+            command: 'Product Data',
             productKey: '000000',
             deviceCategory: '01',
             deviceSubcategory: '2D',
@@ -138,7 +138,7 @@ describe('device.createDevice', () => {
         /* eslint no-undefined: "off" */
         beforeEach(() => {
           device.update({
-            command: 'Product Data Response',
+            command: 'Product Data',
             productKey: '000000',
             deviceCategory: '44',
             deviceSubcategory: '88',
@@ -186,7 +186,7 @@ describe('device.createDevice', () => {
       describe('with non-exisitent subcategory', () => {
         beforeEach(() => {
           device.update({
-            command: 'Product Data Response',
+            command: 'Product Data',
             productKey: '000000',
             deviceCategory: '01',
             deviceSubcategory: 'E8',
@@ -243,7 +243,7 @@ describe('device.createDevice', () => {
       testArgs => {
         const command = {
           ...testArgs.stateProperties,
-          command: 'Light Status Response',
+          command: 'Light Status',
           messageType: 'directAck',
           fromAddress: '561234',
           toAddress: '123456',
@@ -257,7 +257,7 @@ describe('device.createDevice', () => {
       },
       [
         ['command', 'stateProperties'],
-        ['Light Status Response', { onLevel: 0, allLinkDatabaseDelta: 0 }],
+        ['Light Status', { onLevel: 0, allLinkDatabaseDelta: 0 }],
       ])
   })
 })

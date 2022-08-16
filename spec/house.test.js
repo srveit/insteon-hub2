@@ -46,7 +46,7 @@ describe('house.createHouse', () => {
       beforeEach(() => {
         device = house.getDevice('581234')
         house.updateDevices({
-          command: 'Product Data Response',
+          command: 'Product Data',
           productKey: '000000',
           deviceCategory: '02',
           deviceSubcategory: '39',
@@ -70,7 +70,7 @@ describe('house.createHouse', () => {
       let result
       beforeEach(() => {
         result = house.updateDevices({
-          command: 'Product Data Response',
+          command: 'Product Data',
           productKey: '000000',
           deviceCategory: '02',
           deviceSubcategory: '39',
