@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - File .github/workflows/test-actions.yml
+- File lib/plmBase.js
+- File lib/plmBufferProcessor.js
+- File lib/plmStream.js
+
+### Removed
+
+- Dependency on lodash.
 
 ## [1.0.0] - 2017-06-20
 

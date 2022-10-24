@@ -1,3 +1,0 @@
-# TODO
-
-- use node-fetch instead of got
