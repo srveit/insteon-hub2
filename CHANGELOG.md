@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2022-10-24
+
 ### Added
 
 - File .github/workflows/test-actions.yml
@@ -24,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial code
 
-[Unreleased]: https://github.com/srveit/insteon-plm/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/srveit/insteon-plm/compare/v1.1.0...HEAD
+
+[1.1.0]: https://github.com/srveit/insteon-plm/releases/tag/v1.1.0
 
 [1.0.0]: https://github.com/srveit/insteon-plm/releases/tag/v1.0.0
