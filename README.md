@@ -89,7 +89,7 @@ messages, this buffer must be read at a rate of 20 times per second.
   - parsePlmBuffer
 - parsers.js
   - parsers
-- plm.js (TODO: rewrite to use stream)
+- plm.js
   - createPlm
 - plmBase.js
   - createPlmBase
@@ -131,8 +131,8 @@ messages, this buffer must be read at a rate of 20 times per second.
 [coveralls-url]: https://coveralls.io/github/srveit/insteon-hub2?branch=master
 [downloads-image]: https://img.shields.io/npm/dm/insteon-hub2.svg
 [downloads-url]: https://npmjs.org/package/insteon-hub2
-[github-build-badge]: https://img.shields.io/github/workflow/status/srveit/insteaon-plm/build-actions
-[github-build-url]: https://github.com/srveit/insteaon-plm/actions/workflows/test-actions.yml
+[github-build-badge]: https://img.shields.io/github/workflow/status/srveit/insteon-hub2/build-actions
+[github-build-url]: https://github.com/srveit/insteon-hub2/actions/workflows/test-actions.yml
 [gitter-image]: https://img.shields.io/gitter/room/insteon-hub2/Lobby.svg
 [gitter-url]: https://gitter.im/insteon-hub2/Lobby
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
