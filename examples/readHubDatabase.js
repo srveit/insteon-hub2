@@ -1,20 +1,20 @@
-'use strict';
-const util = require('util'),
-  { createPlm } = require('../index'),
-  deviceNames = require('./deviceNames.json');
+'use strict'
 
-async function readHubAllLinkDatabase(plm) {
-  const database = [];
+const { createPlm } = require('../index')
+const deviceNames = require('./deviceNames.json')
+
+async function readHubAllLinkDatabase (plm) {
+  const database = []
   let response = await plm.sendModemCommand({
-    command: 'Get First ALL-Link Record'
-  });
+    command: 'Get First ALL-Link Record',
+  })
   while (response.ack !== false) {
-    database.push(response);
+    database.push(response)
     response = await plm.sendModemCommand({
-      command: 'Get Next ALL-Link Record'
-    });
+      command: 'Get Next ALL-Link Record',
+    })
   };
-  return database;
+  return database
 }
 
 const main = async () => {
@@ -23,13 +23,13 @@ const main = async () => {
     password: process.env.HUB_PASSWORD,
     host: 'insteon-hub',
     port: 25105,
-    deviceNames
-  });
-  plm.startPolling(deviceNames);
+    deviceNames,
+  })
+  plm.startPolling(deviceNames)
 
-  const hubDatabase = await readHubAllLinkDatabase(plm);
-  console.log(hubDatabase);
-  await plm.stopPolling();
-};
+  const hubDatabase = await readHubAllLinkDatabase(plm)
+  console.log(hubDatabase)
+  await plm.stopPolling()
+}
 
-main();
+main()

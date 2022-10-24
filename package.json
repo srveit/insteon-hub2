@@ -1,68 +1,109 @@
 {
   "name": "insteon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Control and monitor Insteon devices through hub",
+  "keywords": [
+    "insteon",
+    "home",
+    "automation"
+  ],
+  "homepage": "https://github.com/srveit/insteon-plm#readme",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:srveit/insteon-plm.git"
+  },
+  "bugs": {
+    "email": "steve@veitconsulting.com",
+    "url": "https://github.com/srveit/insteon-plm/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Stephen R. Veit",
+    "email": "steve@veitconsulting.com",
+    "url": "http://veitconsulting.com"
+  },
+  "contributors": [],
   "main": "index.js",
+  "bin": {},
+  "man": [],
+  "config": {},
+  "scripts": {
+    "createDeviceCategories": "node tools/createDeviceCategories.js",
+    "docs": "jsdoc --configure .jsdocrc.json",
+    "lint": "eslint . --ext .js,.json",
+    "lint-markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "test": "jest --detectOpenHandles",
+    "test-watch": "jest --watch",
+    "test-watch-all": "jest --watchAll"
+  },
   "watch": {
     "lint": {
       "patterns": [
-        "jest.config.js",
         "index.js",
         "{lib,spec}/*.js"
       ],
       "quiet": true
     }
   },
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint jest.config.js index.js {lib,spec}/*.js || exit 1",
-    "test-watch": "jest --watch",
-    "test-watch-all": "jest --watchAll",
-    "createDeviceCategories": "node tools/createDeviceCategories.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:srveit/insteon-plm.git"
-  },
-  "keywords": [
-    "insteon",
-    "home",
-    "automation"
-  ],
-  "author": "Stephen R. Veit",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/srveit/insteon-plm/issues"
-  },
-  "homepage": "https://github.com/srveit/insteon-plm#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "got": "^11.8.2",
-    "moment": "^2.29.1",
-    "node-fetch": "^2.6.1"
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "node_modules",
+      "mock-server.js"
+    ],
+    "coverageProvider": "v8",
+    "coverageDirectory": "./coverage/",
+    "coverageReporters": [
+      "clover",
+      "html",
+      "json",
+      "lcov",
+      "text-summary"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 75
+      }
+    }
   },
   "devDependencies": {
     "@gerhobbelt/nomnom": "^1.8.4-31",
-    "eslint": "^7.30.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.1.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "jest": "^26.5.3",
-    "jest-html-reporter": "^3.2.0",
-    "jsonlint": "github:zaach/jsonlint",
-    "lodash": "^4.17.21",
-    "nyc": "^15.1.0",
-    "pdfreader": "^1.0.10",
-    "prettier": "^2.1.2",
+    "@jest/reporters": "^27.5.1",
+    "ajv": "^8.10.0",
+    "ajv-keywords": "^5.1.0",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-config-standard": "github:standard/eslint-config-standard",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.1",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "express": "^4.17.3",
+    "jest": "^27.5.1",
+    "jest-extended": "^2.0.0",
+    "jest-html-reporter": "^3.4.2",
+    "jsdoc": "^3.6.10",
+    "markdownlint-cli2": "^0.4.0",
+    "node-fetch": "^3.2.8",
+    "pdf2json": "^2.0.0",
+    "standard": "^16.0.4",
     "typescript": "^3.9.7",
     "unroll": "^1.6.0",
     "unzipper": "^0.10.11",
     "ws": "^7.5.3",
     "xml2js": "^0.4.23"
-  }
+  },
+  "overrides": {},
+  "bundledDependencies": [],
+  "engines": {
+    "node": ">= 14.0.0"
+  },
+  "dependencies": {
+    "got": "^11.8.5"
+  },
+  "bundleDependencies": []
 }

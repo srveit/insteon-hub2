@@ -1,39 +1,54 @@
 # insteon-plm
+
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![MIT License][license-image]][license-url]
 [![Node.js Version][node-version-image]][node-version-url]
-[![Build Status][travis-image]][travis-url]
-[![AppVeyor Build Status][appveyor-image]][appveyor-url]
+[![GitHub Build Status][github-build-badge]][github-build-url]
 [![Codecov Status][codecov-image]][codecov-url]
 [![Code Climate][code-climate-image]][code-climate-url]
 [![Gitter][gitter-image]][gitter-url]
-[![Dependency Status][dependency-image]][dependency-url]
-[![Greenkeeper badge][greenkeeper-image]][greenkeeper-url]
+[![Known Vulnerabilities][snyk-badge]][snyk-url]
 <!-- [![js-canonical-style][canonical-image]][canonical-url] -->
 
 Library for monitoring and controlling Insteon devices through an Insteon hub.
 
+## Architucture
+
+The Insteon Hub 2 has a HTTP port that allows for controlling and monitoring
+the hub and the devices controlled by it. To send a command to the hub, you
+send a HTTP request. To read responses from the hub is a little trickier.
+You send a HTTP request to get the buffer which returns a string of
+hexadecimal characters. This string implements a
+[ring (or circular) buffer][circular-buffer-url]. In order to not miss and
+messages, this buffer must be read at a rate of 20 times per second.
+
 ## Files
 
-- allLinkDatabase.js  (36%)
+- allLinkDatabase.js
   - createAllLinkDatabase
-- allLinkRecord.js (81%)
+- allLinkRecord.js
   - createAllLinkRecord
+- commandAnnotator.js
+  - createCommandAnnotator
 - constants.js
-  - ALL_LINK_CODES
-  - ALL_LINK_CONTROL_CODES
-  - ALL_LINK_CONTROL_NAMES
-  - ALL_LINK_TYPES
-  - BUTTON_EVENTS
-  - INSTEON_MESSAGE_TYPES
-  - NAK_ERROR_CODES
-  - OPERATING_FLAGS
-  - OUTLET_CODES
-  - OUTLET_NAMES
-  - X10_COMMANDS
-  - X10_HOUSE_CODES
-  - X10_UNIT_CODES
+  - ALL\_LINK\_CODES
+  - ALL\_LINK\_CONTROL\_CODES
+  - ALL\_LINK\_CONTROL\_NAMES
+  - ALL\_LINK\_TYPES
+  - BUTTON\_EVENTS
+  - INSTEON\_MESSAGE\_TYPES
+  - NAK\_ERROR\_CODES
+  - OPERATING\_FLAGS
+  - OUTLET\_CODES
+  - OUTLET\_NAMES
+  - ENGINE\_VERSION\_CODES
+  - ENGINE\_VERSION\_NAMES
+  - X10\_COMMANDS
+  - X10\_HOUSE\_CODES
+  - X10\_UNIT\_CODES
+- device.js
+  - createDevice
 - deviceCategories.js
   - '00'
   - '01'
@@ -61,15 +76,27 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
   - '17'
   - FE
   - FF
-- encodeCommand.js (67%)
-- parseInsteonCommand.js (70%)
-- parsers.js (49%)
+- deviceManager.js
+  - createDeviceManager
+- encodeCommand.js
+  - encodeCommand
+  - commandResponseMatcher
+- house.js
+  - createHouse
+- parseInsteonCommand.js
+  - parseInsteonCommand
+- parsePlmBuffer.js
+  - parsePlmBuffer
+- parsers.js
+  - parsers
 - plm.js (TODO: rewrite to use stream)
   - createPlm
 - plmBase.js
   - createPlmBase
 - plmBufferProcessor.js
   - createPlmBufferProcessor
+- plmCommandQueue.js
+  - createPlmCommandQueue
 - plmCommandStream.js
   - createPlmCommandStream
 - plmStream.js
@@ -77,51 +104,45 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
 
 ## References
 
-https://github.com/openhab/openhab1-addons/tree/master/bundles/binding/org.openhab.binding.insteonplm/src/main/resources
+- [openHAB 1 Add-ons resources](https://github.com/openhab/openhab1-addons/tree/master/bundles/binding/org.openhab.binding.insteonplm/src/main/resources)
+- [leftover code](https://web.archive.org/web/20191230021838/http://www.leftovercode.info/)
+- [Leftover Code SmartLinc](http://www.leftovercode.info/smartlinc.php)
+- [The Insteon Hub and SmartLinc 2414N HTTP API for X10 Devices](http://www.leftovercode.info/smartlinc_x10.html)
+- [Quick Reference Guide for Smarthome Device Manager for INSTEON](https://web.archive.org/web/20130519075719/http://www.insteon.com/sdk/files/dm/docs/)
+- [Insteon Custom Commands for HouseLinc](https://web.archive.org/web/20141125100324/http://www.insteon.com/houselinc-insteon-custom-commands.html)
+- [Insteon Hacking Guides](http://efundies.com/guides/)
+- [Insteon Device Controller for Windows](https://web.archive.org/web/20151008042115/http://fredricksensoftware.us/Insteon/Device%20Controller/index.htm)
+- [INSTEON COMMAND LIST](http://www.madreporite.com/insteon/commands.htm)
+- [Under the Insteon Hub Hood](https://web.archive.org/web/20150503192537/http://blog.automategreen.com/post/under-the-insteon-hub-hood)
+- [Intellihome 2.5 - Now supports ISY and iPhone 5!](https://forum.smarthome.com/topic.asp?TOPIC_ID=11063&whichpage=2)
+- [Insteon Direct Commands](http://www.richstevenson.com/2014/01/06/insteon-direct-commands/)
+- [Insteon Hub Commands](https://openremote.github.io/archive-dotorg/forums/attachments/22882151/23036480.pdf)
 
-
-http://www.leftovercode.info/
-http://www.leftovercode.info/smartlinc.php
-http://www.leftovercode.info/smartlinc_x10.html
-http://www.insteon.com/sdk/files/dm/docs/
-http://www.insteon.com/houselinc-insteon-custom-commands.html
-http://efundies.com/guides/
-http://fredricksensoftware.us/Insteon/Device%20Controller/index.htm
-http://www.madreporite.com/insteon/commands.htm
-http://blog.automategreen.com/post/under-the-insteon-hub-hood
-http://www.smarthome.com/forum/topic.asp?TOPIC_ID=11063&whichpage=2
-http://www.richstevenson.com/2014/01/06/insteon-direct-commands/
-https://openremote.github.io/archive-dotorg/forums/attachments/22882151/23036480.pdf
-https://blog.automategreen.com/post/under-the-insteon-hub-hood/
-
-[npm-image]: https://img.shields.io/npm/v/insteon-plm.svg
-[npm-url]: https://npmjs.org/package/insteon-plm
-[downloads-image]: https://img.shields.io/npm/dm/insteon-plm.svg
-[downloads-url]: https://npmjs.org/package/insteon-plm
-[node-version-image]: https://img.shields.io/node/v/insteon-plm.svg
-[node-version-url]: https://nodejs.org/en/download/
-[travis-image]: https://img.shields.io/travis/srveit/insteon-plm/master.svg
-[travis-url]: https://travis-ci.org/srveit/insteon-plm
-[appveyor-image]: https://img.shields.io/appveyor/ci/srveit/insteon-plm/master.svg
-[appveyor-url]: https://ci.appveyor.com/project/srveit/insteon-plm/branch/master
-[coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-plm/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/srveit/insteon-plm?branch=master
-[code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-plm.svg
-[code-climate-url]: https://codeclimate.com/github/srveit/insteon-plm
-[gitter-image]: https://img.shields.io/gitter/room/insteon-plm/Lobby.svg
-[gitter-url]: https://gitter.im/insteon-plm/Lobby
 [bithound-image]: https://www.bithound.io/github/srveit/insteon-plm/badges/score.svg
 [bithound-url]: https://www.bithound.io/github/srveit/insteon-plm
-[dependency-image]: https://img.shields.io/david/srveit/insteon-plm.svg
-[dependency-url]: https://david-dm.org/srveit/insteon-plm
-[codecov-image]: https://img.shields.io/codecov/c/github/babel/babylon/master.svg?style=flat
-[codecov-url]: https://codecov.io/gh/babel/babylon
-[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
-[license-url]: http://choosealicense.com/licenses/mit/
 [canonical-image]: https://img.shields.io/badge/code%20style-canonical-brightgreen.svg?style=flat
 [canonical-url]: https://github.com/gajus/eslint-config-canonical
-[greenkeeper-image]: https://badges.greenkeeper.io/srveit/insteon-plm.svg
-[greenkeeper-url]: https://greenkeeper.io/
+[circular-buffer-url]: https://en.wikipedia.org/wiki/Circular_buffer
+[code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-plm.svg
+[code-climate-url]: https://codeclimate.com/github/srveit/insteon-plm
+[codecov-image]: https://img.shields.io/codecov/c/github/babel/babylon/master.svg?style=flat
+[codecov-url]: https://codecov.io/gh/babel/babylon
+[coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-plm/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/srveit/insteon-plm?branch=master
+[downloads-image]: https://img.shields.io/npm/dm/insteon-plm.svg
+[downloads-url]: https://npmjs.org/package/insteon-plm
+[github-build-badge]: https://img.shields.io/github/workflow/status/srveit/insteaon-plm/build-actions
+[github-build-url]: https://github.com/srveit/insteaon-plm/actions/workflows/test-actions.yml
+[gitter-image]: https://img.shields.io/gitter/room/insteon-plm/Lobby.svg
+[gitter-url]: https://gitter.im/insteon-plm/Lobby
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: http://choosealicense.com/licenses/mit/
+[node-version-image]: https://img.shields.io/node/v/insteon-plm.svg
+[node-version-url]: https://nodejs.org/en/download/
+[npm-image]: https://img.shields.io/npm/v/insteon-plm.svg
+[npm-url]: https://npmjs.org/package/insteon-plm
+[snyk-badge]: https://snyk.io/test/github/srveit/insteon-plm/badge.svg
+[snyk-url]: https://snyk.io/test/github/srveit/insteon-plm
 
 <!--
 
@@ -154,6 +175,5 @@ https://sonarcloud.io/dashboard/index/srveit:insteon-plm
 [![Windows Build](https://img.shields.io/appveyor/ci/alexindigo/asynckit/v0.4.0.svg?label=windows:0.12-6.x&style=flat)](https://ci.appveyor.com/project/alexindigo/asynckit)
 [![Windows Tests](https://img.shields.io/appveyor/ci/bcoe/nyc-ilw23/master.svg?label=Windows%20Tests)](https://ci.appveyor.com/project/bcoe/nyc-ilw23)
 [![](http://img.shields.io/badge/unicorn-approved-ff69b4.svg)](https://www.youtube.com/watch?v=9auOCbH5Ns4)
-
 
 -->
