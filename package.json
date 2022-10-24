@@ -1,20 +1,20 @@
 {
-  "name": "insteon",
+  "name": "insteon-hub2",
   "version": "1.1.0",
-  "description": "Control and monitor Insteon devices through hub",
+  "description": "Control and monitor Insteon devices through Insteon Hub 2",
   "keywords": [
     "insteon",
     "home",
     "automation"
   ],
-  "homepage": "https://github.com/srveit/insteon-plm#readme",
+  "homepage": "https://github.com/srveit/insteon-hub2#readme",
   "repository": {
     "type": "git",
-    "url": "git@github.com:srveit/insteon-plm.git"
+    "url": "git@github.com:srveit/insteon-hub2.git"
   },
   "bugs": {
     "email": "steve@veitconsulting.com",
-    "url": "https://github.com/srveit/insteon-plm/issues"
+    "url": "https://github.com/srveit/insteon-hub2/issues"
   },
   "license": "MIT",
   "author": {

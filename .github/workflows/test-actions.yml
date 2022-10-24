@@ -31,6 +31,6 @@ jobs:
         with:
           files: ./coverage/clover.xml
           flags: unittests
-          name: codecov-insteon-plm
+          name: codecov-insteon-hub2
           fail_ci_if_error: true
           verbose: true

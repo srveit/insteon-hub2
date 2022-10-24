@@ -1,4 +1,4 @@
-# insteon-plm
+# insteon-hub2
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
@@ -118,40 +118,40 @@ messages, this buffer must be read at a rate of 20 times per second.
 - [Insteon Direct Commands](http://www.richstevenson.com/2014/01/06/insteon-direct-commands/)
 - [Insteon Hub Commands](https://openremote.github.io/archive-dotorg/forums/attachments/22882151/23036480.pdf)
 
-[bithound-image]: https://www.bithound.io/github/srveit/insteon-plm/badges/score.svg
-[bithound-url]: https://www.bithound.io/github/srveit/insteon-plm
+[bithound-image]: https://www.bithound.io/github/srveit/insteon-hub2/badges/score.svg
+[bithound-url]: https://www.bithound.io/github/srveit/insteon-hub2
 [canonical-image]: https://img.shields.io/badge/code%20style-canonical-brightgreen.svg?style=flat
 [canonical-url]: https://github.com/gajus/eslint-config-canonical
 [circular-buffer-url]: https://en.wikipedia.org/wiki/Circular_buffer
-[code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-plm.svg
-[code-climate-url]: https://codeclimate.com/github/srveit/insteon-plm
+[code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-hub2.svg
+[code-climate-url]: https://codeclimate.com/github/srveit/insteon-hub2
 [codecov-image]: https://img.shields.io/codecov/c/github/babel/babylon/master.svg?style=flat
 [codecov-url]: https://codecov.io/gh/babel/babylon
-[coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-plm/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/srveit/insteon-plm?branch=master
-[downloads-image]: https://img.shields.io/npm/dm/insteon-plm.svg
-[downloads-url]: https://npmjs.org/package/insteon-plm
+[coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-hub2/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/srveit/insteon-hub2?branch=master
+[downloads-image]: https://img.shields.io/npm/dm/insteon-hub2.svg
+[downloads-url]: https://npmjs.org/package/insteon-hub2
 [github-build-badge]: https://img.shields.io/github/workflow/status/srveit/insteaon-plm/build-actions
 [github-build-url]: https://github.com/srveit/insteaon-plm/actions/workflows/test-actions.yml
-[gitter-image]: https://img.shields.io/gitter/room/insteon-plm/Lobby.svg
-[gitter-url]: https://gitter.im/insteon-plm/Lobby
+[gitter-image]: https://img.shields.io/gitter/room/insteon-hub2/Lobby.svg
+[gitter-url]: https://gitter.im/insteon-hub2/Lobby
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: http://choosealicense.com/licenses/mit/
-[node-version-image]: https://img.shields.io/node/v/insteon-plm.svg
+[node-version-image]: https://img.shields.io/node/v/insteon-hub2.svg
 [node-version-url]: https://nodejs.org/en/download/
-[npm-image]: https://img.shields.io/npm/v/insteon-plm.svg
-[npm-url]: https://npmjs.org/package/insteon-plm
-[snyk-badge]: https://snyk.io/test/github/srveit/insteon-plm/badge.svg
-[snyk-url]: https://snyk.io/test/github/srveit/insteon-plm
+[npm-image]: https://img.shields.io/npm/v/insteon-hub2.svg
+[npm-url]: https://npmjs.org/package/insteon-hub2
+[snyk-badge]: https://snyk.io/test/github/srveit/insteon-hub2/badge.svg
+[snyk-url]: https://snyk.io/test/github/srveit/insteon-hub2
 
 <!--
 
-https://sonarcloud.io/dashboard/index/srveit:insteon-plm
+https://sonarcloud.io/dashboard/index/srveit:insteon-hub2
 
-[testling-image]: https://ci.testling.com/srveit/insteon-plm.png
-[testling-url]: https://ci.testling.com/srveit/insteon-plm
-[cdnjs-image]: https://img.shields.io/cdnjs/v/insteon-plm.svg
-[cdnjs-url]: https://cdnjs.com/libraries/insteon-plm
+[testling-image]: https://ci.testling.com/srveit/insteon-hub2.png
+[testling-url]: https://ci.testling.com/srveit/insteon-hub2
+[cdnjs-image]: https://img.shields.io/cdnjs/v/insteon-hub2.svg
+[cdnjs-url]: https://cdnjs.com/libraries/insteon-hub2
 
 [![locked](http://badges.github.io/stability-badges/dist/locked.svg)](http://github.com/badges/stability-badges)
 [![Readme](https://img.shields.io/badge/readme-tested-brightgreen.svg?style=flat)](https://www.npmjs.com/package/reamde)
