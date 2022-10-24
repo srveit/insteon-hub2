@@ -1,4 +1,5 @@
 'use strict'
+const { JsxEmit } = require('typescript')
 const { createPlm } = require('../lib/plm')
 const { fixture } = require('./helpers/fixture.js')
 const { mockServer } = require('./helpers/mock-server.js')
@@ -217,7 +218,7 @@ describe('plm.createPlm', () => {
         headers: {
           'accept-encoding': 'gzip, deflate, br',
           authorization,
-          connection: 'close',
+          connection: expect.any(String),
           host: `${host}:${port}`,
           'user-agent': userAgent,
         },
@@ -276,7 +277,7 @@ describe('plm.createPlm', () => {
         headers: {
           'accept-encoding': 'gzip, deflate, br',
           authorization,
-          connection: 'close',
+          connection: expect.any(String),
           host: `${host}:${port}`,
           'user-agent': userAgent,
         },

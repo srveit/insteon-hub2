@@ -67,9 +67,6 @@
       }
     }
   },
-  "dependencies": {
-    "got": "^11.8.3"
-  },
   "devDependencies": {
     "@gerhobbelt/nomnom": "^1.8.4-31",
     "@jest/reporters": "^27.5.1",
@@ -104,6 +101,9 @@
   "bundledDependencies": [],
   "engines": {
     "node": ">= 14.0.0"
+  },
+  "dependencies": {
+    "got": "^11.8.5"
   },
   "bundleDependencies": []
 }
