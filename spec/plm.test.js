@@ -1,5 +1,4 @@
 'use strict'
-const { JsxEmit } = require('typescript')
 const { createPlm } = require('../lib/plm')
 const { fixture } = require('./helpers/fixture.js')
 const { mockServer } = require('./helpers/mock-server.js')
