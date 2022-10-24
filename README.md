@@ -125,8 +125,8 @@ messages, this buffer must be read at a rate of 20 times per second.
 [circular-buffer-url]: https://en.wikipedia.org/wiki/Circular_buffer
 [code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-hub2.svg
 [code-climate-url]: https://codeclimate.com/github/srveit/insteon-hub2
-[codecov-image]: https://img.shields.io/codecov/c/github/babel/babylon/master.svg?style=flat
-[codecov-url]: https://codecov.io/gh/babel/babylon
+[codecov-image]: https://img.shields.io/codecov/c/github/srveit/insteon-hub2/master.svg?style=flat
+[codecov-url]: https://codecov.io/gh/srveit/insteon-hub2
 [coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-hub2/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/srveit/insteon-hub2?branch=master
 [downloads-image]: https://img.shields.io/npm/dm/insteon-hub2.svg
