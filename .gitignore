@@ -62,3 +62,5 @@ typings/
 .DS_Store
 
 log*.csv
+examples/*{.txt
+deviceNames.json

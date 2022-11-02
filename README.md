@@ -118,17 +118,11 @@ messages, this buffer must be read at a rate of 20 times per second.
 - [Insteon Direct Commands](http://www.richstevenson.com/2014/01/06/insteon-direct-commands/)
 - [Insteon Hub Commands](https://openremote.github.io/archive-dotorg/forums/attachments/22882151/23036480.pdf)
 
-[bithound-image]: https://www.bithound.io/github/srveit/insteon-hub2/badges/score.svg
-[bithound-url]: https://www.bithound.io/github/srveit/insteon-hub2
-[canonical-image]: https://img.shields.io/badge/code%20style-canonical-brightgreen.svg?style=flat
-[canonical-url]: https://github.com/gajus/eslint-config-canonical
 [circular-buffer-url]: https://en.wikipedia.org/wiki/Circular_buffer
 [code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-hub2.svg
 [code-climate-url]: https://codeclimate.com/github/srveit/insteon-hub2
 [codecov-image]: https://img.shields.io/codecov/c/github/srveit/insteon-hub2/master.svg?style=flat
 [codecov-url]: https://codecov.io/gh/srveit/insteon-hub2
-[coveralls-image]: https://coveralls.io/repos/github/srveit/insteon-hub2/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/srveit/insteon-hub2?branch=master
 [downloads-image]: https://img.shields.io/npm/dm/insteon-hub2.svg
 [downloads-url]: https://npmjs.org/package/insteon-hub2
 [github-build-badge]: https://img.shields.io/github/workflow/status/srveit/insteon-hub2/build-actions

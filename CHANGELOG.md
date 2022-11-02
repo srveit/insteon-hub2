@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `examples/linkDevice.js`
+- `examples/testParse.js`
+
 ## [1.1.1] - 2022-10-24
 
 ### Changed
@@ -33,9 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial code
 
 [Unreleased]: https://github.com/srveit/insteon-hub2/compare/v1.1.1...HEAD
-
 [1.1.1]: https://github.com/srveit/insteon-hub2/releases/tag/v1.1.1
-
 [1.1.0]: https://github.com/srveit/insteon-hub2/releases/tag/v1.1.0
-
 [1.0.0]: https://github.com/srveit/insteon-hub2/releases/tag/v1.0.0
