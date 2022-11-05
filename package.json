@@ -32,7 +32,7 @@
     "docs": "jsdoc --configure .jsdocrc.json",
     "lint": "eslint . --ext .js,.json",
     "lint-markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
-    "test": "rm -rf coverage; jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles",
     "test-watch": "jest --watch",
     "test-watch-all": "jest --watchAll"
   },
