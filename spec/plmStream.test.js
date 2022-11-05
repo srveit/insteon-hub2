@@ -14,6 +14,8 @@ const waitForClose = stream => new Promise(resolve => {
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+jest.setTimeout(10000) // 10 seconds
+
 describe('createPlmStream', () => {
   /* eslint no-undefined: "off" */
   let server, host, port, username, password, plmBase,
