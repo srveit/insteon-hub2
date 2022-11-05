@@ -28,9 +28,9 @@ jobs:
       - run: npm test
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v3
-          with:
-            name: coverage ${{ matrix.os }} ${{ matrix.node-version }}
-            path: coverage/clover.xml
+        with:
+          name: coverage ${{ matrix.os }} ${{ matrix.node-version }}
+          path: coverage/clover.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
