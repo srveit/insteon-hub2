@@ -15,13 +15,87 @@ Library for monitoring and controlling Insteon devices through an Insteon hub.
 
 ## Architucture
 
-The Insteon Hub 2 has a HTTP port that allows for controlling and monitoring
+The INSTEON Hub 2 has a HTTP port that allows for controlling and monitoring
 the hub and the devices controlled by it. To send a command to the hub, you
 send a HTTP request. To read responses from the hub is a little trickier.
 You send a HTTP request to get the buffer which returns a string of
 hexadecimal characters. This string implements a
 [ring (or circular) buffer][circular-buffer-url]. In order to not miss and
 messages, this buffer must be read at a rate of 20 times per second.
+
+## INSTEON Command Types
+
+SD, Standard-length Direct Commands
+  direct SDO v
+  directAck SDK v
+  directNak SDN v
+
+ED, Extended-length Direct Commands
+  direct EDO v
+  directAck EDK
+  directNak EDN
+
+SA, Standard-length ALL-Link Commands
+  allLinkBroadcast SAO v
+
+EA, Extended-length ALL-Link Commands
+  allLinkBroadcast EAO
+
+SC, Standard-length ALL-Link Cleanup Commands
+  allLinkCleanup SCO v
+  allLinkCleanupAck SCK v
+  allLinkCleanupNak SCN v
+
+EC, Extended-length ALL-Link Cleanup Commands
+  allLinkCleanup ECO
+  allLinkCleanupAck ECK
+  allLinkCleanupNak ECN
+
+SB, Standard-length Broadcast Commands
+  broadcast SBO v
+
+EB, Extended-length Broadcast Commands
+  broadcast SBO
+
+## INSTEON Message Types
+
+There are 16 logically possible INSTEON Message Types denoted by four bits in the Message Flags byte within an INSTEON Message. A three-letter mnemonic designates the INSTEON Message Type. The first letter is S for Standard-length or E for Extended-length messages. The second letter is D for Direct, B for Broadcast, A for ALL-Link Broadcast, or C for ALL-Link Cleanup messages. The third letter, which is optional, is O for Outgoing, K for ACK, or N for NAK messages. Valid Outgoing INSTEON Message Types are SD, ED, SA, SC, and SB. Valid INSTEON Acknowledgement Message Types are SDK, SDN, SCK, and SCN.
+
+Currently used (as of 2/2009):
+
+- SD, Standard-length Direct Commands
+  - direct SDO v (receives acknowledgement)
+  - directAck SDK v
+  - directNak SDN v
+
+- ED, Extended-length Direct Commands
+  - direct EDO v (receives acknowledgement)
+
+- SA, Standard-length ALL-Link Commands
+  - allLinkBroadcast SAO v
+
+- SC, Standard-length ALL-Link Cleanup Commands
+  - allLinkCleanup SCO v (receives acknowledgement)
+  - allLinkCleanupAck SCK v
+  - allLinkCleanupNak SCN v
+
+- SB, Standard-length Broadcast Commands
+  - broadcast SBO
+
+## Undocumented IM commands
+
+- 59-5F (5C received)
+- 74-7F (77 and 7F received)
+
+## Hardware
+
+| Model    | Version | Revision | Category | Subcategory | Other                                             |
+| -------- | ------- | -------- | -------- | ----------- | ------------------------------------------------- |
+| 2477D    | 8.2     | 3117     | 01       | 20          | 45                                                |
+| 2477DH   | 8.2     | 3117     | 01       | 2D          | 44                                                |
+| 2477S    | 7.2     | 2717     | 01       | 2A          | 45                                                |
+| 2663-222 | 7.4     | 4117     | 01       | 39          | 44                                                |
+| 2245-222 | 2.8     | 3417     | 03       | 33          | A3 04-20140904  1013  Build Dec 18 2017  09:43:02 |
 
 ## Files
 

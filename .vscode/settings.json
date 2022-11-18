@@ -4,6 +4,6 @@
   "terminal.integrated.fontSize": 14,
   "[markdown]":{
       "editor.wordWrap": "wordWrapColumn",
-      "editor.wordWrapColumn": 80
+      "editor.wordWrapColumn": 120
   }
 }
