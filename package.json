@@ -102,7 +102,7 @@
     "node": ">= 16.0.0"
   },
   "dependencies": {
-    "got": "^11.8.5"
+    "got": "^11.8.6"
   },
   "bundleDependencies": []
 }
