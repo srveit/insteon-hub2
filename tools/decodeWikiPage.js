@@ -36,7 +36,7 @@ const getData = async (url) => {
   }
 }
 
-function cellValue(td) {
+const cellValue = (td) => {
   if (typeof td === 'string') {
     return td
       .trim()
@@ -83,7 +83,7 @@ const headerNames = {
   Name: 'deviceDescription',
 }
 
-async function decodeWikiPage() {
+const decodeWikiPage = async () => {
   const data = await getData(URL)
   const htmlText = data.data.content.nodes[0].body.view.value
   const html = await parseStringPromise(`<div>${htmlText}</div>`)
