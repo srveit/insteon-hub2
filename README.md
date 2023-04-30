@@ -180,8 +180,8 @@ Currently used (as of 2/2009):
 
 - [openHAB 1 Add-ons resources](https://github.com/openhab/openhab1-addons/tree/master/bundles/binding/org.openhab.binding.insteonplm/src/main/resources)
 - [leftover code](https://web.archive.org/web/20191230021838/http://www.leftovercode.info/)
-- [Leftover Code SmartLinc](http://www.leftovercode.info/smartlinc.php)
-- [The Insteon Hub and SmartLinc 2414N HTTP API for X10 Devices](http://www.leftovercode.info/smartlinc_x10.html)
+- [Leftover Code SmartLinc](https://web.archive.org/web/20181213025708/http://leftovercode.info/smartlinc.php)
+- [The Insteon Hub and SmartLinc 2414N HTTP API for X10 Devices](https://web.archive.org/web/20181222053916/http://leftovercode.info/smartlinc_x10.php)
 - [Quick Reference Guide for Smarthome Device Manager for INSTEON](https://web.archive.org/web/20130519075719/http://www.insteon.com/sdk/files/dm/docs/)
 - [Insteon Custom Commands for HouseLinc](https://web.archive.org/web/20141125100324/http://www.insteon.com/houselinc-insteon-custom-commands.html)
 - [Insteon Hacking Guides](http://efundies.com/guides/)
@@ -191,6 +191,10 @@ Currently used (as of 2/2009):
 - [Intellihome 2.5 - Now supports ISY and iPhone 5!](https://forum.smarthome.com/topic.asp?TOPIC_ID=11063&whichpage=2)
 - [Insteon Direct Commands](http://www.richstevenson.com/2014/01/06/insteon-direct-commands/)
 - [Insteon Hub Commands](https://openremote.github.io/archive-dotorg/forums/attachments/22882151/23036480.pdf)
+- [2242-222dev-062013-en](http://cache.insteon.com/developer/2242-222dev-062013-en.pdf)
+- [INSTEON Device Categories and Product Keys](http://cache.insteon.com/pdf/INSTEON_DevCats_and_Product_Keys_20081008.pdf)
+- [INSTEON Devices XML](https://www.insteon.com/s/houselinc-device-definitions-2987-bjb7.zip)
+- [Device Categories from Wiki](https://forum.universal-devices.com/topic/17006-new-insteon-products/)
 
 [circular-buffer-url]: https://en.wikipedia.org/wiki/Circular_buffer
 [code-climate-image]: https://img.shields.io/codeclimate/maintainability/srveit/insteon-hub2.svg

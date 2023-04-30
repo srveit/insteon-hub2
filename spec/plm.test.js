@@ -193,6 +193,7 @@ describe('plm.createPlm', () => {
     let result, log
 
     beforeEach(async () => {
+      jest.setTimeout(10 * 1000)
       server.deviceControlCommand.mockReset()
       server.bufferStatus.mockReset()
       server.deviceControlCommand.mockImplementation(() => {

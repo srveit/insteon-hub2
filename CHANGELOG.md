@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning][semantic-versioning].
 
 <!-- ## [Unreleased] -->
 
+## [1.1.3] - 2023-01-05
+
+### Added
+
+- `prepublishOnly` script to call `publint`
+- catch errors in processing hub messages
+
+### Changed
+
+- updated npm dependencies
+
 ## [1.1.2] - 2022-11-05
 
 ### Added
@@ -44,6 +55,7 @@ and this project adheres to [Semantic Versioning][semantic-versioning].
 - Initial code
 
 <!-- [Unreleased]: https://github.com/srveit/insteon-hub2/compare/v1.1.2...HEAD -->
+[1.1.3]: https://github.com/srveit/insteon-hub2/releasess/tag/v.1.3
 [1.1.2]: https://github.com/srveit/insteon-hub2/releasess/tag/v.1.2
 [1.1.1]: https://github.com/srveit/insteon-hub2/releases/tag/v1.1.1
 [1.1.0]: https://github.com/srveit/insteon-hub2/releases/tag/v1.1.0

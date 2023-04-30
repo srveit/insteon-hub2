@@ -3,11 +3,20 @@ const { createPlmCommandQueue } = require('../lib/plmCommandQueue')
 
 describe('plmCommandQueue.createPlmCommandQueue', () => {
   /* eslint no-undefined: "off" */
-  let plmCommandQueue, sendCommandBuffer, setTimeout
+  let plmCommandQueue,
+    sendCommandBuffer,
+    sendCommandBufferPromise,
+    setTimeout,
+    sendCommandBufferResolve,
+    sendCommandBufferReject
 
   beforeEach(() => {
     jest.useFakeTimers()
-    sendCommandBuffer = jest.fn()
+    sendCommandBufferPromise = new Promise((resolve, reject) => {
+      sendCommandBufferResolve = resolve
+      sendCommandBufferReject = reject
+    })
+    sendCommandBuffer = jest.fn(() => sendCommandBufferPromise)
     setTimeout = jest.fn()
     plmCommandQueue = createPlmCommandQueue(sendCommandBuffer, setTimeout)
   })
@@ -21,15 +30,19 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
 
     const delay = 0.1
     const commandBuffer = '01020304'
-    const responseMatcher = response => response.match
+    const responseMatcher = (response) => response.match
 
     beforeEach(() => {
-      responseHandler =
-        plmCommandQueue.addCommand(
-          commandBuffer,
-          responseMatcher,
-          { maxNumberRetries: 0, delay }
-        )
+      jest.spyOn(global.console, 'warn').mockImplementation(() => {})
+      responseHandler = plmCommandQueue.addCommand(
+        commandBuffer,
+        responseMatcher,
+        { maxNumberRetries: 0, delay }
+      )
+    })
+
+    afterAll(() => {
+      global.console.warn.mockRestore()
     })
 
     it('should call sendCommandBuffer', () => {
@@ -40,18 +53,40 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
       expect(plmCommandQueue.queueLength()).toBe(0)
     })
 
+    describe('and sendCommandBuffer succeeds', () => {
+      beforeEach(() => {
+        sendCommandBufferResolve()
+      })
+
+      it('should not catch error', () => {
+        expect(console.warn).toHaveBeenCalledTimes(0)
+      })
+    })
+
+    describe('and sendCommandBuffer fails', () => {
+      const errorMessage = 'error occured'
+
+      beforeEach(() => {
+        sendCommandBufferReject(errorMessage)
+      })
+
+      it('should catch error', () => {
+        expect(console.warn).toHaveBeenCalledWith(errorMessage)
+        expect(console.warn).toHaveBeenCalledTimes(1)
+      })
+    })
+
     describe('and addCommand called again', () => {
       let responseHandler2
 
       const secondCommandBuffer = '05060708'
 
       beforeEach(() => {
-        responseHandler2 =
-          plmCommandQueue.addCommand(
-            secondCommandBuffer,
-            responseMatcher,
-            { delay }
-          )
+        responseHandler2 = plmCommandQueue.addCommand(
+          secondCommandBuffer,
+          responseMatcher,
+          { delay }
+        )
       })
 
       it('should not call sendCommandBuffer again', () => {
@@ -116,20 +151,22 @@ describe('plmCommandQueue.createPlmCommandQueue', () => {
 
     const defaultDelay = 1
     const commandBuffer = '01020304'
-    const responseMatcher = response => response.match
+    const responseMatcher = (response) => response.match
 
     beforeEach(() => {
-      responseHandler =
-        plmCommandQueue.addCommand(
-          commandBuffer,
-          responseMatcher
-        )
+      responseHandler = plmCommandQueue.addCommand(
+        commandBuffer,
+        responseMatcher
+      )
     })
 
     it('should call sendCommandBuffer', () => {
       expect(sendCommandBuffer).toHaveBeenCalledWith(commandBuffer)
       expect(setTimeout).toHaveBeenCalledTimes(1)
-      expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), defaultDelay * 1000)
+      expect(setTimeout).toHaveBeenCalledWith(
+        expect.any(Function),
+        defaultDelay * 1000
+      )
     })
 
     describe('and timeout expires', () => {

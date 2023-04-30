@@ -56,7 +56,7 @@ function objectToString (object, indent = '') {
     indent + '  ' +
     keys.map(key => keyValueToString(key, object[key], indent))
       .join(',\n  ' + indent) +
-    '\n' + indent + '}'
+    ',\n' + indent + '}'
 }
 
 module.exports = objectToString

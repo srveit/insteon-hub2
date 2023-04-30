@@ -1,12 +1,17 @@
 'use strict'
 
+// NOTE: The following URL is no longer accessible. The contents
+// was retrieved Sep 29, 2015 and recorded on this forum page:
+// https://forum.universal-devices.com/topic/17006-new-insteon-products/
+
 // https://insteon.atlassian.net/wiki/spaces/IKB/pages/13533225/Insteon+Device+Categories+and+Sub-Categories
 
 const { parseStringPromise } = require('xml2js')
-const fetch = require('node-fetch')
-const URL = 'https://insteon.atlassian.net/cgraphql?q=QueryPreloader_ContentBodyQuery'
+const URL =
+  'https://insteon.atlassian.net/cgraphql?q=QueryPreloader_ContentBodyQuery'
 const payload = {
-  query: 'query ContentBodyQuery($contentId:ID$versionOverride:Int$embeddedContentRender:String){content(id:$contentId version:$versionOverride embeddedContentRender:$embeddedContentRender){nodes{id body{view{value}}}}}',
+  query:
+    'query ContentBodyQuery($contentId:ID$versionOverride:Int$embeddedContentRender:String){content(id:$contentId version:$versionOverride embeddedContentRender:$embeddedContentRender){nodes{id body{view{value}}}}}',
   variables: {
     contentId: '13533225',
     versionOverride: null,
@@ -15,7 +20,8 @@ const payload = {
 }
 const headers = { 'content-type': 'application/json' }
 
-const getData = async url => {
+const getData = async (url) => {
+  const fetch = (await import('node-fetch')).default
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -30,9 +36,10 @@ const getData = async url => {
   }
 }
 
-function cellValue (td) {
+function cellValue(td) {
   if (typeof td === 'string') {
-    return td.trim()
+    return td
+      .trim()
       .replace(')[beeper]', ') [with beeper]')
       .replace('HL(Dual Band)', 'HouseLinc (Dual Band)')
       .replace('HL (Dual Band)', 'HouseLinc (Dual Band)')
@@ -41,7 +48,7 @@ function cellValue (td) {
         'PowerLinc Serial Modem w/o EEPROM (w/o RF)'
       )
       .replace('Count-down', 'Countdown')
-      .replace('Developer\u2019s', 'Developer\'s')
+      .replace('Developer\u2019s', "Developer's")
       .replace('\u00a0 -', ' -')
       .replace('Dual-Band,50/60 Hz', 'Dual-Band, 50/60 Hz')
       .replace('w/ ', 'with ')
@@ -76,34 +83,27 @@ const headerNames = {
   Name: 'deviceDescription',
 }
 
-async function decodeWikiPage () {
+async function decodeWikiPage() {
   const data = await getData(URL)
   const htmlText = data.data.content.nodes[0].body.view.value
   const html = await parseStringPromise(`<div>${htmlText}</div>`)
   const trs = html.div.div[0].table[0].tbody[0].tr
-  const header = trs[0].th.map(e => e.p[0].trim())
-  const deviceRows = trs.slice(1).map(tr => tr.td.map(cellValue))
+  const header = trs[0].th.map((e) => e.p[0].trim())
+  const deviceRows = trs.slice(1).map((tr) => tr.td.map(cellValue))
 
-  return deviceRows.reduce(
-    (categories, deviceRow) => {
-      const device = deviceRow.reduce(
-        (device, value, i) => {
-          device[headerNames[header[i]]] = value
-          return device
-        },
-        {}
-      )
-      if (!categories[device.categoryId]) {
-        categories[device.categoryId] = {
-          categoryId: device.categoryId,
-          subcategories: {},
-        }
+  return deviceRows.reduce((categories, deviceRow) => {
+    const device = deviceRow.reduce((device, value, i) => {
+      device[headerNames[header[i]]] = value
+      return device
+    }, {})
+    if (!categories[device.categoryId]) {
+      categories[device.categoryId] = {
+        categoryId: device.categoryId,
+        subcategories: {},
       }
-      categories[device.categoryId].subcategories[device.subcategoryId] =
-        device
-      return categories
-    },
-    {}
-  )
+    }
+    categories[device.categoryId].subcategories[device.subcategoryId] = device
+    return categories
+  }, {})
 }
 module.exports = decodeWikiPage

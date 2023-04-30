@@ -2,8 +2,6 @@
 
 const { readFile } = require('fs/promises')
 const path = require('path')
-const PDFParser = require('pdf2json')
-const fetch = require('node-fetch')
 const URL = 'http://cache.insteon.com/pdf/INSTEON_DevCats_and_Product_Keys_20081008.pdf'
 const CATEGORY_BOUNDARIES_FILE = path.join(__dirname, 'categoryBoundaries.json')
 
@@ -13,6 +11,8 @@ async function readJsonFile (filename) {
 }
 
 async function parseCategoriesTable (contents) {
+  const PDFParser = (await import('pdf2json')).default
+
   return new Promise(function (resolve, reject) {
     const pdfParser = new PDFParser()
 
@@ -201,6 +201,8 @@ function removeTopBottom (categories) {
 }
 
 const getDevelopersGuide = async () => {
+  const fetch = (await import('node-fetch')).default
+
   try {
     const response = await fetch(URL)
     return response.buffer()

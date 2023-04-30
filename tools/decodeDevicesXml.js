@@ -1,10 +1,10 @@
 'use strict'
 const { parseStringPromise } = require('xml2js')
 const unzipper = require('unzipper')
-const fetch = require('node-fetch')
 const URL = 'https://www.insteon.com/s/houselinc-device-definitions-2987-bjb7.zip'
 
 const getDevicesXml = async () => {
+  const fetch = (await import('node-fetch')).default
   try {
     const response = await fetch(URL)
     const directory = await unzipper.Open.buffer(await response.buffer())
